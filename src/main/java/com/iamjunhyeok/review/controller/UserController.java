@@ -4,6 +4,7 @@ import com.iamjunhyeok.review.dto.UserJoinRequest;
 import com.iamjunhyeok.review.dto.UserJoinResponse;
 import com.iamjunhyeok.review.service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ public class UserController {
 
     @PostMapping
     public ResponseEntity<UserJoinResponse> join(@RequestBody UserJoinRequest request) {
-        return ResponseEntity.created(null).body(UserJoinResponse.from(userService.join(request)));
+        return ResponseEntity.status(HttpStatus.CREATED).body(UserJoinResponse.from(userService.join(request)));
     }
+
 }
