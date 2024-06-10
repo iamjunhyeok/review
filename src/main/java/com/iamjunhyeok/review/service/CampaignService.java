@@ -46,4 +46,11 @@ public class CampaignService {
                 .orElseThrow(() -> ErrorCode.CAMPAIGN_NOT_FOUND.build());
         return campaign.update(request);
     }
+
+    @Transactional
+    public void delete(Long id) {
+        Campaign campaign = campaignRepository.findById(id)
+                .orElseThrow(() -> ErrorCode.CAMPAIGN_NOT_FOUND.build());
+        campaign.delete();
+    }
 }

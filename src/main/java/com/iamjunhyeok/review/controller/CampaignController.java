@@ -8,6 +8,7 @@ import com.iamjunhyeok.review.dto.CampaignUpdateResponse;
 import com.iamjunhyeok.review.service.CampaignService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -35,5 +36,11 @@ public class CampaignController {
     @PatchMapping("/{id}")
     public ResponseEntity<CampaignUpdateResponse> update(@PathVariable Long id, @RequestBody CampaignUpdateRequest request) {
         return ResponseEntity.ok(CampaignUpdateResponse.from(campaignService.update(id, request)));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        campaignService.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }

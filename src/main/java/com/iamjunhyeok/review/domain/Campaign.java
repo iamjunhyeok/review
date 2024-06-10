@@ -42,6 +42,8 @@ public class Campaign extends CampaignBase {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    private boolean deleted = false;
+
     public Campaign update(CampaignUpdateRequest request) {
         title = request.getTitle();
         capacity = request.getCapacity();
@@ -59,6 +61,10 @@ public class Campaign extends CampaignBase {
         guide = request.getGuide();
         information = request.getInformation();
         return this;
+    }
+
+    public void delete() {
+        deleted = true;
     }
 }
 
