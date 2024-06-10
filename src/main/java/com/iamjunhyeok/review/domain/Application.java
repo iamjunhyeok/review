@@ -50,6 +50,7 @@ public class Application extends Base {
         application.setCampaign(campaign);
         application.setName(request.getName());
         application.setPhoneNumber(request.getPhoneNumber());
+        application.setStatus(ApplicationStatus.APPLIED);
         return application;
     }
 
