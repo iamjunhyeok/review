@@ -3,9 +3,13 @@ package com.iamjunhyeok.review.controller;
 import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.dto.CampaignCreateRequest;
 import com.iamjunhyeok.review.dto.CampaignCreateResponse;
+import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
+import com.iamjunhyeok.review.dto.CampaignUpdateResponse;
 import com.iamjunhyeok.review.service.CampaignService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,5 +30,10 @@ public class CampaignController {
                         .buildAndExpand(campaign.getId())
                         .toUri()
         ).build();
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<CampaignUpdateResponse> update(@PathVariable Long id, @RequestBody CampaignUpdateRequest request) {
+        return ResponseEntity.ok(CampaignUpdateResponse.from(campaignService.update(id, request)));
     }
 }

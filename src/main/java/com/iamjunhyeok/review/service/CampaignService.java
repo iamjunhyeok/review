@@ -3,9 +3,12 @@ package com.iamjunhyeok.review.service;
 import com.iamjunhyeok.review.constant.CampaignStatus;
 import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.dto.CampaignCreateRequest;
+import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
+import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.CampaignRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
@@ -35,5 +38,12 @@ public class CampaignService {
                         .status(request.getApplicationStartDate().isAfter(LocalDate.now()) ? CampaignStatus.PLANNED : CampaignStatus.ONGOING)
                         .build()
         );
+    }
+
+    @Transactional
+    public Campaign update(Long id, CampaignUpdateRequest request) {
+        Campaign campaign = campaignRepository.findById(id)
+                .orElseThrow(() -> ErrorCode.CAMPAIGN_NOT_FOUND.build());
+        return campaign.update(request);
     }
 }

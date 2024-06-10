@@ -1,6 +1,7 @@
 package com.iamjunhyeok.review.domain;
 
 import com.iamjunhyeok.review.constant.CampaignStatus;
+import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
@@ -38,8 +39,27 @@ public class Campaign extends CampaignBase {
     @CreatedDate
     private LocalDateTime createdAt;
 
-    @LastModifiedBy
+    @LastModifiedDate
     private LocalDateTime updatedAt;
+
+    public Campaign update(CampaignUpdateRequest request) {
+        title = request.getTitle();
+        capacity = request.getCapacity();
+        applicationStartDate = request.getApplicationStartDate();
+        applicationEndDate = request.getApplicationEndDate();
+        announcementDate = request.getAnnouncementDate();
+        useStartDate = request.getUseStartDate();
+        useEndDate = request.getUseEndDate();
+        reviewStartDate = request.getReviewStartDate();
+        reviewEndDate = request.getReviewEndDate();
+        offering = request.getOffering();
+        keyword = request.getKeyword();
+        hashtag = request.getHashtag();
+        mission = request.getMission();
+        guide = request.getGuide();
+        information = request.getInformation();
+        return this;
+    }
 }
 
 
