@@ -27,4 +27,8 @@ public class User {
         user.setPassword(password);
         return user;
     }
+
+    public void changePassword(String newPassword) {
+        password = newPassword;
+    }
 }
