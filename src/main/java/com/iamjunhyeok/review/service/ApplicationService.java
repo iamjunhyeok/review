@@ -31,4 +31,9 @@ public class ApplicationService {
 
         return applicationRepository.save(Application.create(user, campaign, request));
     }
+
+    public Application findById(Long id) {
+        return applicationRepository.findById(id)
+                .orElseThrow(() -> ErrorCode.APPLICATION_NOT_FOUND.build());
+    }
 }
