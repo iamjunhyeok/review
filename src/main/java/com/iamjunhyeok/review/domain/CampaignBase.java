@@ -3,6 +3,7 @@ package com.iamjunhyeok.review.domain;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 @SuperBuilder
 @NoArgsConstructor
 @Getter
+@Setter
 @MappedSuperclass
 public class CampaignBase {
 
