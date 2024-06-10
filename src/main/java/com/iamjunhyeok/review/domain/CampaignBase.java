@@ -15,40 +15,40 @@ import java.time.LocalDate;
 @MappedSuperclass
 public class CampaignBase {
 
-    protected String title;
+    String title;
 
-    private Integer capacity;
+    Integer capacity;
 
     // ---- 신청기간
-    private LocalDate applicationStartDate;
-    private LocalDate applicationEndDate;
+    LocalDate applicationStartDate;
+    LocalDate applicationEndDate;
 
     // --- 발표일
-    private LocalDate announcementDate;
+    LocalDate announcementDate;
 
     // --- 이용기간
-    private LocalDate useStartDate;
-    private LocalDate useEndDate;
+    LocalDate useStartDate;
+    LocalDate useEndDate;
 
     // --- 리뷰기간
-    private LocalDate reviewStartDate;
-    private LocalDate reviewEndDate;
+    LocalDate reviewStartDate;
+    LocalDate reviewEndDate;
 
     // --- 제공 내용
-    private String offering;
+    String offering;
 
     // --- 필수 키워드
-    private String keyword;
+    String keyword;
 
     // --- 해시태그
-    private String hashtag;
+    String hashtag;
 
     // --- 미션
-    private String mission;
+    String mission;
 
     // --- 작성 가이드
-    private String guide;
+    String guide;
 
     // --- 안내사항
-    private String information;
+    String information;
 }
