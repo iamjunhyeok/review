@@ -1,5 +1,6 @@
 package com.iamjunhyeok.review.dto;
 
+import com.iamjunhyeok.review.domain.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,10 +10,10 @@ public class UserJoinResponse {
     private String email;
     private String password;
 
-    public static UserJoinResponse from(UserDto userDto) {
+    public static UserJoinResponse from(User user) {
         UserJoinResponse userJoinResponse = new UserJoinResponse();
-        userJoinResponse.setEmail(userDto.getEmail());
-        userJoinResponse.setPassword(userDto.getPassword());
+        userJoinResponse.setEmail(user.getEmail());
+        userJoinResponse.setPassword(user.getPassword());
         return userJoinResponse;
     }
 }
