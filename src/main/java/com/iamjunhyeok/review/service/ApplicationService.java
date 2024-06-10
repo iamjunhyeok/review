@@ -36,4 +36,11 @@ public class ApplicationService {
         return applicationRepository.findById(id)
                 .orElseThrow(() -> ErrorCode.APPLICATION_NOT_FOUND.build());
     }
+
+    @Transactional
+    public Application cancel(Long id) {
+        Application application = applicationRepository.findById(id)
+                .orElseThrow(() -> ErrorCode.APPLICATION_NOT_FOUND.build());
+        return application.cancel();
+    }
 }

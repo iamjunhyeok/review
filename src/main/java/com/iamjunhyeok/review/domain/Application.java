@@ -1,8 +1,11 @@
 package com.iamjunhyeok.review.domain;
 
+import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.dto.CampaignApplyRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -38,6 +41,9 @@ public class Application extends Base {
     @JoinColumn(name = "campaign_id")
     private Campaign campaign;
 
+    @Enumerated(EnumType.STRING)
+    private ApplicationStatus status;
+
     public static Application create(User user, Campaign campaign, CampaignApplyRequest request) {
         Application application = new Application();
         application.setUser(user);
@@ -45,5 +51,10 @@ public class Application extends Base {
         application.setName(request.getName());
         application.setPhoneNumber(request.getPhoneNumber());
         return application;
+    }
+
+    public Application cancel() {
+        status = ApplicationStatus.CANCELLED;
+        return this;
     }
 }
