@@ -16,7 +16,6 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -96,7 +95,7 @@ class UserServiceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(spyUser));
 
         UserChangePasswordRequest request = new UserChangePasswordRequest();
-        request.setOldPassword("");
+        request.setOldPassword("1234");
         request.setNewPassword("5678");
 
         userService.changePassword(request);
@@ -107,6 +106,19 @@ class UserServiceTest {
 
     @Test
     void 비밀번호변경_비밀번호틀림_400() {
-        fail();
+        User user = new User();
+        user.setId(1L);
+        user.setEmail("abc@gmail.com");
+        user.setPassword("1234");
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        UserChangePasswordRequest request = new UserChangePasswordRequest();
+        request.setOldPassword("123456");
+        request.setNewPassword("5678");
+
+        ApplicationException exception = assertThrows(ApplicationException.class, () -> userService.changePassword(request));
+        assertEquals(ErrorCode.INCORRECT_PASSWORD.getHttpStatus(), exception.getHttpStatus());
+        assertEquals(ErrorCode.INCORRECT_PASSWORD.getMessage(), exception.getMessage());
     }
 }
