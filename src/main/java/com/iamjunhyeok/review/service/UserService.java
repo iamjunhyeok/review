@@ -26,7 +26,13 @@ public class UserService {
     @Transactional
     public void changePassword(UserChangePasswordRequest request) {
         userRepository.findById(1L)
-                .ifPresentOrElse(user -> user.changePassword(request.getNewPassword()), () -> {
+                .ifPresentOrElse(user -> {
+                    if (user.getPassword().equals(request.getOldPassword())) {
+                        user.changePassword(request.getNewPassword());
+                    } else {
+                        throw ErrorCode.INCORRECT_PASSWORD.build();
+                    }
+                }, () -> {
                     throw ErrorCode.USER_NOT_FOUND.build();
                 });
     }
