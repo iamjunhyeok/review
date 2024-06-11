@@ -7,9 +7,10 @@ import com.iamjunhyeok.review.exception.ApplicationException;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.UserRepository;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
@@ -21,13 +22,13 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    @Autowired
+    @InjectMocks
     private UserService userService;
 
-    @MockBean
+    @Mock
     private UserRepository userRepository;
 
     @Test
@@ -94,12 +95,30 @@ class UserServiceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(spyUser));
 
         UserChangePasswordRequest request = new UserChangePasswordRequest();
-        request.setOldPassword("");
+        request.setOldPassword("1234");
         request.setNewPassword("5678");
 
         userService.changePassword(request);
 
         assertEquals(request.getNewPassword(), spyUser.getPassword());
         verify(spyUser, times(1)).changePassword(request.getNewPassword());
+    }
+
+    @Test
+    void 비밀번호변경_비밀번호틀림_400() {
+        User user = new User();
+        user.setId(1L);
+        user.setEmail("abc@gmail.com");
+        user.setPassword("1234");
+
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+
+        UserChangePasswordRequest request = new UserChangePasswordRequest();
+        request.setOldPassword("123456");
+        request.setNewPassword("5678");
+
+        ApplicationException exception = assertThrows(ApplicationException.class, () -> userService.changePassword(request));
+        assertEquals(ErrorCode.INCORRECT_PASSWORD.getHttpStatus(), exception.getHttpStatus());
+        assertEquals(ErrorCode.INCORRECT_PASSWORD.getMessage(), exception.getMessage());
     }
 }
