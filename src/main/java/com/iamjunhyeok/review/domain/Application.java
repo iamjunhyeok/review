@@ -55,7 +55,7 @@ public class Application extends Base {
     }
 
     public Application cancel() {
-        status = ApplicationStatus.CANCELLED;
+        this.setStatus(ApplicationStatus.CANCELLED);
         return this;
     }
 }

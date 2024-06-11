@@ -6,12 +6,12 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ApplicationReadResponse {
+public class ApplicationViewResponse {
     private String name;
     private String phoneNumber;
 
-    public static ApplicationReadResponse from(Application application) {
-        ApplicationReadResponse response = new ApplicationReadResponse();
+    public static ApplicationViewResponse from(Application application) {
+        ApplicationViewResponse response = new ApplicationViewResponse();
         response.setName(application.getName());
         response.setPhoneNumber(application.getPhoneNumber());
         return response;

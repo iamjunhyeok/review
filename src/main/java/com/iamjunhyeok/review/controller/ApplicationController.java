@@ -2,7 +2,7 @@ package com.iamjunhyeok.review.controller;
 
 import com.iamjunhyeok.review.domain.Application;
 import com.iamjunhyeok.review.dto.ApplicationCancelResponse;
-import com.iamjunhyeok.review.dto.ApplicationReadResponse;
+import com.iamjunhyeok.review.dto.ApplicationViewResponse;
 import com.iamjunhyeok.review.dto.CampaignApplyRequest;
 import com.iamjunhyeok.review.dto.CampaignApplyResponse;
 import com.iamjunhyeok.review.service.ApplicationService;
@@ -36,8 +36,8 @@ public class ApplicationController {
     }
 
     @GetMapping("/applications/{id}")
-    public ResponseEntity<ApplicationReadResponse> read(@PathVariable Long id) {
-        return ResponseEntity.ok(ApplicationReadResponse.from(applicationService.findById(id)));
+    public ResponseEntity<ApplicationViewResponse> view(@PathVariable Long id) {
+        return ResponseEntity.ok(ApplicationViewResponse.from(applicationService.findById(id)));
     }
 
     @PatchMapping("/applications/{id}/cancel")
