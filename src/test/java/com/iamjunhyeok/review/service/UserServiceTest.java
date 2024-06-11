@@ -7,27 +7,29 @@ import com.iamjunhyeok.review.exception.ApplicationException;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.UserRepository;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-    @Autowired
+    @InjectMocks
     private UserService userService;
 
-    @MockBean
+    @Mock
     private UserRepository userRepository;
 
     @Test
@@ -101,5 +103,10 @@ class UserServiceTest {
 
         assertEquals(request.getNewPassword(), spyUser.getPassword());
         verify(spyUser, times(1)).changePassword(request.getNewPassword());
+    }
+
+    @Test
+    void 비밀번호변경_비밀번호틀림_400() {
+        fail();
     }
 }
