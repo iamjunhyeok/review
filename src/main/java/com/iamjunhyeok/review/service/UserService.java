@@ -29,10 +29,11 @@ public class UserService {
 
     @Transactional
     public void changePassword(UserChangePasswordRequest request) {
+        // 로그인이 개발되면 ID 값 매개변수 변경할 것!!
         userRepository.findById(1L)
                 .ifPresentOrElse(user -> {
-                    if (user.getPassword().equals(request.getOldPassword())) {
-                        user.changePassword(request.getNewPassword());
+                    if (user.getPassword().equals(request.getCurrentPassword())) {
+                        user.changePassword(request.getNewPassword(), request.getConfirmNewPassword());
                     } else {
                         throw ErrorCode.INCORRECT_PASSWORD.build();
                     }

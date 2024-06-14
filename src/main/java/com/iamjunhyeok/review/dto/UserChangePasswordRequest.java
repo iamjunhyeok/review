@@ -1,17 +1,25 @@
 package com.iamjunhyeok.review.dto;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
 public class UserChangePasswordRequest {
-    private String oldPassword;
+
+    @NotBlank
+    private String currentPassword;
+
+    @NotBlank
     private String newPassword;
+
+    @NotBlank
+    private String confirmNewPassword;
 
     public static UserChangePasswordRequest of(String oldPassword, String newPassword) {
         UserChangePasswordRequest userChangePasswordRequest = new UserChangePasswordRequest();
-        userChangePasswordRequest.setOldPassword(oldPassword);
+        userChangePasswordRequest.setCurrentPassword(oldPassword);
         userChangePasswordRequest.setNewPassword(newPassword);
         return userChangePasswordRequest;
     }

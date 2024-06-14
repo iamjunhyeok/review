@@ -76,7 +76,7 @@ class UserServiceTest {
 
         UserChangePasswordRequest request = new UserChangePasswordRequest();
         request.setNewPassword("");
-        request.setOldPassword("");
+        request.setCurrentPassword("");
 
         ApplicationException exception = assertThrows(ApplicationException.class, () -> userService.changePassword(request));
 
@@ -95,13 +95,13 @@ class UserServiceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(spyUser));
 
         UserChangePasswordRequest request = new UserChangePasswordRequest();
-        request.setOldPassword("1234");
+        request.setCurrentPassword("1234");
         request.setNewPassword("5678");
 
         userService.changePassword(request);
 
         assertEquals(request.getNewPassword(), spyUser.getPassword());
-        verify(spyUser, times(1)).changePassword(request.getNewPassword());
+        verify(spyUser, times(1)).changePassword(request.getNewPassword(), request.getConfirmNewPassword());
     }
 
     @Test
@@ -114,7 +114,7 @@ class UserServiceTest {
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
         UserChangePasswordRequest request = new UserChangePasswordRequest();
-        request.setOldPassword("123456");
+        request.setCurrentPassword("123456");
         request.setNewPassword("5678");
 
         ApplicationException exception = assertThrows(ApplicationException.class, () -> userService.changePassword(request));
