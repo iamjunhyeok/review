@@ -3,6 +3,7 @@ package com.iamjunhyeok.review.service;
 import com.iamjunhyeok.review.domain.User;
 import com.iamjunhyeok.review.dto.UserChangePasswordRequest;
 import com.iamjunhyeok.review.dto.UserJoinRequest;
+import com.iamjunhyeok.review.dto.UserUpdateInfoRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,20 @@ public class UserService {
                         throw ErrorCode.INCORRECT_PASSWORD.build();
                     }
                 }, () -> {
+                    throw ErrorCode.USER_NOT_FOUND.build();
+                });
+    }
+
+    @Transactional
+    public void updateMyInfo(UserUpdateInfoRequest request) {
+        // 로그인이 개발되면 ID 값 매개변수 변경할 것!!
+        updateUserInfo(1L, request);
+    }
+
+    @Transactional
+    public void updateUserInfo(Long id, UserUpdateInfoRequest request) {
+        userRepository.findById(id)
+                .ifPresentOrElse(user -> user.updateInfo(request.getNickname()), () -> {
                     throw ErrorCode.USER_NOT_FOUND.build();
                 });
     }

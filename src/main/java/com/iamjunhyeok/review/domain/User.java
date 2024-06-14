@@ -44,4 +44,8 @@ public class User extends Base {
         }
         this.setPassword(newPassword);
     }
+
+    public void updateInfo(String nickname) {
+        this.setNickname(nickname);
+    }
 }
