@@ -12,7 +12,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity(name = "users")
-public class User {
+public class User extends Base {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
@@ -36,6 +36,6 @@ public class User {
     }
 
     public void changePassword(String newPassword) {
-        password = newPassword;
+        this.setPassword(newPassword);
     }
 }
