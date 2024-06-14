@@ -34,8 +34,10 @@ public class Campaign extends CampaignBase {
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private CampaignStatus status;
 
+    @Column(updatable = false)
     @CreatedDate
     private LocalDateTime createdAt;
 
@@ -45,26 +47,28 @@ public class Campaign extends CampaignBase {
     private boolean deleted = false;
 
     public Campaign update(CampaignUpdateRequest request) {
-        title = request.getTitle();
-        capacity = request.getCapacity();
-        applicationStartDate = request.getApplicationStartDate();
-        applicationEndDate = request.getApplicationEndDate();
-        announcementDate = request.getAnnouncementDate();
-        useStartDate = request.getUseStartDate();
-        useEndDate = request.getUseEndDate();
-        reviewStartDate = request.getReviewStartDate();
-        reviewEndDate = request.getReviewEndDate();
-        offering = request.getOffering();
-        keyword = request.getKeyword();
-        hashtag = request.getHashtag();
-        mission = request.getMission();
-        guide = request.getGuide();
-        information = request.getInformation();
+        this.setType(request.getType());
+        this.setSocial(request.getSocial());
+        this.setTitle(request.getTitle());
+        this.setCapacity(request.getCapacity());
+        this.setApplicationStartDate(request.getApplicationStartDate());
+        this.setApplicationEndDate(request.getApplicationEndDate());
+        this.setAnnouncementDate(request.getAnnouncementDate());
+        this.setUseStartDate(request.getUseStartDate());
+        this.setUseEndDate(request.getUseEndDate());
+        this.setReviewStartDate(request.getReviewStartDate());
+        this.setReviewEndDate(request.getReviewEndDate());
+        this.setOffering(request.getOffering());
+        this.setKeyword(request.getKeyword());
+        this.setHashtag(request.getHashtag());
+        this.setMission(request.getMission());
+        this.setGuide(request.getGuide());
+        this.setInformation(request.getInformation());
         return this;
     }
 
     public void delete() {
-        deleted = true;
+        this.setDeleted(true);
     }
 }
 

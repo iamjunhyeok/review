@@ -14,12 +14,16 @@ import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class CampaignService {
     private final CampaignRepository campaignRepository;
 
+    @Transactional
     public Campaign create(CampaignCreateRequest request) {
         return campaignRepository.save(
                 Campaign.builder()
+                        .type(request.getType())
+                        .social(request.getSocial())
                         .title(request.getTitle())
                         .capacity(request.getCapacity())
                         .applicationStartDate(request.getApplicationStartDate())

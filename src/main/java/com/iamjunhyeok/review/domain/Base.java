@@ -1,5 +1,6 @@
 package com.iamjunhyeok.review.domain;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.EntityListeners;
 import jakarta.persistence.MappedSuperclass;
 import org.springframework.data.annotation.CreatedDate;
@@ -11,6 +12,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
 public class Base {
+    @Column(updatable = false)
     @CreatedDate
     private LocalDateTime createdAt;
 

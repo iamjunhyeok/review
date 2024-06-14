@@ -5,6 +5,5 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class UserChangePasswordResponse {
-
+public class UserUpdateInfoResponse {
 }
