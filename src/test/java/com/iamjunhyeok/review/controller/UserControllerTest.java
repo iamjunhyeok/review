@@ -34,9 +34,11 @@ class UserControllerTest {
     @Test
     void 회원가입_유효한값_생성() throws Exception {
         String email = "jeonjhyeok@gmail.com";
+        String nickname = "jeonjhyeok";
         String password = "1234";
+        String confirmPassword = "1234";
 
-        User user = User.createUser(email, password);
+        User user = User.createUser(email, nickname, password, confirmPassword);
         when(userService.join(any(UserJoinRequest.class))).thenReturn(user);
 
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/users")
@@ -52,9 +54,11 @@ class UserControllerTest {
     @Test
     void 회원가입_중복된이메일_생성() throws Exception {
         String email = "jeonjhyeok@gmail.com";
+        String nickname = "jeonjhyeok";
         String password = "1234";
+        String confirmPassword = "1234";
 
-        User user = User.createUser(email, password);
+        User user = User.createUser(email, nickname, password, confirmPassword);
         when(userService.join(any(UserJoinRequest.class))).thenThrow(ErrorCode.DUPLICATE_EMAIL.build());
 
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/users")

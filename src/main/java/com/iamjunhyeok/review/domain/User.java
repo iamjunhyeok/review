@@ -1,5 +1,6 @@
 package com.iamjunhyeok.review.domain;
 
+import com.iamjunhyeok.review.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -19,11 +20,17 @@ public class User {
 
     private String email;
 
+    private String nickname;
+
     private String password;
 
-    public static User createUser(String email, String password) {
+    public static User createUser(String email, String nickname, String password, String confirmPassword) {
+        if (!password.equals(confirmPassword)) {
+            throw ErrorCode.PASSWORDS_DO_NOT_MATCH.build();
+        }
         User user = new User();
         user.setEmail(email);
+        user.setNickname(nickname);
         user.setPassword(password);
         return user;
     }

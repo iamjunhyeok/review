@@ -5,22 +5,26 @@ import com.iamjunhyeok.review.dto.UserChangePasswordRequest;
 import com.iamjunhyeok.review.dto.UserJoinRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.UserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class UserService {
 
     private final UserRepository userRepository;
 
+    @Transactional
     public User join(UserJoinRequest request) {
-        userRepository.findByEmail(request.getEmail())
-                .ifPresent(user -> {
-                    throw ErrorCode.DUPLICATE_EMAIL.build();
-                });
-        return userRepository.save(User.createUser(request.getEmail(), request.getPassword()));
+        if (userRepository.existsByEmail(request.getEmail())) {
+            throw ErrorCode.DUPLICATE_EMAIL.build();
+        }
+        if (userRepository.existsByNickname(request.getNickname())) {
+            throw ErrorCode.DUPLICATE_NICKNAME.build();
+        }
+        return userRepository.save(User.createUser(request.getEmail(), request.getNickname(), request.getPassword(), request.getConfirmPassword()));
     }
 
     @Transactional
