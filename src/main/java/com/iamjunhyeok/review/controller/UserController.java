@@ -4,6 +4,7 @@ import com.iamjunhyeok.review.dto.UserChangePasswordRequest;
 import com.iamjunhyeok.review.dto.UserJoinRequest;
 import com.iamjunhyeok.review.dto.UserJoinResponse;
 import com.iamjunhyeok.review.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class UserController {
     private final UserService userService;
 
     @PostMapping
-    public ResponseEntity<UserJoinResponse> join(@RequestBody UserJoinRequest request) {
+    public ResponseEntity<UserJoinResponse> join(@RequestBody @Valid UserJoinRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(UserJoinResponse.from(userService.join(request)));
     }
 

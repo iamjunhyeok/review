@@ -18,10 +18,13 @@ public class User extends Base {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(nullable = false, unique = true, updatable = false)
     private String email;
 
+    @Column(nullable = false, unique = true)
     private String nickname;
 
+    @Column(nullable = false)
     private String password;
 
     public static User createUser(String email, String nickname, String password, String confirmPassword) {
