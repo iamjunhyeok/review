@@ -6,6 +6,7 @@ import com.iamjunhyeok.review.dto.CampaignCreateResponse;
 import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
 import com.iamjunhyeok.review.dto.CampaignUpdateResponse;
 import com.iamjunhyeok.review.service.CampaignService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -24,7 +25,7 @@ public class CampaignController {
     private final CampaignService campaignService;
 
     @PostMapping
-    public ResponseEntity<CampaignCreateResponse> create(@RequestBody CampaignCreateRequest request) {
+    public ResponseEntity<CampaignCreateResponse> create(@RequestBody @Valid CampaignCreateRequest request) {
         Campaign campaign = campaignService.create(request);
         return ResponseEntity.created(
                 UriComponentsBuilder.fromPath("/campaigns/{id}")
@@ -34,7 +35,7 @@ public class CampaignController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<CampaignUpdateResponse> update(@PathVariable Long id, @RequestBody CampaignUpdateRequest request) {
+    public ResponseEntity<CampaignUpdateResponse> update(@PathVariable Long id, @RequestBody @Valid CampaignUpdateRequest request) {
         return ResponseEntity.ok(CampaignUpdateResponse.from(campaignService.update(id, request)));
     }
 
