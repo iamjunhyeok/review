@@ -1,7 +1,7 @@
 package com.iamjunhyeok.review.service;
 
 import com.iamjunhyeok.review.domain.User;
-import com.iamjunhyeok.review.dto.UserChangePasswordRequest;
+import com.iamjunhyeok.review.dto.UserUpdatePasswordRequest;
 import com.iamjunhyeok.review.dto.UserJoinRequest;
 import com.iamjunhyeok.review.dto.UserUpdateInfoRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
@@ -29,12 +29,12 @@ public class UserService {
     }
 
     @Transactional
-    public void changePassword(UserChangePasswordRequest request) {
+    public void updatePassword(UserUpdatePasswordRequest request) {
         // 로그인이 개발되면 ID 값 매개변수 변경할 것!!
         userRepository.findById(1L)
                 .ifPresentOrElse(user -> {
                     if (user.getPassword().equals(request.getCurrentPassword())) {
-                        user.changePassword(request.getNewPassword(), request.getConfirmNewPassword());
+                        user.updatePassword(request.getNewPassword(), request.getConfirmNewPassword());
                     } else {
                         throw ErrorCode.INCORRECT_PASSWORD.build();
                     }

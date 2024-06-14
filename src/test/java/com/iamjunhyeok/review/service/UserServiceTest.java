@@ -1,7 +1,7 @@
 package com.iamjunhyeok.review.service;
 
 import com.iamjunhyeok.review.domain.User;
-import com.iamjunhyeok.review.dto.UserChangePasswordRequest;
+import com.iamjunhyeok.review.dto.UserUpdatePasswordRequest;
 import com.iamjunhyeok.review.dto.UserJoinRequest;
 import com.iamjunhyeok.review.exception.ApplicationException;
 import com.iamjunhyeok.review.exception.ErrorCode;
@@ -74,11 +74,11 @@ class UserServiceTest {
     void 비밀번호변경_사용자를찾을수없음() {
         when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
-        UserChangePasswordRequest request = new UserChangePasswordRequest();
+        UserUpdatePasswordRequest request = new UserUpdatePasswordRequest();
         request.setNewPassword("");
         request.setCurrentPassword("");
 
-        ApplicationException exception = assertThrows(ApplicationException.class, () -> userService.changePassword(request));
+        ApplicationException exception = assertThrows(ApplicationException.class, () -> userService.updatePassword(request));
 
         assertEquals(ErrorCode.USER_NOT_FOUND.getHttpStatus(), exception.getHttpStatus());
     }
@@ -94,14 +94,14 @@ class UserServiceTest {
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(spyUser));
 
-        UserChangePasswordRequest request = new UserChangePasswordRequest();
+        UserUpdatePasswordRequest request = new UserUpdatePasswordRequest();
         request.setCurrentPassword("1234");
         request.setNewPassword("5678");
 
-        userService.changePassword(request);
+        userService.updatePassword(request);
 
         assertEquals(request.getNewPassword(), spyUser.getPassword());
-        verify(spyUser, times(1)).changePassword(request.getNewPassword(), request.getConfirmNewPassword());
+        verify(spyUser, times(1)).updatePassword(request.getNewPassword(), request.getConfirmNewPassword());
     }
 
     @Test
@@ -113,11 +113,11 @@ class UserServiceTest {
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
-        UserChangePasswordRequest request = new UserChangePasswordRequest();
+        UserUpdatePasswordRequest request = new UserUpdatePasswordRequest();
         request.setCurrentPassword("123456");
         request.setNewPassword("5678");
 
-        ApplicationException exception = assertThrows(ApplicationException.class, () -> userService.changePassword(request));
+        ApplicationException exception = assertThrows(ApplicationException.class, () -> userService.updatePassword(request));
         assertEquals(ErrorCode.INCORRECT_PASSWORD.getHttpStatus(), exception.getHttpStatus());
         assertEquals(ErrorCode.INCORRECT_PASSWORD.getMessage(), exception.getMessage());
     }

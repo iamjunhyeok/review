@@ -2,7 +2,7 @@ package com.iamjunhyeok.review.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.iamjunhyeok.review.domain.User;
-import com.iamjunhyeok.review.dto.UserChangePasswordRequest;
+import com.iamjunhyeok.review.dto.UserUpdatePasswordRequest;
 import com.iamjunhyeok.review.dto.UserJoinRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.service.UserService;
@@ -76,9 +76,9 @@ class UserControllerTest {
         String oldPassword = "1234";
         String newPassword = "5678";
 
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/users/change-password")
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/users/update-password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(UserChangePasswordRequest.of(oldPassword, newPassword)));
+                .content(new ObjectMapper().writeValueAsString(UserUpdatePasswordRequest.of(oldPassword, newPassword)));
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isOk())
@@ -90,11 +90,11 @@ class UserControllerTest {
         String oldPassword = "1234";
         String newPassword = "5678";
 
-        doThrow(ErrorCode.USER_NOT_FOUND.build()).when(userService).changePassword(any(UserChangePasswordRequest.class));
+        doThrow(ErrorCode.USER_NOT_FOUND.build()).when(userService).updatePassword(any(UserUpdatePasswordRequest.class));
 
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/users/change-password")
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/users/update-password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(UserChangePasswordRequest.of(oldPassword, newPassword)));
+                .content(new ObjectMapper().writeValueAsString(UserUpdatePasswordRequest.of(oldPassword, newPassword)));
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isNotFound())
@@ -107,11 +107,11 @@ class UserControllerTest {
         String oldPassword = "1234";
         String newPassword = "5678";
 
-        doThrow(ErrorCode.INCORRECT_PASSWORD.build()).when(userService).changePassword(any(UserChangePasswordRequest.class));
+        doThrow(ErrorCode.INCORRECT_PASSWORD.build()).when(userService).updatePassword(any(UserUpdatePasswordRequest.class));
 
-        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/users/change-password")
+        MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/users/update-password")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(new ObjectMapper().writeValueAsString(UserChangePasswordRequest.of(oldPassword, newPassword)));
+                .content(new ObjectMapper().writeValueAsString(UserUpdatePasswordRequest.of(oldPassword, newPassword)));
 
         mockMvc.perform(requestBuilder)
                 .andExpect(status().isBadRequest())

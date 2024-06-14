@@ -38,7 +38,7 @@ public class User extends Base {
         return user;
     }
 
-    public void changePassword(String newPassword, String confirmNewPassword) {
+    public void updatePassword(String newPassword, String confirmNewPassword) {
         if (!newPassword.equals(confirmNewPassword)) {
             throw ErrorCode.PASSWORDS_DO_NOT_MATCH.build();
         }

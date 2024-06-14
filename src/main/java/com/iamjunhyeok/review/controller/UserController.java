@@ -1,6 +1,6 @@
 package com.iamjunhyeok.review.controller;
 
-import com.iamjunhyeok.review.dto.UserChangePasswordRequest;
+import com.iamjunhyeok.review.dto.UserUpdatePasswordRequest;
 import com.iamjunhyeok.review.dto.UserJoinRequest;
 import com.iamjunhyeok.review.dto.UserJoinResponse;
 import com.iamjunhyeok.review.dto.UserUpdateInfoRequest;
@@ -28,9 +28,9 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(UserJoinResponse.from(userService.join(request)));
     }
 
-    @PatchMapping("/me/change-password")
-    public ResponseEntity<Void> changePassword(@RequestBody @Valid UserChangePasswordRequest request) {
-        userService.changePassword(request);
+    @PatchMapping("/me/update-password")
+    public ResponseEntity<Void> updatePassword(@RequestBody @Valid UserUpdatePasswordRequest request) {
+        userService.updatePassword(request);
         return ResponseEntity.ok().build();
     }
 
