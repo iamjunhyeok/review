@@ -3,12 +3,15 @@ package com.iamjunhyeok.review.service;
 import com.iamjunhyeok.review.domain.Inquiry;
 import com.iamjunhyeok.review.domain.User;
 import com.iamjunhyeok.review.dto.InquiryCreateRequest;
+import com.iamjunhyeok.review.dto.InquirySearchRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.InquiryRepository;
 import com.iamjunhyeok.review.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -25,5 +28,14 @@ public class InquiryService {
         User user = userRepository.findById(1L)
                 .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build());
         return inquiryRepository.save(Inquiry.of(request.getTitle(), request.getContent(), user));
+    }
+
+    public List<Inquiry> search(InquirySearchRequest request) {
+        return inquiryRepository.findAll();
+    }
+
+    public Inquiry findById(Long id) {
+        return inquiryRepository.findById(id)
+                .orElseThrow(() -> ErrorCode.INQUIRY_NOT_FOUND.build());
     }
 }
