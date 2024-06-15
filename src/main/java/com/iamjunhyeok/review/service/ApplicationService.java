@@ -3,6 +3,7 @@ package com.iamjunhyeok.review.service;
 import com.iamjunhyeok.review.domain.Application;
 import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.domain.User;
+import com.iamjunhyeok.review.dto.ApplicationCancelRequest;
 import com.iamjunhyeok.review.dto.CampaignApplyRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.ApplicationRepository;
@@ -14,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ApplicationService {
     private final ApplicationRepository applicationRepository;
 
@@ -29,18 +31,20 @@ public class ApplicationService {
         Campaign campaign = campaignRepository.findById(id)
                 .orElseThrow(() -> ErrorCode.CAMPAIGN_NOT_FOUND.build());
 
+        if (applicationRepository.existsByUserIdAndCampaignId(user.getId(), campaign.getId())) {
+            throw ErrorCode.DUPLICATE_APPLICATION.build();
+        }
         return applicationRepository.save(Application.create(user, campaign, request));
     }
 
-    public Application findById(Long id) {
-        return applicationRepository.findById(id)
+    public Application findByIdAndCampaignId(Long campaignId, Long id) {
+        return applicationRepository.findByIdAndCampaignId(id, campaignId)
                 .orElseThrow(() -> ErrorCode.APPLICATION_NOT_FOUND.build());
     }
 
     @Transactional
-    public Application cancel(Long id) {
-        Application application = applicationRepository.findById(id)
-                .orElseThrow(() -> ErrorCode.APPLICATION_NOT_FOUND.build());
-        return application.cancel();
+    public void cancel(Long campaignId, Long id, ApplicationCancelRequest request) {
+        applicationRepository.findByIdAndCampaignId(id, campaignId)
+                .ifPresentOrElse(application -> application.cancel(), () -> { throw ErrorCode.APPLICATION_NOT_FOUND.build(); });
     }
 }

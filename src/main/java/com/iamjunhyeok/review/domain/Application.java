@@ -2,6 +2,7 @@ package com.iamjunhyeok.review.domain;
 
 import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.dto.CampaignApplyRequest;
+import com.iamjunhyeok.review.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -29,8 +30,10 @@ public class Application extends Base {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
+    @Column(nullable = false)
     private String phoneNumber;
 
     @ManyToOne
@@ -42,6 +45,7 @@ public class Application extends Base {
     private Campaign campaign;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ApplicationStatus status;
 
     public static Application create(User user, Campaign campaign, CampaignApplyRequest request) {
@@ -54,8 +58,11 @@ public class Application extends Base {
         return application;
     }
 
-    public Application cancel() {
-        this.setStatus(ApplicationStatus.CANCELLED);
-        return this;
+    public void cancel() {
+        if (this.status == ApplicationStatus.APPLIED || this.status == ApplicationStatus.APPROVED) {
+            this.setStatus(ApplicationStatus.CANCELLED);
+        } else {
+            throw ErrorCode.CAMPAIGN_CANNOT_BE_CANCELED.build();
+        }
     }
 }

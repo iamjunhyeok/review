@@ -53,7 +53,7 @@ class ApplicationServiceTest {
         Long id = 1L;
         CampaignApplyRequest request = CampaignApplyRequest.of("전준혁", "01076782457");
 
-        User user = User.createUser("jeonjhyeok@gmail.com", "1234");
+        User user = User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234", "1234");
 
         Campaign campaign = Campaign.builder()
                 .title("타이틀")
@@ -109,7 +109,7 @@ class ApplicationServiceTest {
         request.setName("전준혁");
         request.setPhoneNumber("01076782457");
 
-        when(userRepository.findById(id)).thenReturn(Optional.of(User.createUser("jeonjhyeok@gmail.com", "1234")));
+        when(userRepository.findById(id)).thenReturn(Optional.of(User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234", "1234")));
         when(campaignRepository.findById(id)).thenReturn(Optional.empty());
 
         ApplicationException exception = assertThrows(ApplicationException.class, () -> applicationService.apply(id, request));
@@ -120,22 +120,97 @@ class ApplicationServiceTest {
 
     @Test
     void 캠페인신청_중복신청_예외발생() {
-        fail();
+        Long userId = 1L;
+        User user = User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234", "1234");
+
+        Long campaignId = 1L;
+        Campaign campaign = Campaign.builder()
+                .id(campaignId)
+                .status(CampaignStatus.PLANNED)
+                .build();
+
+        CampaignApplyRequest request = CampaignApplyRequest.of("전준혁", "01076782457");
+
+        Application application = Application.create(user, campaign, request);
+
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(campaignRepository.findById(campaignId)).thenReturn(Optional.of(campaign));
+        when(applicationRepository.findByUserIdAndCampaignId(user.getId(), campaign.getId())).thenReturn(Optional.of(application));
+
+        ApplicationException exception = assertThrows(ApplicationException.class, () -> applicationService.apply(campaignId, request));
+
+        assertEquals(ErrorCode.DUPLICATE_APPLICATION.getHttpStatus(), exception.getHttpStatus());
+        assertEquals(ErrorCode.DUPLICATE_APPLICATION.getMessage(), exception.getMessage());
     }
 
     @Test
     void 캠페인신청_진행상태아님_예외발생() {
-        fail();
+        Long campaignId = 1L;
+        Campaign campaign = Campaign.builder()
+                .id(campaignId)
+                .status(CampaignStatus.PLANNED)
+                .build();
+
+        CampaignApplyRequest request = CampaignApplyRequest.of("전준혁", "01076782457");
+
+        when(campaignRepository.findById(campaignId)).thenReturn(Optional.of(campaign));
+
+        ApplicationException exception = assertThrows(ApplicationException.class, () -> applicationService.apply(campaignId, request));
+
+        assertEquals(ErrorCode.NOT_ONGOING_CAMPAIGN.getHttpStatus(), exception.getHttpStatus());
+        assertEquals(ErrorCode.NOT_ONGOING_CAMPAIGN.getMessage(), exception.getMessage());
     }
 
     @Test
     void 캠페인조회_유효함_조회성공() {
-        fail();
+        Long userId = 1L;
+        User user = User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234", "1234");
+
+        Long campaignId = 1L;
+        Campaign campaign = Campaign.builder()
+                .id(campaignId)
+                .status(CampaignStatus.PLANNED)
+                .build();
+
+        CampaignApplyRequest request = CampaignApplyRequest.of("전준혁", "01076782457");
+
+        Application application = Application.create(user, campaign, request);
+
+        Long id = 1L;
+        when(applicationRepository.findById(id)).thenReturn(Optional.of(application));
+
+        Application find = applicationService.findByIdAndCampaignId(id, id);
+
+        assertEquals(request.getName(), find.getName());
+        assertEquals(request.getPhoneNumber(), find.getPhoneNumber());
+        assertEquals(user.getId(), find.getUser().getId());
+        assertEquals(campaign.getId(), find.getCampaign().getId());
     }
 
     @Test
     void 캠페인조회_캠페인없음_예외발생() {
-        fail();
+        Long userId = 1L;
+        User user = User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234", "1234");
+
+        Long campaignId = 1L;
+        Campaign campaign = Campaign.builder()
+                .id(campaignId)
+                .status(CampaignStatus.PLANNED)
+                .build();
+
+        CampaignApplyRequest request = CampaignApplyRequest.of("전준혁", "01076782457");
+
+        Application application = Application.create(user, campaign, request);
+
+
+        Long id = 1L;
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(campaignRepository.findById(userId)).thenReturn(Optional.empty());
+
+        ApplicationException exception = assertThrows(ApplicationException.class, () -> applicationService.apply(campaignId, request));
+
+        assertEquals(ErrorCode.CAMPAIGN_NOT_FOUND.getHttpStatus(), exception.getHttpStatus());
+        assertEquals(ErrorCode.CAMPAIGN_NOT_FOUND.getMessage(), exception.getMessage());
     }
 
     @Test

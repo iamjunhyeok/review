@@ -57,7 +57,7 @@ class ApplicationControllerTest {
         application.setName("전준혁");
         application.setPhoneNumber("01076782457");
 
-        when(applicationService.findById(any())).thenReturn(application);
+        when(applicationService.findByIdAndCampaignId(1L, 2L)).thenReturn(application);
 
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.get("/campaigns/applications/{id}", 1L);
 
@@ -75,7 +75,7 @@ class ApplicationControllerTest {
         application.setName("전준혁");
         application.setPhoneNumber("01076782457");
 
-        when(applicationService.findById(any())).thenReturn(application);
+        when(applicationService.findByIdAndCampaignId(1L, 2L)).thenReturn(application);
 
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.patch("/campaigns/applications/{id}/cancel", 1L);
 
