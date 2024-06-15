@@ -1,14 +1,25 @@
 package com.iamjunhyeok.review.service;
 
+import com.iamjunhyeok.review.constant.VocaType;
 import com.iamjunhyeok.review.domain.User;
-import com.iamjunhyeok.review.dto.UserUpdatePasswordRequest;
+import com.iamjunhyeok.review.domain.Voca;
 import com.iamjunhyeok.review.dto.UserJoinRequest;
 import com.iamjunhyeok.review.dto.UserUpdateInfoRequest;
+import com.iamjunhyeok.review.dto.UserUpdatePasswordRequest;
+import com.iamjunhyeok.review.exception.ApplicationException;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.UserRepository;
+import com.iamjunhyeok.review.repository.VocaRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+
+import static java.util.stream.Collectors.groupingBy;
 
 @Service
 @RequiredArgsConstructor
@@ -16,6 +27,8 @@ import org.springframework.transaction.annotation.Transactional;
 public class UserService {
 
     private final UserRepository userRepository;
+
+    private final VocaRepository vocaRepository;
 
     @Transactional
     public User join(UserJoinRequest request) {
@@ -55,5 +68,24 @@ public class UserService {
                 .ifPresentOrElse(user -> user.updateInfo(request.getNickname()), () -> {
                     throw ErrorCode.USER_NOT_FOUND.build();
                 });
+    }
+
+    public String generateNickname() {
+        Map<VocaType, List<Voca>> groupedByType = vocaRepository.findAll()
+                .stream().collect(groupingBy(Voca::getType));
+        List<Voca> adjectives = groupedByType.get(VocaType.ADJECTIVE);
+        List<Voca> nouns = groupedByType.get(VocaType.NOUN);
+        StringBuilder nickname;
+        int attempts = 0;
+        do {
+            if (attempts > 100) {
+                throw new ApplicationException(HttpStatus.INTERNAL_SERVER_ERROR, "에러가 발생했습니다.");
+            }
+            nickname = new StringBuilder();
+            nickname.append(adjectives.get(new Random().nextInt(adjectives.size())).getValue());
+            nickname.append(nouns.get(new Random().nextInt(adjectives.size())).getValue());
+            attempts++;
+        } while (userRepository.existsByNickname(nickname.toString()));
+        return nickname.toString();
     }
 }
