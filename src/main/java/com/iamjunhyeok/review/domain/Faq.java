@@ -25,8 +25,19 @@ public class Faq extends Base {
     @Column(nullable = false)
     private String answer;
 
+    boolean deleted = false;
+
     public Faq(String question, String answer) {
         this.question = question;
         this.answer = answer;
+    }
+
+    public void update(String question, String answer) {
+        this.setQuestion(question);
+        this.setAnswer(answer);
+    }
+
+    public void delete() {
+        this.setDeleted(true);
     }
 }
