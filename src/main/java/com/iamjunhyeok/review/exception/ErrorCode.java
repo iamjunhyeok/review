@@ -20,7 +20,8 @@ public enum ErrorCode {
     CAMPAIGN_CANNOT_BE_APPROVED(HttpStatus.BAD_REQUEST, "승인할 수 없는 캠페인입니다."),
     CAMPAIGN_CANNOT_BE_REJECTED(HttpStatus.BAD_REQUEST, "거부할 수 없는 캠페인입니다."),
     INQUIRY_NOT_FOUND(HttpStatus.NOT_FOUND, "문의를 찾을 수 없습니다."),
-    FAQ_NOT_FOUND(HttpStatus.NOT_FOUND, "FAQ 를 찾을 수 없습니다.");
+    FAQ_NOT_FOUND(HttpStatus.NOT_FOUND, "FAQ 를 찾을 수 없습니다."),
+    ANSWER_NOT_FOUND(HttpStatus.NOT_FOUND, "문의에 대한 답변을 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
