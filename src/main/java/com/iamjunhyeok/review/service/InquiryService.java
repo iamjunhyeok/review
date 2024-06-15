@@ -4,6 +4,7 @@ import com.iamjunhyeok.review.domain.Inquiry;
 import com.iamjunhyeok.review.domain.User;
 import com.iamjunhyeok.review.dto.InquiryCreateRequest;
 import com.iamjunhyeok.review.dto.InquirySearchRequest;
+import com.iamjunhyeok.review.dto.InquiryUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.InquiryRepository;
 import com.iamjunhyeok.review.repository.UserRepository;
@@ -37,5 +38,17 @@ public class InquiryService {
     public Inquiry findById(Long id) {
         return inquiryRepository.findById(id)
                 .orElseThrow(() -> ErrorCode.INQUIRY_NOT_FOUND.build());
+    }
+
+    @Transactional
+    public void update(Long id, InquiryUpdateRequest request) {
+        inquiryRepository.findById(id)
+                .ifPresentOrElse(inquiry -> inquiry.update(request.getTitle(), request.getContent()), () -> { throw ErrorCode.INQUIRY_NOT_FOUND.build(); });
+    }
+
+    @Transactional
+    public void delete(Long id) {
+        inquiryRepository.findById(id)
+                .ifPresentOrElse(inquiry -> inquiry.delete(), () -> { throw ErrorCode.INQUIRY_NOT_FOUND.build(); });
     }
 }

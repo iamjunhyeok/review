@@ -38,4 +38,13 @@ public class Inquiry extends Base {
         inquiry.setUser(user);
         return inquiry;
     }
+
+    public void update(String title, String content) {
+        this.setTitle(title);
+        this.setContent(content);
+    }
+
+    public void delete() {
+        this.setDeleted(true);
+    }
 }
