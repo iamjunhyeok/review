@@ -1,5 +1,6 @@
 package com.iamjunhyeok.review.service;
 
+import com.iamjunhyeok.review.constant.PenaltyReason;
 import com.iamjunhyeok.review.domain.Application;
 import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.domain.User;
@@ -23,6 +24,8 @@ public class ApplicationService {
 
     private final CampaignRepository campaignRepository;
 
+    private final PenaltyService penaltyService;
+
     @Transactional
     public Application apply(Long id, CampaignApplyRequest request) {
         User user = userRepository.findById(id)
@@ -45,7 +48,13 @@ public class ApplicationService {
     @Transactional
     public void cancel(Long campaignId, Long id, ApplicationCancelRequest request) {
         applicationRepository.findByIdAndCampaignId(id, campaignId)
-                .ifPresentOrElse(application -> application.cancel(), () -> { throw ErrorCode.APPLICATION_NOT_FOUND.build(); });
+                .ifPresentOrElse(application -> {
+                    application.cancel();
+
+                    // 로그인 기능 개발되면 수정할 것!!
+                    penaltyService.create(1L, application.getId(), PenaltyReason.USER_CANCELLED);
+
+                }, () -> { throw ErrorCode.APPLICATION_NOT_FOUND.build(); });
     }
 
     @Transactional
