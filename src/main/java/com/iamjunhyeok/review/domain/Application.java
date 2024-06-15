@@ -65,4 +65,20 @@ public class Application extends Base {
             throw ErrorCode.CAMPAIGN_CANNOT_BE_CANCELED.build();
         }
     }
+
+    public void approve() {
+        if (this.status == ApplicationStatus.APPLIED) {
+            this.setStatus(ApplicationStatus.APPROVED);
+        } else {
+            throw ErrorCode.CAMPAIGN_CANNOT_BE_APPROVED.build();
+        }
+    }
+
+    public void reject() {
+        if (this.status == ApplicationStatus.APPLIED) {
+            this.setStatus(ApplicationStatus.REJECTED);
+        } else {
+            throw ErrorCode.CAMPAIGN_CANNOT_BE_REJECTED.build();
+        }
+    }
 }

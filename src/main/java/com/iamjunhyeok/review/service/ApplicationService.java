@@ -47,4 +47,16 @@ public class ApplicationService {
         applicationRepository.findByIdAndCampaignId(id, campaignId)
                 .ifPresentOrElse(application -> application.cancel(), () -> { throw ErrorCode.APPLICATION_NOT_FOUND.build(); });
     }
+
+    @Transactional
+    public void approve(Long campaignId, Long id) {
+        applicationRepository.findByIdAndCampaignId(id, campaignId)
+                .ifPresentOrElse(application -> application.approve(), () -> { throw ErrorCode.APPLICATION_NOT_FOUND.build(); });
+    }
+
+    @Transactional
+    public void reject(Long campaignId, Long id) {
+        applicationRepository.findByIdAndCampaignId(id, campaignId)
+                .ifPresentOrElse(application -> application.reject(), () -> { throw ErrorCode.APPLICATION_NOT_FOUND.build(); });
+    }
 }

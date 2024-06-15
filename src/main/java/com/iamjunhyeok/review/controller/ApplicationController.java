@@ -11,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -45,5 +46,17 @@ public class ApplicationController {
     public ResponseEntity<Void> cancel(@PathVariable Long campaignId, @PathVariable Long id, @RequestBody @Valid ApplicationCancelRequest request) {
         applicationService.cancel(campaignId, id, request);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{campaignId}/applications/{id}/approve")
+    public ResponseEntity<Void> approve(@PathVariable Long campaignId, @PathVariable Long id) {
+        applicationService.approve(campaignId, id);
+        return ResponseEntity.ok().build();
+    }
+
+    @PatchMapping("/{campaignId}/applications/{id}/reject")
+    public ResponseEntity<Void> reject(@PathVariable Long campaignId, @PathVariable Long id) {
+        applicationService.reject(campaignId, id);
+        return ResponseEntity.ok().build();
     }
 }
