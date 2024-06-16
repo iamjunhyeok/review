@@ -1,6 +1,7 @@
 package com.iamjunhyeok.review.controller;
 
 import com.iamjunhyeok.review.domain.Application;
+import com.iamjunhyeok.review.dto.ApplicantSearchResponse;
 import com.iamjunhyeok.review.dto.ApplicationCancelRequest;
 import com.iamjunhyeok.review.dto.ApplicationViewResponse;
 import com.iamjunhyeok.review.dto.CampaignApplyRequest;
@@ -18,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/campaigns")
@@ -58,5 +62,14 @@ public class ApplicationController {
     public ResponseEntity<Void> reject(@PathVariable Long campaignId, @PathVariable Long id) {
         applicationService.reject(campaignId, id);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{campaignId}/applications")
+    public ResponseEntity<List<ApplicantSearchResponse>> searchApplicant(@PathVariable Long campaignId) {
+        return ResponseEntity.ok(
+                applicationService.searchApplicant(campaignId)
+                        .stream().map(ApplicantSearchResponse::from)
+                        .collect(Collectors.toList())
+        );
     }
 }

@@ -14,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -67,5 +70,11 @@ public class ApplicationService {
     public void reject(Long campaignId, Long id) {
         applicationRepository.findByIdAndCampaignId(id, campaignId)
                 .ifPresentOrElse(application -> application.reject(), () -> { throw ErrorCode.APPLICATION_NOT_FOUND.build(); });
+    }
+
+    public List<User> searchApplicant(Long campaignId) {
+        return applicationRepository.findByCampaignIdWithUsers(campaignId)
+                .stream().map(Application::getUser)
+                .collect(Collectors.toList());
     }
 }
