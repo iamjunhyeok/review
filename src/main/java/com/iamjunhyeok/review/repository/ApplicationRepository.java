@@ -2,8 +2,10 @@ package com.iamjunhyeok.review.repository;
 
 import com.iamjunhyeok.review.domain.Application;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -14,4 +16,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
     Optional<Application> findByIdAndCampaignId(Long id, Long campaignId);
 
     Optional<Application> findByUserIdAndCampaignId(Long userId, Long campaignId);
+
+    @Query("select a from Application a join fetch a.user where a.campaign.id = :campaignId")
+    List<Application> findByCampaignIdWithUsers(Long campaignId);
 }
