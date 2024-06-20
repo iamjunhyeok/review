@@ -74,7 +74,7 @@ public class UserService {
     @Transactional
     public void updateUserInfo(Long id, UserUpdateInfoRequest request) {
         userRepository.findById(id)
-                .ifPresentOrElse(user -> user.updateInfo(request.getNickname()), () -> {
+                .ifPresentOrElse(user -> user.updateInfo(request.getNickname(), request.getAddress(), request.getRest(), request.getPostalCode()), () -> {
                     throw ErrorCode.USER_NOT_FOUND.build();
                 });
     }

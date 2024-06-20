@@ -45,7 +45,10 @@ public class User extends Address {
         this.setPassword(newPassword);
     }
 
-    public void updateInfo(String nickname) {
+    public void updateInfo(String nickname, String address, String rest, String postalCode) {
         this.setNickname(nickname);
+        this.setAddress(address);
+        this.setRest(rest);
+        this.setPostalCode(postalCode);
     }
 }
