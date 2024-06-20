@@ -19,97 +19,97 @@ import lombok.experimental.SuperBuilder;
 import java.time.LocalDate;
 
 @SuperBuilder
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
 @MappedSuperclass
-public class CampaignBase {
+public class CampaignBase extends CampaignAddress {
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    CampaignType type;
+    private CampaignType type;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    CampaignSocial social;
+    private CampaignSocial social;
 
     @Column(nullable = false)
     @NotBlank
-    String title;
+    private String title;
 
     @NotNull
     @Column(nullable = false)
     @Positive
-    Integer capacity;
+    private Integer capacity;
 
     // ---- 신청기간
     @NotNull
     @Column(nullable = false)
     @FutureOrPresent
-    LocalDate applicationStartDate;
+    private LocalDate applicationStartDate;
 
     @NotNull
     @Column(nullable = false)
     @Future
-    LocalDate applicationEndDate;
+    private LocalDate applicationEndDate;
 
     // --- 발표일
     @NotNull
     @Column(nullable = false)
     @Future
-    LocalDate announcementDate;
+    private LocalDate announcementDate;
 
     // --- 이용기간
     @NotNull
     @Column(nullable = false)
     @Future
-    LocalDate useStartDate;
+    private LocalDate useStartDate;
 
     @NotNull
     @Column(nullable = false)
     @Future
-    LocalDate useEndDate;
+    private LocalDate useEndDate;
 
     // --- 리뷰기간
     @NotNull
     @Column(nullable = false)
     @Future
-    LocalDate reviewStartDate;
+    private LocalDate reviewStartDate;
 
     @NotNull
     @Column(nullable = false)
     @Future
-    LocalDate reviewEndDate;
+    private LocalDate reviewEndDate;
 
     // --- 제공 내용
     @Column(nullable = false)
     @NotBlank
-    String offering;
+    private String offering;
 
     // --- 필수 키워드
     @Column(nullable = false)
     @NotBlank
-    String keyword;
+    private String keyword;
 
     // --- 해시태그
     @Column(nullable = false)
     @NotBlank
-    String hashtag;
+    private String hashtag;
 
     // --- 미션
     @Column(nullable = false)
     @NotBlank
-    String mission;
+    private String mission;
 
     // --- 작성 가이드
     @Column(nullable = false)
     @NotBlank
-    String guide;
+    private String guide;
 
     // --- 안내사항
     @Column(nullable = false)
     @NotBlank
-    String information;
+    private String information;
 }

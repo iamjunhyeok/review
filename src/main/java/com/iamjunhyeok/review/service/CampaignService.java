@@ -40,6 +40,11 @@ public class CampaignService {
                         .guide(request.getGuide())
                         .information(request.getInformation())
                         .status(request.getApplicationStartDate().isAfter(LocalDate.now()) ? CampaignStatus.PLANNED : CampaignStatus.ONGOING)
+                        .address(request.getAddress())
+                        .rest(request.getRest())
+                        .postalCode(request.getPostalCode())
+                        .longitude(request.getLongitude())
+                        .latitude(request.getLatitude())
                         .build()
         );
     }

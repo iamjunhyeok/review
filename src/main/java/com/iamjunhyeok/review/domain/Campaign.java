@@ -64,6 +64,11 @@ public class Campaign extends CampaignBase {
         this.setMission(request.getMission());
         this.setGuide(request.getGuide());
         this.setInformation(request.getInformation());
+        this.setAddress(request.getAddress());
+        this.setRest(request.getRest());
+        this.setPostalCode(request.getPostalCode());
+        this.setLongitude(request.getLongitude());
+        this.setLatitude(request.getLatitude());
         return this;
     }
 
