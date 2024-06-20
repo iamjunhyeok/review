@@ -25,9 +25,9 @@ class UserRepositoryTest {
 
     @Test
     void findByEmail_유효한테스트_찾기성공() {
-        userRepository.save(User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234", "1234"));
-        userRepository.save(User.createUser("jeonjhyeok2@gmail.com", "jeonjhyeok2", "12345", "12345"));
-        userRepository.save(User.createUser("jeonjhyeok3@gmail.com", "jeonjhyeok3", "123456", "123456"));
+        userRepository.save(User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234"));
+        userRepository.save(User.createUser("jeonjhyeok2@gmail.com", "jeonjhyeok2", "12345"));
+        userRepository.save(User.createUser("jeonjhyeok3@gmail.com", "jeonjhyeok3", "123456"));
 
         Optional<User> user = userRepository.findByEmail("jeonjhyeok@gmail.com");
         assertTrue(user.isPresent());
@@ -37,9 +37,9 @@ class UserRepositoryTest {
 
     @Test
     void findByEmail_찾을수없는이메일_빈옵셔널리턴() {
-        userRepository.save(User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234", "1234"));
-        userRepository.save(User.createUser("jeonjhyeok2@gmail.com", "jeonjhyeok2", "12345", "12345"));
-        userRepository.save(User.createUser("jeonjhyeok3@gmail.com", "jeonjhyeok3", "123456", "123456"));
+        userRepository.save(User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234"));
+        userRepository.save(User.createUser("jeonjhyeok2@gmail.com", "jeonjhyeok2", "12345"));
+        userRepository.save(User.createUser("jeonjhyeok3@gmail.com", "jeonjhyeok3", "123456"));
 
         assertTrue(userRepository.findByEmail("jeonjhyeok4@gmail.com").isEmpty());
     }

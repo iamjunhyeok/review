@@ -1,6 +1,5 @@
 package com.iamjunhyeok.review.domain;
 
-import com.iamjunhyeok.review.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -16,10 +15,10 @@ import java.util.List;
 @Getter
 @Setter
 @Entity(name = "users")
-public class User extends Base {
+public class User extends Address {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
     @Column(nullable = false, unique = true, updatable = false)
@@ -42,10 +41,7 @@ public class User extends Base {
         return user;
     }
 
-    public void updatePassword(String newPassword, String confirmNewPassword) {
-        if (!newPassword.equals(confirmNewPassword)) {
-            throw ErrorCode.PASSWORDS_DO_NOT_MATCH.build();
-        }
+    public void updatePassword(String newPassword) {
         this.setPassword(newPassword);
     }
 

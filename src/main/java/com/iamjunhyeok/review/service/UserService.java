@@ -49,11 +49,14 @@ public class UserService {
 
     @Transactional
     public void updatePassword(UserUpdatePasswordRequest request) {
+        if (!request.getNewPassword().equals(request.getConfirmNewPassword())) {
+            throw ErrorCode.PASSWORDS_DO_NOT_MATCH.build();
+        }
         // 로그인이 개발되면 ID 값 매개변수 변경할 것!!
         userRepository.findById(1L)
                 .ifPresentOrElse(user -> {
                     if (user.getPassword().equals(request.getCurrentPassword())) {
-                        user.updatePassword(request.getNewPassword(), request.getConfirmNewPassword());
+                        user.updatePassword(passwordEncoder.encode(request.getNewPassword()));
                     } else {
                         throw ErrorCode.INCORRECT_PASSWORD.build();
                     }

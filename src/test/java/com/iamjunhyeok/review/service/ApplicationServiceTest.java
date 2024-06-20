@@ -53,7 +53,7 @@ class ApplicationServiceTest {
         Long id = 1L;
         CampaignApplyRequest request = CampaignApplyRequest.of("전준혁", "01076782457");
 
-        User user = User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234", "1234");
+        User user = User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234");
 
         Campaign campaign = Campaign.builder()
                 .title("타이틀")
@@ -109,7 +109,7 @@ class ApplicationServiceTest {
         request.setName("전준혁");
         request.setPhoneNumber("01076782457");
 
-        when(userRepository.findById(id)).thenReturn(Optional.of(User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234", "1234")));
+        when(userRepository.findById(id)).thenReturn(Optional.of(User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234")));
         when(campaignRepository.findById(id)).thenReturn(Optional.empty());
 
         ApplicationException exception = assertThrows(ApplicationException.class, () -> applicationService.apply(id, request));
@@ -121,7 +121,7 @@ class ApplicationServiceTest {
     @Test
     void 캠페인신청_중복신청_예외발생() {
         Long userId = 1L;
-        User user = User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234", "1234");
+        User user = User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234");
 
         Long campaignId = 1L;
         Campaign campaign = Campaign.builder()
@@ -164,7 +164,7 @@ class ApplicationServiceTest {
     @Test
     void 캠페인조회_유효함_조회성공() {
         Long userId = 1L;
-        User user = User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234", "1234");
+        User user = User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234");
 
         Long campaignId = 1L;
         Campaign campaign = Campaign.builder()
@@ -190,7 +190,7 @@ class ApplicationServiceTest {
     @Test
     void 캠페인조회_캠페인없음_예외발생() {
         Long userId = 1L;
-        User user = User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234", "1234");
+        User user = User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234");
 
         Long campaignId = 1L;
         Campaign campaign = Campaign.builder()
