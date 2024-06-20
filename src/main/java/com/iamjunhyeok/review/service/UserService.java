@@ -12,6 +12,7 @@ import com.iamjunhyeok.review.repository.UserRepository;
 import com.iamjunhyeok.review.repository.VocaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,6 +31,8 @@ public class UserService {
 
     private final VocaRepository vocaRepository;
 
+    private final PasswordEncoder passwordEncoder;
+
     @Transactional
     public User join(UserJoinRequest request) {
         if (userRepository.existsByEmail(request.getEmail())) {
@@ -38,7 +41,10 @@ public class UserService {
         if (userRepository.existsByNickname(request.getNickname())) {
             throw ErrorCode.DUPLICATE_NICKNAME.build();
         }
-        return userRepository.save(User.createUser(request.getEmail(), request.getNickname(), request.getPassword(), request.getConfirmPassword()));
+        if (!request.getPassword().equals(request.getConfirmPassword())) {
+            throw ErrorCode.PASSWORDS_DO_NOT_MATCH.build();
+        }
+        return userRepository.save(User.createUser(request.getEmail(), request.getNickname(), passwordEncoder.encode(request.getPassword())));
     }
 
     @Transactional

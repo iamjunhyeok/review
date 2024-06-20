@@ -34,10 +34,7 @@ public class User extends Base {
     @OneToMany(mappedBy = "user")
     private List<Penalty> penalties = new ArrayList<>();
 
-    public static User createUser(String email, String nickname, String password, String confirmPassword) {
-        if (!password.equals(confirmPassword)) {
-            throw ErrorCode.PASSWORDS_DO_NOT_MATCH.build();
-        }
+    public static User createUser(String email, String nickname, String password) {
         User user = new User();
         user.setEmail(email);
         user.setNickname(nickname);
