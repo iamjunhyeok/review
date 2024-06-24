@@ -10,6 +10,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -45,6 +48,9 @@ public class Campaign extends CampaignBase {
     private LocalDateTime updatedAt;
 
     private boolean deleted = false;
+
+    @OneToMany(mappedBy = "campaign")
+    private List<Application> applications = new ArrayList<>();
 
     public Campaign update(CampaignUpdateRequest request) {
         this.setType(request.getType());

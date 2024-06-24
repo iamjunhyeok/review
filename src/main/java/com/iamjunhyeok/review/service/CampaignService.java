@@ -3,6 +3,7 @@ package com.iamjunhyeok.review.service;
 import com.iamjunhyeok.review.constant.CampaignStatus;
 import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.dto.CampaignCreateRequest;
+import com.iamjunhyeok.review.dto.CampaignSearchProjection;
 import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.CampaignRepository;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -61,5 +63,9 @@ public class CampaignService {
         Campaign campaign = campaignRepository.findById(id)
                 .orElseThrow(() -> ErrorCode.CAMPAIGN_NOT_FOUND.build());
         campaign.delete();
+    }
+
+    public List<CampaignSearchProjection> search(String query) {
+        return campaignRepository.search(query);
     }
 }
