@@ -1,14 +1,15 @@
 package com.iamjunhyeok.review.controller;
 
-import com.iamjunhyeok.review.dto.UserUpdatePasswordRequest;
 import com.iamjunhyeok.review.dto.UserJoinRequest;
 import com.iamjunhyeok.review.dto.UserJoinResponse;
 import com.iamjunhyeok.review.dto.UserUpdateInfoRequest;
+import com.iamjunhyeok.review.dto.UserUpdatePasswordRequest;
 import com.iamjunhyeok.review.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,6 +47,8 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-
-
+    @GetMapping("/nickname/generate")
+    public String generateNickname() {
+        return userService.generateNickname();
+    }
 }

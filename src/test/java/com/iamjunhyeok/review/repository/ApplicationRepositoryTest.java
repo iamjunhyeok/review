@@ -36,7 +36,7 @@ class ApplicationRepositoryTest {
 
     @Test
     void findByUserIdAndCampaignId_유효함_조회성공() {
-        User user = User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234", "1234");
+        User user = User.createUser("jeonjhyeok@gmail.com", "jeonjhyeok", "1234");
         userRepository.save(user);
 
         Campaign campaign = Campaign.builder()

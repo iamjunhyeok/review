@@ -10,6 +10,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +20,8 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -46,6 +49,9 @@ public class Campaign extends CampaignBase {
 
     private boolean deleted = false;
 
+    @OneToMany(mappedBy = "campaign")
+    private List<Application> applications = new ArrayList<>();
+
     public Campaign update(CampaignUpdateRequest request) {
         this.setType(request.getType());
         this.setSocial(request.getSocial());
@@ -64,6 +70,11 @@ public class Campaign extends CampaignBase {
         this.setMission(request.getMission());
         this.setGuide(request.getGuide());
         this.setInformation(request.getInformation());
+        this.setAddress(request.getAddress());
+        this.setRest(request.getRest());
+        this.setPostalCode(request.getPostalCode());
+        this.setLongitude(request.getLongitude());
+        this.setLatitude(request.getLatitude());
         return this;
     }
 

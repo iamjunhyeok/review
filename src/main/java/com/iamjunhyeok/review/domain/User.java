@@ -1,21 +1,24 @@
 package com.iamjunhyeok.review.domain;
 
-import com.iamjunhyeok.review.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @Entity(name = "users")
-public class User extends Base {
+public class User extends Address {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
     @Column(nullable = false, unique = true, updatable = false)
@@ -27,10 +30,10 @@ public class User extends Base {
     @Column(nullable = false)
     private String password;
 
-    public static User createUser(String email, String nickname, String password, String confirmPassword) {
-        if (!password.equals(confirmPassword)) {
-            throw ErrorCode.PASSWORDS_DO_NOT_MATCH.build();
-        }
+    @OneToMany(mappedBy = "user")
+    private List<Penalty> penalties = new ArrayList<>();
+
+    public static User createUser(String email, String nickname, String password) {
         User user = new User();
         user.setEmail(email);
         user.setNickname(nickname);
@@ -38,14 +41,14 @@ public class User extends Base {
         return user;
     }
 
-    public void updatePassword(String newPassword, String confirmNewPassword) {
-        if (!newPassword.equals(confirmNewPassword)) {
-            throw ErrorCode.PASSWORDS_DO_NOT_MATCH.build();
-        }
+    public void updatePassword(String newPassword) {
         this.setPassword(newPassword);
     }
 
-    public void updateInfo(String nickname) {
+    public void updateInfo(String nickname, String address, String rest, String postalCode) {
         this.setNickname(nickname);
+        this.setAddress(address);
+        this.setRest(rest);
+        this.setPostalCode(postalCode);
     }
 }

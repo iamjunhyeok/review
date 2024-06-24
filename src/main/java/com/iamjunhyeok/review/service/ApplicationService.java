@@ -1,5 +1,6 @@
 package com.iamjunhyeok.review.service;
 
+import com.iamjunhyeok.review.constant.PenaltyReason;
 import com.iamjunhyeok.review.domain.Application;
 import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.domain.User;
@@ -13,6 +14,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -22,6 +26,8 @@ public class ApplicationService {
     private final UserRepository userRepository;
 
     private final CampaignRepository campaignRepository;
+
+    private final PenaltyService penaltyService;
 
     @Transactional
     public Application apply(Long id, CampaignApplyRequest request) {
@@ -45,7 +51,13 @@ public class ApplicationService {
     @Transactional
     public void cancel(Long campaignId, Long id, ApplicationCancelRequest request) {
         applicationRepository.findByIdAndCampaignId(id, campaignId)
-                .ifPresentOrElse(application -> application.cancel(), () -> { throw ErrorCode.APPLICATION_NOT_FOUND.build(); });
+                .ifPresentOrElse(application -> {
+                    application.cancel();
+
+                    // 로그인 기능 개발되면 수정할 것!!
+                    penaltyService.create(1L, application.getId(), PenaltyReason.USER_CANCELLED);
+
+                }, () -> { throw ErrorCode.APPLICATION_NOT_FOUND.build(); });
     }
 
     @Transactional
@@ -58,5 +70,11 @@ public class ApplicationService {
     public void reject(Long campaignId, Long id) {
         applicationRepository.findByIdAndCampaignId(id, campaignId)
                 .ifPresentOrElse(application -> application.reject(), () -> { throw ErrorCode.APPLICATION_NOT_FOUND.build(); });
+    }
+
+    public List<User> searchApplicant(Long campaignId) {
+        return applicationRepository.findByCampaignIdWithUsers(campaignId)
+                .stream().map(Application::getUser)
+                .collect(Collectors.toList());
     }
 }

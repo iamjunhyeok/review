@@ -38,7 +38,7 @@ class UserControllerTest {
         String password = "1234";
         String confirmPassword = "1234";
 
-        User user = User.createUser(email, nickname, password, confirmPassword);
+        User user = User.createUser(email, nickname, password);
         when(userService.join(any(UserJoinRequest.class))).thenReturn(user);
 
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/users")
@@ -58,7 +58,7 @@ class UserControllerTest {
         String password = "1234";
         String confirmPassword = "1234";
 
-        User user = User.createUser(email, nickname, password, confirmPassword);
+        User user = User.createUser(email, nickname, password);
         when(userService.join(any(UserJoinRequest.class))).thenThrow(ErrorCode.DUPLICATE_EMAIL.build());
 
         MockHttpServletRequestBuilder requestBuilder = MockMvcRequestBuilders.post("/users")

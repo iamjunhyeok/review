@@ -1,8 +1,8 @@
 package com.iamjunhyeok.review.service;
 
 import com.iamjunhyeok.review.domain.User;
-import com.iamjunhyeok.review.dto.UserUpdatePasswordRequest;
 import com.iamjunhyeok.review.dto.UserJoinRequest;
+import com.iamjunhyeok.review.dto.UserUpdatePasswordRequest;
 import com.iamjunhyeok.review.exception.ApplicationException;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.UserRepository;
@@ -101,7 +101,7 @@ class UserServiceTest {
         userService.updatePassword(request);
 
         assertEquals(request.getNewPassword(), spyUser.getPassword());
-        verify(spyUser, times(1)).updatePassword(request.getNewPassword(), request.getConfirmNewPassword());
+        verify(spyUser, times(1)).updatePassword(request.getNewPassword());
     }
 
     @Test
