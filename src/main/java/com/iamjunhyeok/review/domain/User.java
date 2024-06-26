@@ -1,7 +1,10 @@
 package com.iamjunhyeok.review.domain;
 
+import com.iamjunhyeok.review.constant.Gender;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -9,6 +12,7 @@ import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,8 +31,24 @@ public class User extends Address {
     @Column(nullable = false, unique = true)
     private String nickname;
 
-    @Column(nullable = false)
     private String password;
+
+    private String name;
+
+    private String phoneNumber;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    private LocalDate dateOfBirth;
+
+    private String idCardNumber;
+
+    private String bank;
+
+    private String accountNumber;
+
+    private String accountHolder;
 
     @OneToMany(mappedBy = "user")
     private List<Penalty> penalties = new ArrayList<>();
