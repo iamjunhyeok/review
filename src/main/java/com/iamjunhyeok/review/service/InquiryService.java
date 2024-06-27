@@ -51,8 +51,7 @@ public class InquiryService {
     @Transactional
     public void delete(Long id) {
         inquiryRepository.findById(id)
-                .ifPresentOrElse(inquiry -> inquiry.delete(), () -> {
-                    throw ErrorCode.INQUIRY_NOT_FOUND.build();
-                });
+                .orElseThrow(() -> ErrorCode.INQUIRY_NOT_FOUND.build())
+                .delete();
     }
 }
