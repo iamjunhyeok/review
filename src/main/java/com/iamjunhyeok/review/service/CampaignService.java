@@ -2,10 +2,12 @@ package com.iamjunhyeok.review.service;
 
 import com.iamjunhyeok.review.constant.CampaignStatus;
 import com.iamjunhyeok.review.domain.Campaign;
+import com.iamjunhyeok.review.domain.CampaignLink;
 import com.iamjunhyeok.review.dto.CampaignCreateRequest;
 import com.iamjunhyeok.review.dto.CampaignSearchProjection;
 import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
+import com.iamjunhyeok.review.repository.CampaignLinkRepository;
 import com.iamjunhyeok.review.repository.CampaignRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,9 +22,11 @@ import java.util.List;
 public class CampaignService {
     private final CampaignRepository campaignRepository;
 
+    private final CampaignLinkRepository campaignLinkRepository;
+
     @Transactional
     public Campaign create(CampaignCreateRequest request) {
-        return campaignRepository.save(
+        Campaign campaign = campaignRepository.save(
                 Campaign.builder()
                         .type(request.getType())
                         .category(request.getCategory())
@@ -48,6 +52,14 @@ public class CampaignService {
                         .status(request.getApplicationStartDate().isAfter(LocalDate.now()) ? CampaignStatus.PLANNED : CampaignStatus.ONGOING)
                         .build()
         );
+
+        List<CampaignLink> links = request.getLinks().stream()
+                .map(CampaignLink::of)
+                .toList();
+        campaign.addLink(links);
+        campaignLinkRepository.saveAll(links);
+
+        return campaign;
     }
 
     @Transactional

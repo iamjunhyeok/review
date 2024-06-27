@@ -3,20 +3,23 @@ package com.iamjunhyeok.review.dto;
 import com.iamjunhyeok.review.constant.CampaignStatus;
 import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.domain.CampaignBase;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
 @SuperBuilder
 public class CampaignCreateResponse extends CampaignBase {
+    private Long id;
+    private List<CampaignLinkDto> links;
 
     public static CampaignCreateResponse from(Campaign campaign) {
         return CampaignCreateResponse.builder()
+                .id(campaign.getId())
                 .type(campaign.getType())
                 .category(campaign.getCategory())
                 .social(campaign.getSocial())
@@ -40,6 +43,11 @@ public class CampaignCreateResponse extends CampaignBase {
                 .longitude(campaign.getLongitude())
                 .latitude(campaign.getLatitude())
                 .status(campaign.getStatus())
+                .links(
+                        campaign.getLinks()
+                                .stream().map(CampaignLinkDto::from)
+                                .toList()
+                )
                 .build();
     }
 }

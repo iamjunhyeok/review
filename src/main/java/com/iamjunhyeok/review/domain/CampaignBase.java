@@ -20,9 +20,9 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 
-@SuperBuilder
 @Getter
 @Setter
+@SuperBuilder
 @NoArgsConstructor
 @MappedSuperclass
 public class CampaignBase extends CampaignAddress {

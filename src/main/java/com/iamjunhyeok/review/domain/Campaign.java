@@ -8,6 +8,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -45,6 +46,10 @@ public class Campaign extends CampaignBase {
     @OneToMany(mappedBy = "campaign")
     private List<Application> applications = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "campaign")
+    private List<CampaignLink> links = new ArrayList<>();
+
     public Campaign update(CampaignUpdateRequest request) {
         this.type = request.getType();
         this.category = request.getCategory();
@@ -72,6 +77,13 @@ public class Campaign extends CampaignBase {
 
     public void delete() {
         this.deleted = true;
+    }
+
+    public void addLink(List<CampaignLink> links) {
+        this.links.addAll(links);
+        for (CampaignLink link : links) {
+            link.setCampaign(this);
+        }
     }
 }
 
