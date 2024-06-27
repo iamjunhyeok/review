@@ -1,15 +1,15 @@
 package com.iamjunhyeok.review.controller;
 
-import com.iamjunhyeok.review.domain.Faq;
 import com.iamjunhyeok.review.dto.FaqCreateRequest;
 import com.iamjunhyeok.review.dto.FaqCreateResponse;
-import com.iamjunhyeok.review.dto.FaqSearchRequest;
 import com.iamjunhyeok.review.dto.FaqSearchResponse;
 import com.iamjunhyeok.review.dto.FaqUpdateRequest;
+import com.iamjunhyeok.review.dto.FaqUpdateResponse;
 import com.iamjunhyeok.review.dto.FaqViewResponse;
 import com.iamjunhyeok.review.service.FaqService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,14 +18,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/support/faqs")
+@RequestMapping("/support/faq")
 @RequiredArgsConstructor
 public class FaqController {
 
@@ -33,20 +33,15 @@ public class FaqController {
 
     @PostMapping
     public ResponseEntity<FaqCreateResponse> create(@RequestBody @Valid FaqCreateRequest request) {
-        Faq faq = faqService.create(request);
-        return ResponseEntity.created(
-                UriComponentsBuilder.fromPath("/support/faqs/{id}")
-                        .buildAndExpand(faq.getId())
-                        .toUri()
-        ).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(FaqCreateResponse.from(faqService.create(request)));
     }
 
     @GetMapping
-    public ResponseEntity<List<FaqSearchResponse>> search(@RequestBody FaqSearchRequest request) {
+    public ResponseEntity<List<FaqSearchResponse>> search(@RequestParam(required = false) String category) {
         return ResponseEntity.ok(
-                faqService.search(request)
+                faqService.search(category)
                         .stream().map(FaqSearchResponse::from)
-                        .collect(Collectors.toList())
+                        .toList()
         );
     }
 
@@ -56,14 +51,13 @@ public class FaqController {
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody @Valid FaqUpdateRequest request) {
-        faqService.update(id, request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<FaqUpdateResponse> update(@PathVariable Long id, @RequestBody @Valid FaqUpdateRequest request) {
+        return ResponseEntity.ok(FaqUpdateResponse.from(faqService.update(id, request)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
         faqService.delete(id);
-        return ResponseEntity.noContent().build();
     }
 }

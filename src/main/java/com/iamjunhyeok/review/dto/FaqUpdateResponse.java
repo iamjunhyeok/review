@@ -7,14 +7,14 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class FaqViewResponse {
+public class FaqUpdateResponse {
     private Long id;
     private FaqCategory category;
     private String question;
     private String answer;
 
-    public static FaqViewResponse from(Faq faq) {
-        FaqViewResponse response = new FaqViewResponse();
+    public static FaqUpdateResponse from(Faq faq) {
+        FaqUpdateResponse response = new FaqUpdateResponse();
         response.setId(faq.getId());
         response.setCategory(faq.getCategory());
         response.setQuestion(faq.getQuestion());

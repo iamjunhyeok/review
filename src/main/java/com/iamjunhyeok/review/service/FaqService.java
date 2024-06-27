@@ -2,7 +2,6 @@ package com.iamjunhyeok.review.service;
 
 import com.iamjunhyeok.review.domain.Faq;
 import com.iamjunhyeok.review.dto.FaqCreateRequest;
-import com.iamjunhyeok.review.dto.FaqSearchRequest;
 import com.iamjunhyeok.review.dto.FaqUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.FaqRepository;
@@ -21,10 +20,10 @@ public class FaqService {
 
     @Transactional
     public Faq create(FaqCreateRequest request) {
-        return faqRepository.save(new Faq(request.getQuestion(), request.getAnswer()));
+        return faqRepository.save(Faq.of(request.getCategory(), request.getQuestion(), request.getAnswer()));
     }
 
-    public List<Faq> search(FaqSearchRequest request) {
+    public List<Faq> search(String category) {
         return faqRepository.findAll();
     }
 
@@ -34,16 +33,16 @@ public class FaqService {
     }
 
     @Transactional
-    public void update(Long id, FaqUpdateRequest request) {
-        Faq faq = faqRepository.findById(id)
-                .orElseThrow(() -> ErrorCode.FAQ_NOT_FOUND.build());
-        faq.update(request.getQuestion(), request.getAnswer());
+    public Faq update(Long id, FaqUpdateRequest request) {
+        return faqRepository.findById(id)
+                .orElseThrow(() -> ErrorCode.FAQ_NOT_FOUND.build())
+                .update(request.getCategory(), request.getQuestion(), request.getAnswer());
     }
 
     @Transactional
     public void delete(Long id) {
-        Faq faq = faqRepository.findById(id)
-                .orElseThrow(() -> ErrorCode.FAQ_NOT_FOUND.build());
-        faq.delete();
+        faqRepository.findById(id)
+                .orElseThrow(() -> ErrorCode.FAQ_NOT_FOUND.build())
+                .delete();
     }
 }

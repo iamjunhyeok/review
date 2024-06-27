@@ -1,7 +1,10 @@
 package com.iamjunhyeok.review.domain;
 
+import com.iamjunhyeok.review.constant.FaqCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -15,9 +18,13 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Faq extends Base {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private FaqCategory category;
 
     @Column(nullable = false)
     private String question;
@@ -25,19 +32,24 @@ public class Faq extends Base {
     @Column(nullable = false)
     private String answer;
 
-    boolean deleted = false;
+    private boolean deleted = false;
 
-    public Faq(String question, String answer) {
-        this.question = question;
-        this.answer = answer;
+    public static Faq of(FaqCategory category, String question, String answer) {
+        Faq faq = new Faq();
+        faq.setCategory(category);
+        faq.setQuestion(question);
+        faq.setAnswer(answer);
+        return faq;
     }
 
-    public void update(String question, String answer) {
-        this.setQuestion(question);
-        this.setAnswer(answer);
+    public Faq update(FaqCategory category, String question, String answer) {
+        this.category = category;
+        this.question = question;
+        this.answer = answer;
+        return this;
     }
 
     public void delete() {
-        this.setDeleted(true);
+        this.deleted = true;
     }
 }
