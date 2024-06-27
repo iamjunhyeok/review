@@ -21,11 +21,11 @@ import java.util.List;
 @Entity(name = "users")
 public class User extends Address {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    @Column(nullable = false, unique = true, updatable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false, unique = true)
@@ -35,6 +35,7 @@ public class User extends Address {
 
     private String name;
 
+    @Column(length = 11)
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
@@ -42,7 +43,8 @@ public class User extends Address {
 
     private LocalDate dateOfBirth;
 
-    private String idCardNumber;
+    @Column(length = 13)
+    private String idNumber;
 
     private String bank;
 
