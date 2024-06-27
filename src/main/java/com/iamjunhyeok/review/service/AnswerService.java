@@ -24,17 +24,19 @@ public class AnswerService {
     public Answer create(Long inquiryId, AnswerCreateRequest request) {
         Inquiry inquiry = inquiryRepository.findById(inquiryId)
                 .orElseThrow(() -> ErrorCode.INQUIRY_NOT_FOUND.build());
-        Answer answer = answerRepository.save(Answer.of(request.getTitle(), request.getContent()));
+
+        Answer answer = Answer.of(request.getTitle(), request.getContent());
+        answerRepository.save(answer);
+
         inquiry.registerAnswer(answer);
+
         return answer;
     }
 
     @Transactional
-    public void update(Long inquiryId, Long id, AnswerUpdateRequest request) {
-        Inquiry inquiry = inquiryRepository.findByIdAndAnswerId(inquiryId, id)
-                .orElseThrow(() -> ErrorCode.ANSWER_NOT_FOUND.build());
-
-        // 성능 최적화를 위해 수정해야 함!!!
-        inquiry.getAnswer().update(request.getTitle(), request.getContent());
+    public Answer update(Long inquiryId, Long id, AnswerUpdateRequest request) {
+        return answerRepository.findByIdAndInquiryId(id, inquiryId)
+                .orElseThrow(() -> ErrorCode.ANSWER_NOT_FOUND.build())
+                .update(request.getTitle(), request.getContent());
     }
 }

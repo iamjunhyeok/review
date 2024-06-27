@@ -40,8 +40,7 @@ public class Inquiry extends Base {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "answer_id")
+    @OneToOne
     private Answer answer;
 
     public static Inquiry of(InquiryCategory category, String title, String content, User user) {
@@ -65,6 +64,7 @@ public class Inquiry extends Base {
     }
 
     public void registerAnswer(Answer answer) {
-        this.setAnswer(answer);
+        this.answer = answer;
+        answer.setInquiry(this);
     }
 }
