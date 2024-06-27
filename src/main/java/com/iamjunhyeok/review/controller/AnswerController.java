@@ -25,13 +25,11 @@ public class AnswerController {
 
     @PostMapping("/{inquiryId}/answers")
     public ResponseEntity<AnswerCreateResponse> create(@PathVariable Long inquiryId, @RequestBody @Valid AnswerCreateRequest request) {
-        answerService.create(inquiryId, request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(AnswerCreateResponse.from(answerService.create(inquiryId, request)));
     }
 
     @PatchMapping("/{inquiryId}/answers/{id}")
     public ResponseEntity<AnswerUpdateResponse> update(@PathVariable Long inquiryId, @PathVariable Long id, @RequestBody @Valid AnswerUpdateRequest request) {
-        answerService.update(inquiryId, id, request);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok().body(AnswerUpdateResponse.from(answerService.update(inquiryId, id, request)));
     }
 }

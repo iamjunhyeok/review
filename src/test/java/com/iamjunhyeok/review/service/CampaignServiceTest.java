@@ -40,8 +40,6 @@ class CampaignServiceTest {
                 .applicationStartDate(request.getApplicationStartDate())
                 .applicationEndDate(request.getApplicationEndDate())
                 .announcementDate(request.getAnnouncementDate())
-                .useStartDate(request.getUseStartDate())
-                .useEndDate(request.getUseEndDate())
                 .reviewStartDate(request.getReviewStartDate())
                 .reviewEndDate(request.getReviewEndDate())
                 .offering(request.getOffering())
@@ -62,8 +60,6 @@ class CampaignServiceTest {
         assertEquals(request.getApplicationStartDate(), saved.getApplicationStartDate());
         assertEquals(request.getApplicationEndDate(), saved.getApplicationEndDate());
         assertEquals(request.getAnnouncementDate(), saved.getAnnouncementDate());
-        assertEquals(request.getUseStartDate(), saved.getUseStartDate());
-        assertEquals(request.getUseEndDate(), saved.getUseEndDate());
         assertEquals(request.getReviewStartDate(), saved.getReviewStartDate());
         assertEquals(request.getReviewEndDate(), saved.getReviewEndDate());
         assertEquals(request.getOffering(), saved.getOffering());
@@ -85,8 +81,6 @@ class CampaignServiceTest {
                 .applicationStartDate(request.getApplicationStartDate())
                 .applicationEndDate(request.getApplicationEndDate())
                 .announcementDate(request.getAnnouncementDate())
-                .useStartDate(request.getUseStartDate())
-                .useEndDate(request.getUseEndDate())
                 .reviewStartDate(request.getReviewStartDate())
                 .reviewEndDate(request.getReviewEndDate())
                 .offering(request.getOffering())
@@ -107,8 +101,6 @@ class CampaignServiceTest {
         assertEquals(request.getApplicationStartDate(), saved.getApplicationStartDate());
         assertEquals(request.getApplicationEndDate(), saved.getApplicationEndDate());
         assertEquals(request.getAnnouncementDate(), saved.getAnnouncementDate());
-        assertEquals(request.getUseStartDate(), saved.getUseStartDate());
-        assertEquals(request.getUseEndDate(), saved.getUseEndDate());
         assertEquals(request.getReviewStartDate(), saved.getReviewStartDate());
         assertEquals(request.getReviewEndDate(), saved.getReviewEndDate());
         assertEquals(request.getOffering(), saved.getOffering());
@@ -127,8 +119,6 @@ class CampaignServiceTest {
         request.setApplicationStartDate(LocalDate.MAX);
         request.setApplicationEndDate(LocalDate.MAX);
         request.setAnnouncementDate(LocalDate.MAX);
-        request.setUseStartDate(LocalDate.MAX);
-        request.setUseEndDate(LocalDate.MAX);
         request.setReviewStartDate(LocalDate.MAX);
         request.setReviewEndDate(LocalDate.MAX);
         request.setOffering("제공내용");
@@ -169,8 +159,6 @@ class CampaignServiceTest {
         assertEquals(request.getApplicationStartDate(), updated.getApplicationStartDate());
         assertEquals(request.getApplicationEndDate(), updated.getApplicationEndDate());
         assertEquals(request.getAnnouncementDate(), updated.getAnnouncementDate());
-        assertEquals(request.getUseStartDate(), updated.getUseStartDate());
-        assertEquals(request.getUseEndDate(), updated.getUseEndDate());
         assertEquals(request.getReviewStartDate(), updated.getReviewStartDate());
         assertEquals(request.getReviewEndDate(), updated.getReviewEndDate());
         assertEquals(request.getOffering(), updated.getOffering());
@@ -188,8 +176,6 @@ class CampaignServiceTest {
         request.setApplicationStartDate(LocalDate.MAX);
         request.setApplicationEndDate(LocalDate.MAX);
         request.setAnnouncementDate(LocalDate.MAX);
-        request.setUseStartDate(LocalDate.MAX);
-        request.setUseEndDate(LocalDate.MAX);
         request.setReviewStartDate(LocalDate.MAX);
         request.setReviewEndDate(LocalDate.MAX);
         request.setOffering("제공내용");

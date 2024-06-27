@@ -1,6 +1,8 @@
 package com.iamjunhyeok.review.domain;
 
+import com.iamjunhyeok.review.constant.CampaignCategory;
 import com.iamjunhyeok.review.constant.CampaignSocial;
+import com.iamjunhyeok.review.constant.CampaignStatus;
 import com.iamjunhyeok.review.constant.CampaignType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
@@ -18,9 +20,9 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 
-@SuperBuilder
 @Getter
 @Setter
+@SuperBuilder
 @NoArgsConstructor
 @MappedSuperclass
 public class CampaignBase extends CampaignAddress {
@@ -28,88 +30,77 @@ public class CampaignBase extends CampaignAddress {
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private CampaignType type;
+    CampaignType type;
 
     @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private CampaignSocial social;
+    CampaignCategory category;
+
+    @NotNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    CampaignSocial social;
 
     @Column(nullable = false)
     @NotBlank
-    private String title;
+    String title;
 
     @NotNull
     @Column(nullable = false)
     @Positive
-    private Integer capacity;
+    Integer capacity;
 
-    // ---- 신청기간
     @NotNull
     @Column(nullable = false)
     @FutureOrPresent
-    private LocalDate applicationStartDate;
+    LocalDate applicationStartDate;
 
     @NotNull
     @Column(nullable = false)
     @Future
-    private LocalDate applicationEndDate;
-
-    // --- 발표일
-    @NotNull
-    @Column(nullable = false)
-    @Future
-    private LocalDate announcementDate;
-
-    // --- 이용기간
-    @NotNull
-    @Column(nullable = false)
-    @Future
-    private LocalDate useStartDate;
+    LocalDate applicationEndDate;
 
     @NotNull
     @Column(nullable = false)
     @Future
-    private LocalDate useEndDate;
-
-    // --- 리뷰기간
-    @NotNull
-    @Column(nullable = false)
-    @Future
-    private LocalDate reviewStartDate;
+    LocalDate announcementDate;
 
     @NotNull
     @Column(nullable = false)
     @Future
-    private LocalDate reviewEndDate;
+    LocalDate reviewStartDate;
 
-    // --- 제공 내용
+    @NotNull
+    @Column(nullable = false)
+    @Future
+    LocalDate reviewEndDate;
+
     @Column(nullable = false)
     @NotBlank
-    private String offering;
+    String offering;
 
-    // --- 필수 키워드
     @Column(nullable = false)
     @NotBlank
-    private String keyword;
+    String keyword;
 
-    // --- 해시태그
     @Column(nullable = false)
     @NotBlank
-    private String hashtag;
+    String hashtag;
 
-    // --- 미션
     @Column(nullable = false)
     @NotBlank
-    private String mission;
+    String mission;
 
-    // --- 작성 가이드
     @Column(nullable = false)
     @NotBlank
-    private String guide;
+    String guide;
 
-    // --- 안내사항
     @Column(nullable = false)
     @NotBlank
-    private String information;
+    String information;
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    CampaignStatus status;
 }

@@ -1,5 +1,5 @@
 package com.iamjunhyeok.review.constant;
 
-public enum VocaType {
-    ADJECTIVE, NOUN
+public enum Gender {
+    MALE, FEMALE
 }

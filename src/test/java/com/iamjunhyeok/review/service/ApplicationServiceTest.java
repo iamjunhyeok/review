@@ -61,8 +61,6 @@ class ApplicationServiceTest {
                 .applicationStartDate(LocalDate.MAX)
                 .applicationEndDate(LocalDate.MAX)
                 .announcementDate(LocalDate.MAX)
-                .useStartDate(LocalDate.MAX)
-                .useEndDate(LocalDate.MAX)
                 .reviewStartDate(LocalDate.MAX)
                 .reviewEndDate(LocalDate.MAX)
                 .offering("제공내용")

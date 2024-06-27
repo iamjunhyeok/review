@@ -1,16 +1,15 @@
 package com.iamjunhyeok.review.domain;
 
-import com.iamjunhyeok.review.constant.CampaignStatus;
 import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -32,13 +31,9 @@ import java.util.List;
 public class Campaign extends CampaignBase {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private CampaignStatus status;
 
     @Column(updatable = false)
     @CreatedDate
@@ -52,34 +47,44 @@ public class Campaign extends CampaignBase {
     @OneToMany(mappedBy = "campaign")
     private List<Application> applications = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "campaign", cascade = CascadeType.PERSIST)
+    private List<CampaignLink> links = new ArrayList<>();
+
     public Campaign update(CampaignUpdateRequest request) {
-        this.setType(request.getType());
-        this.setSocial(request.getSocial());
-        this.setTitle(request.getTitle());
-        this.setCapacity(request.getCapacity());
-        this.setApplicationStartDate(request.getApplicationStartDate());
-        this.setApplicationEndDate(request.getApplicationEndDate());
-        this.setAnnouncementDate(request.getAnnouncementDate());
-        this.setUseStartDate(request.getUseStartDate());
-        this.setUseEndDate(request.getUseEndDate());
-        this.setReviewStartDate(request.getReviewStartDate());
-        this.setReviewEndDate(request.getReviewEndDate());
-        this.setOffering(request.getOffering());
-        this.setKeyword(request.getKeyword());
-        this.setHashtag(request.getHashtag());
-        this.setMission(request.getMission());
-        this.setGuide(request.getGuide());
-        this.setInformation(request.getInformation());
-        this.setAddress(request.getAddress());
-        this.setRest(request.getRest());
-        this.setPostalCode(request.getPostalCode());
-        this.setLongitude(request.getLongitude());
-        this.setLatitude(request.getLatitude());
+        this.type = request.getType();
+        this.category = request.getCategory();
+        this.social = request.getSocial();
+        this.title = request.getTitle();
+        this.capacity = request.getCapacity();
+        this.applicationStartDate = request.getApplicationStartDate();
+        this.applicationEndDate = request.getApplicationEndDate();
+        this.announcementDate = request.getAnnouncementDate();
+        this.reviewStartDate = request.getReviewStartDate();
+        this.reviewEndDate = request.getReviewEndDate();
+        this.offering = request.getOffering();
+        this.keyword = request.getKeyword();
+        this.hashtag = request.getHashtag();
+        this.mission = request.getMission();
+        this.guide = request.getGuide();
+        this.information = request.getInformation();
+        this.address = request.getAddress();
+        this.rest = request.getRest();
+        this.postalCode = request.getPostalCode();
+        this.longitude = request.getLongitude();
+        this.latitude = request.getLatitude();
         return this;
     }
 
     public void delete() {
-        this.setDeleted(true);
+        this.deleted = true;
+    }
+
+    public void addLink(List<CampaignLink> links) {
+        this.links.addAll(links);
+        for (CampaignLink link : links) {
+            link.setCampaign(this);
+        }
     }
 }
 

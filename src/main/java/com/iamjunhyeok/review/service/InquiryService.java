@@ -3,7 +3,6 @@ package com.iamjunhyeok.review.service;
 import com.iamjunhyeok.review.domain.Inquiry;
 import com.iamjunhyeok.review.domain.User;
 import com.iamjunhyeok.review.dto.InquiryCreateRequest;
-import com.iamjunhyeok.review.dto.InquirySearchRequest;
 import com.iamjunhyeok.review.dto.InquiryUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.InquiryRepository;
@@ -26,12 +25,13 @@ public class InquiryService {
     @Transactional
     public Inquiry create(InquiryCreateRequest request) {
         // 로그인 개발 시, 수정할 것!!
-        User user = userRepository.findById(1L)
-                .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build());
-        return inquiryRepository.save(Inquiry.of(request.getTitle(), request.getContent(), user));
+//        User user = userRepository.findById(1L)
+//                .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build());
+        User user = userRepository.getReferenceById(1L);
+        return inquiryRepository.save(Inquiry.of(request.getCategory(), request.getTitle(), request.getContent(), user));
     }
 
-    public List<Inquiry> search(InquirySearchRequest request) {
+    public List<Inquiry> search(String category) {
         return inquiryRepository.findAll();
     }
 
@@ -41,14 +41,16 @@ public class InquiryService {
     }
 
     @Transactional
-    public void update(Long id, InquiryUpdateRequest request) {
-        inquiryRepository.findById(id)
-                .ifPresentOrElse(inquiry -> inquiry.update(request.getTitle(), request.getContent()), () -> { throw ErrorCode.INQUIRY_NOT_FOUND.build(); });
+    public Inquiry update(Long id, InquiryUpdateRequest request) {
+        return inquiryRepository.findById(id)
+                .orElseThrow(() -> ErrorCode.INQUIRY_NOT_FOUND.build())
+                .update(request.getCategory(), request.getTitle(), request.getContent());
     }
 
     @Transactional
     public void delete(Long id) {
         inquiryRepository.findById(id)
-                .ifPresentOrElse(inquiry -> inquiry.delete(), () -> { throw ErrorCode.INQUIRY_NOT_FOUND.build(); });
+                .orElseThrow(() -> ErrorCode.INQUIRY_NOT_FOUND.build())
+                .delete();
     }
 }

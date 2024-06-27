@@ -1,7 +1,11 @@
 package com.iamjunhyeok.review.domain;
 
+import com.iamjunhyeok.review.constant.Gender;
+import com.iamjunhyeok.review.dto.UserUpdateInfoRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -9,6 +13,7 @@ import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -17,18 +22,36 @@ import java.util.List;
 @Entity(name = "users")
 public class User extends Address {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    @Column(nullable = false, unique = true, updatable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false, unique = true)
     private String nickname;
 
-    @Column(nullable = false)
     private String password;
+
+    private String name;
+
+    @Column(length = 11)
+    private String phoneNumber;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
+    private LocalDate birthDate;
+
+    @Column(length = 13)
+    private String idNumber;
+
+    private String bank;
+
+    private String accountNumber;
+
+    private String accountHolder;
 
     @OneToMany(mappedBy = "user")
     private List<Penalty> penalties = new ArrayList<>();
@@ -45,10 +68,16 @@ public class User extends Address {
         this.setPassword(newPassword);
     }
 
-    public void updateInfo(String nickname, String address, String rest, String postalCode) {
-        this.setNickname(nickname);
-        this.setAddress(address);
-        this.setRest(rest);
-        this.setPostalCode(postalCode);
+    public User update(UserUpdateInfoRequest request) {
+        this.email = request.getEmail();
+        this.nickname = request.getNickname();
+        this.name = request.getName();
+        this.phoneNumber = request.getPhoneNumber();
+        this.gender = request.getGender();
+        this.birthDate = request.getBirthDate();
+        this.address = request.getAddress();
+        this.rest = request.getRest();
+        this.postalCode = request.getPostalCode();
+        return this;
     }
 }

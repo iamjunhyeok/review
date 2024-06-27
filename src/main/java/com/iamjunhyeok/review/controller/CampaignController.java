@@ -1,6 +1,5 @@
 package com.iamjunhyeok.review.controller;
 
-import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.dto.CampaignCreateRequest;
 import com.iamjunhyeok.review.dto.CampaignCreateResponse;
 import com.iamjunhyeok.review.dto.CampaignSearchProjection;
@@ -9,6 +8,7 @@ import com.iamjunhyeok.review.dto.CampaignUpdateResponse;
 import com.iamjunhyeok.review.service.CampaignService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,8 +18,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import java.util.List;
 
@@ -27,16 +27,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/campaigns")
 public class CampaignController {
+
     private final CampaignService campaignService;
 
     @PostMapping
     public ResponseEntity<CampaignCreateResponse> create(@RequestBody @Valid CampaignCreateRequest request) {
-        Campaign campaign = campaignService.create(request);
-        return ResponseEntity.created(
-                UriComponentsBuilder.fromPath("/campaigns/{id}")
-                        .buildAndExpand(campaign.getId())
-                        .toUri()
-        ).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(CampaignCreateResponse.from(campaignService.create(request)));
     }
 
     @PatchMapping("/{id}")
@@ -45,9 +41,9 @@ public class CampaignController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable Long id) {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long id) {
         campaignService.delete(id);
-        return ResponseEntity.noContent().build();
     }
 
     @GetMapping
