@@ -3,7 +3,6 @@ package com.iamjunhyeok.review.service;
 import com.iamjunhyeok.review.domain.Inquiry;
 import com.iamjunhyeok.review.domain.User;
 import com.iamjunhyeok.review.dto.InquiryCreateRequest;
-import com.iamjunhyeok.review.dto.InquirySearchRequest;
 import com.iamjunhyeok.review.dto.InquiryUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.InquiryRepository;
@@ -32,7 +31,7 @@ public class InquiryService {
         return inquiryRepository.save(Inquiry.of(request.getCategory(), request.getTitle(), request.getContent(), user));
     }
 
-    public List<Inquiry> search(InquirySearchRequest request) {
+    public List<Inquiry> search(String category) {
         return inquiryRepository.findAll();
     }
 

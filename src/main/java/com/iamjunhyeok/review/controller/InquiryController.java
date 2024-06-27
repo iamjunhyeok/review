@@ -2,7 +2,6 @@ package com.iamjunhyeok.review.controller;
 
 import com.iamjunhyeok.review.dto.InquiryCreateRequest;
 import com.iamjunhyeok.review.dto.InquiryCreateResponse;
-import com.iamjunhyeok.review.dto.InquirySearchRequest;
 import com.iamjunhyeok.review.dto.InquirySearchResponse;
 import com.iamjunhyeok.review.dto.InquiryUpdateRequest;
 import com.iamjunhyeok.review.dto.InquiryUpdateResponse;
@@ -19,11 +18,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/support/inquiries")
@@ -43,11 +42,12 @@ public class InquiryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<InquirySearchResponse>> search(InquirySearchRequest request) {
+    public ResponseEntity<List<InquirySearchResponse>> search(@RequestParam(required = false) String category) {
         return ResponseEntity.ok(
-                inquiryService.search(request)
-                        .stream().map(inquiry -> InquirySearchResponse.from(inquiry))
-                        .collect(Collectors.toList())
+                inquiryService.search(category)
+                        .stream()
+                        .map(InquirySearchResponse::from)
+                        .toList()
         );
     }
 
