@@ -1,7 +1,7 @@
 package com.iamjunhyeok.review.controller;
 
 import com.iamjunhyeok.review.dto.UserUpdateInfoRequest;
-import com.iamjunhyeok.review.dto.UserUpdatePasswordRequest;
+import com.iamjunhyeok.review.dto.UserUpdateInfoResponse;
 import com.iamjunhyeok.review.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,21 +19,13 @@ public class UserController {
 
     private final UserService userService;
 
-    @PatchMapping("/me/update-password")
-    public ResponseEntity<Void> updatePassword(@RequestBody @Valid UserUpdatePasswordRequest request) {
-        userService.updatePassword(request);
-        return ResponseEntity.ok().build();
-    }
-
     @PatchMapping
-    public ResponseEntity<Void> updateMyInfo(@RequestBody @Valid UserUpdateInfoRequest request) {
-        userService.updateMyInfo(request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<UserUpdateInfoResponse> updateMyInfo(@RequestBody @Valid UserUpdateInfoRequest request) {
+        return ResponseEntity.ok(UserUpdateInfoResponse.from(userService.updateMyInfo(request)));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<Void> updateUserInfo(@PathVariable Long id, @RequestBody @Valid UserUpdateInfoRequest request) {
-        userService.updateUserInfo(id, request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<UserUpdateInfoResponse> updateUserInfo(@PathVariable Long id, @RequestBody @Valid UserUpdateInfoRequest request) {
+        return ResponseEntity.ok(UserUpdateInfoResponse.from(userService.updateUserInfo(id, request)));
     }
 }

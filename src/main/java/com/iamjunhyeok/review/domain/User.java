@@ -1,6 +1,7 @@
 package com.iamjunhyeok.review.domain;
 
 import com.iamjunhyeok.review.constant.Gender;
+import com.iamjunhyeok.review.dto.UserUpdateInfoRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -41,7 +42,7 @@ public class User extends Address {
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    private LocalDate dateOfBirth;
+    private LocalDate birthDate;
 
     @Column(length = 13)
     private String idNumber;
@@ -67,10 +68,16 @@ public class User extends Address {
         this.setPassword(newPassword);
     }
 
-    public void updateInfo(String nickname, String address, String rest, String postalCode) {
-        this.setNickname(nickname);
-        this.setAddress(address);
-        this.setRest(rest);
-        this.setPostalCode(postalCode);
+    public User update(UserUpdateInfoRequest request) {
+        this.email = request.getEmail();
+        this.nickname = request.getNickname();
+        this.name = request.getName();
+        this.phoneNumber = request.getPhoneNumber();
+        this.gender = request.getGender();
+        this.birthDate = request.getBirthDate();
+        this.address = request.getAddress();
+        this.rest = request.getRest();
+        this.postalCode = request.getPostalCode();
+        return this;
     }
 }
