@@ -100,6 +100,7 @@ public class CampaignBase extends CampaignAddress {
     @NotBlank
     String information;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     CampaignStatus status;
 }
