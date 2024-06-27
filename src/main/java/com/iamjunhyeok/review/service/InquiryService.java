@@ -42,14 +42,17 @@ public class InquiryService {
     }
 
     @Transactional
-    public void update(Long id, InquiryUpdateRequest request) {
-        inquiryRepository.findById(id)
-                .ifPresentOrElse(inquiry -> inquiry.update(request.getTitle(), request.getContent()), () -> { throw ErrorCode.INQUIRY_NOT_FOUND.build(); });
+    public Inquiry update(Long id, InquiryUpdateRequest request) {
+        Inquiry inquiry = inquiryRepository.findById(id)
+                .orElseThrow(() -> ErrorCode.INQUIRY_NOT_FOUND.build());
+        return inquiry.update(request.getCategory(), request.getTitle(), request.getContent());
     }
 
     @Transactional
     public void delete(Long id) {
         inquiryRepository.findById(id)
-                .ifPresentOrElse(inquiry -> inquiry.delete(), () -> { throw ErrorCode.INQUIRY_NOT_FOUND.build(); });
+                .ifPresentOrElse(inquiry -> inquiry.delete(), () -> {
+                    throw ErrorCode.INQUIRY_NOT_FOUND.build();
+                });
     }
 }

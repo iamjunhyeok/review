@@ -36,6 +36,11 @@ public class InquiryController {
         return ResponseEntity.status(HttpStatus.CREATED).body(InquiryCreateResponse.from(inquiryService.create(request)));
     }
 
+    @PatchMapping("/{id}")
+    public ResponseEntity<InquiryUpdateResponse> update(@PathVariable Long id, @RequestBody @Valid InquiryUpdateRequest request) {
+        return ResponseEntity.ok(InquiryUpdateResponse.from(inquiryService.update(id, request)));
+    }
+
     @GetMapping
     public ResponseEntity<List<InquirySearchResponse>> search(InquirySearchRequest request) {
         return ResponseEntity.ok(
@@ -50,11 +55,7 @@ public class InquiryController {
         return ResponseEntity.ok(InquiryViewResponse.from(inquiryService.findById(id)));
     }
 
-    @PatchMapping("/{id}")
-    public ResponseEntity<InquiryUpdateResponse> update(@PathVariable Long id, @RequestBody @Valid InquiryUpdateRequest request) {
-        inquiryService.update(id, request);
-        return ResponseEntity.ok().build();
-    }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

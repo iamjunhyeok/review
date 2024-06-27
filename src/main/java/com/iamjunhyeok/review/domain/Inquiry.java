@@ -20,8 +20,8 @@ import lombok.Setter;
 @Entity
 public class Inquiry extends Base {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
     @Enumerated(EnumType.STRING)
@@ -53,13 +53,15 @@ public class Inquiry extends Base {
         return inquiry;
     }
 
-    public void update(String title, String content) {
-        this.setTitle(title);
-        this.setContent(content);
+    public Inquiry update(InquiryCategory category, String title, String content) {
+        this.category = category;
+        this.title = title;
+        this.content = content;
+        return this;
     }
 
     public void delete() {
-        this.setDeleted(true);
+        this.deleted = true;
     }
 
     public void registerAnswer(Answer answer) {
