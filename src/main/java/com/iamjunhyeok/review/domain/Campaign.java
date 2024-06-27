@@ -1,6 +1,7 @@
 package com.iamjunhyeok.review.domain;
 
 import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -47,7 +48,7 @@ public class Campaign extends CampaignBase {
     private List<Application> applications = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany(mappedBy = "campaign")
+    @OneToMany(mappedBy = "campaign", cascade = CascadeType.PERSIST)
     private List<CampaignLink> links = new ArrayList<>();
 
     public Campaign update(CampaignUpdateRequest request) {
