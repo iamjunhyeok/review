@@ -1,13 +1,12 @@
 package com.iamjunhyeok.review.dto;
 
-import com.iamjunhyeok.review.constant.CampaignStatus;
 import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.domain.CampaignBase;
+import com.iamjunhyeok.review.domain.CampaignLink;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Getter
@@ -15,7 +14,7 @@ import java.util.List;
 @SuperBuilder
 public class CampaignCreateResponse extends CampaignBase {
     private Long id;
-    private List<CampaignLinkDto> links;
+    private List<String> links;
 
     public static CampaignCreateResponse from(Campaign campaign) {
         return CampaignCreateResponse.builder()
@@ -36,7 +35,6 @@ public class CampaignCreateResponse extends CampaignBase {
                 .mission(campaign.getMission())
                 .guide(campaign.getGuide())
                 .information(campaign.getInformation())
-                .status(campaign.getApplicationStartDate().isAfter(LocalDate.now()) ? CampaignStatus.PLANNED : CampaignStatus.ONGOING)
                 .address(campaign.getAddress())
                 .rest(campaign.getRest())
                 .postalCode(campaign.getPostalCode())
@@ -45,7 +43,7 @@ public class CampaignCreateResponse extends CampaignBase {
                 .status(campaign.getStatus())
                 .links(
                         campaign.getLinks()
-                                .stream().map(CampaignLinkDto::from)
+                                .stream().map(CampaignLink::getLink)
                                 .toList()
                 )
                 .build();

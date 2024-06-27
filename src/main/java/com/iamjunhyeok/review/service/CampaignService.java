@@ -7,6 +7,7 @@ import com.iamjunhyeok.review.dto.CampaignCreateRequest;
 import com.iamjunhyeok.review.dto.CampaignSearchProjection;
 import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
+import com.iamjunhyeok.review.repository.CampaignLinkRepository;
 import com.iamjunhyeok.review.repository.CampaignRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -20,6 +21,7 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class CampaignService {
     private final CampaignRepository campaignRepository;
+    private final CampaignLinkRepository campaignLinkRepository;
 
     @Transactional
     public Campaign create(CampaignCreateRequest request) {
@@ -60,9 +62,20 @@ public class CampaignService {
 
     @Transactional
     public Campaign update(Long id, CampaignUpdateRequest request) {
-        Campaign campaign = campaignRepository.findById(id)
+        Campaign campaign = campaignRepository.findByIdWithLink(id)
                 .orElseThrow(() -> ErrorCode.CAMPAIGN_NOT_FOUND.build());
-        return campaign.update(request);
+        campaign.update(request);
+
+        List<CampaignLink> links = request.getLinks().stream()
+                .map(CampaignLink::of)
+                .toList();
+
+        campaignLinkRepository.deleteByCampaignId(campaign.getId());
+        campaign.getLinks().clear();
+
+        campaign.addLink(links);
+
+        return campaign;
     }
 
     @Transactional

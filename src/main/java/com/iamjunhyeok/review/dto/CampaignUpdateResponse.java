@@ -1,20 +1,24 @@
 package com.iamjunhyeok.review.dto;
 
-import com.iamjunhyeok.review.constant.CampaignStatus;
 import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.domain.CampaignBase;
+import com.iamjunhyeok.review.domain.CampaignLink;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
 @SuperBuilder
 public class CampaignUpdateResponse extends CampaignBase {
+    private Long id;
+    private List<String> links;
+
     public static CampaignUpdateResponse from(Campaign campaign) {
         return CampaignUpdateResponse.builder()
+                .id(campaign.getId())
                 .type(campaign.getType())
                 .category(campaign.getCategory())
                 .social(campaign.getSocial())
@@ -31,13 +35,17 @@ public class CampaignUpdateResponse extends CampaignBase {
                 .mission(campaign.getMission())
                 .guide(campaign.getGuide())
                 .information(campaign.getInformation())
-                .status(campaign.getApplicationStartDate().isAfter(LocalDate.now()) ? CampaignStatus.PLANNED : CampaignStatus.ONGOING)
                 .address(campaign.getAddress())
                 .rest(campaign.getRest())
                 .postalCode(campaign.getPostalCode())
                 .longitude(campaign.getLongitude())
                 .latitude(campaign.getLatitude())
                 .status(campaign.getStatus())
+                .links(
+                        campaign.getLinks()
+                                .stream().map(CampaignLink::getLink)
+                                .toList()
+                )
                 .build();
     }
 }
