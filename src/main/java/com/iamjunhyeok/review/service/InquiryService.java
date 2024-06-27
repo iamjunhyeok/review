@@ -26,9 +26,10 @@ public class InquiryService {
     @Transactional
     public Inquiry create(InquiryCreateRequest request) {
         // 로그인 개발 시, 수정할 것!!
-        User user = userRepository.findById(1L)
-                .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build());
-        return inquiryRepository.save(Inquiry.of(request.getTitle(), request.getContent(), user));
+//        User user = userRepository.findById(1L)
+//                .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build());
+        User user = userRepository.getReferenceById(1L);
+        return inquiryRepository.save(Inquiry.of(request.getCategory(), request.getTitle(), request.getContent(), user));
     }
 
     public List<Inquiry> search(InquirySearchRequest request) {

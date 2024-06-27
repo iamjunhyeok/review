@@ -1,7 +1,11 @@
 package com.iamjunhyeok.review.domain;
 
+import com.iamjunhyeok.review.constant.InquiryCategory;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -20,6 +24,10 @@ public class Inquiry extends Base {
     @Column(name = "id", nullable = false)
     private Long id;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private InquiryCategory category;
+
     @Column(nullable = false)
     private String title;
 
@@ -28,16 +36,17 @@ public class Inquiry extends Base {
 
     private boolean deleted = false;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "answer_id")
     private Answer answer;
 
-    public static Inquiry of(String title, String content, User user) {
+    public static Inquiry of(InquiryCategory category, String title, String content, User user) {
         Inquiry inquiry = new Inquiry();
+        inquiry.setCategory(category);
         inquiry.setTitle(title);
         inquiry.setContent(content);
         inquiry.setUser(user);
