@@ -43,9 +43,9 @@ public class InquiryService {
 
     @Transactional
     public Inquiry update(Long id, InquiryUpdateRequest request) {
-        Inquiry inquiry = inquiryRepository.findById(id)
-                .orElseThrow(() -> ErrorCode.INQUIRY_NOT_FOUND.build());
-        return inquiry.update(request.getCategory(), request.getTitle(), request.getContent());
+        return inquiryRepository.findById(id)
+                .orElseThrow(() -> ErrorCode.INQUIRY_NOT_FOUND.build())
+                .update(request.getCategory(), request.getTitle(), request.getContent());
     }
 
     @Transactional
