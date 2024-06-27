@@ -17,21 +17,21 @@ public class CampaignAddress {
 
     @NotBlank
     @Column(nullable = false)
-    private String address;
+    String address;
 
     @NotBlank
     @Column(nullable = false)
-    private String rest;
+    String rest;
 
     @NotBlank
     @Column(nullable = false)
-    private String postalCode;
+    String postalCode;
 
     @NotBlank
     @Column(nullable = false)
-    private String longitude;
+    String longitude;
 
     @NotBlank
     @Column(nullable = false)
-    private String latitude;
+    String latitude;
 }
