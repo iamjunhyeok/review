@@ -37,8 +37,13 @@ public class PenaltyService {
     }
 
     public List<Penalty> search(Long userId) {
-        User user = userRepository.findByIdWithPenalties(userId)
-                .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build());
-        return user.getPenalties();
+        return penaltyRepository.findByUserIdWithCampaign(userId);
+    }
+
+    @Transactional
+    public void delete(Long userId, Long id) {
+        penaltyRepository.findByIdAndUserId(id, userId)
+                .orElseThrow(() -> ErrorCode.PENALTY_NOT_FOUND.build())
+                .delete();
     }
 }

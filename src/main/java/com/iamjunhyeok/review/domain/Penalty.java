@@ -20,8 +20,8 @@ import lombok.Setter;
 @Entity
 public class Penalty extends Base {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
     @Enumerated(EnumType.STRING)
@@ -30,7 +30,9 @@ public class Penalty extends Base {
 
     private int point;
 
-    @ManyToOne
+    private boolean deleted = false;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -45,5 +47,9 @@ public class Penalty extends Base {
         penalty.setReason(reason);
         penalty.setPoint(reason.getPoint());
         return penalty;
+    }
+
+    public void delete() {
+        this.deleted = true;
     }
 }
