@@ -2,6 +2,8 @@ package com.iamjunhyeok.review.controller;
 
 import com.iamjunhyeok.review.dto.ReviewCreateRequest;
 import com.iamjunhyeok.review.dto.ReviewCreateResponse;
+import com.iamjunhyeok.review.dto.ReviewRejectRequest;
+import com.iamjunhyeok.review.dto.ReviewRejectResponse;
 import com.iamjunhyeok.review.dto.ReviewUpdateRequest;
 import com.iamjunhyeok.review.dto.ReviewUpdateResponse;
 import com.iamjunhyeok.review.service.ReviewService;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -34,5 +37,25 @@ public class ReviewController {
                                                        @PathVariable Long id,
                                                        @RequestBody @Valid ReviewUpdateRequest request) {
         return ResponseEntity.ok(ReviewUpdateResponse.from(reviewService.update(campaignId, applicationId, id, request)));
+    }
+
+    @PatchMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews/{id}/modify-request")
+    public ResponseEntity<ReviewRejectResponse> modifyRequest(@PathVariable Long campaignId,
+                                                       @PathVariable Long applicationId,
+                                                       @PathVariable Long id,
+                                                       @RequestBody @Valid ReviewRejectRequest request) {
+        return ResponseEntity.ok(ReviewRejectResponse.from(reviewService.modifyRequest(campaignId, applicationId, id, request)));
+    }
+
+    @PatchMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews/{id}/reconfirm-request")
+    @ResponseStatus(HttpStatus.OK)
+    public void reconfirmRequest(@PathVariable Long campaignId, @PathVariable Long applicationId, @PathVariable Long id) {
+        reviewService.reconfirmRequest(campaignId, applicationId, id);
+    }
+
+    @PatchMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews/{id}/confirm")
+    @ResponseStatus(HttpStatus.OK)
+    public void confirm(@PathVariable Long campaignId, @PathVariable Long applicationId, @PathVariable Long id) {
+        reviewService.confirm(campaignId, applicationId, id);
     }
 }

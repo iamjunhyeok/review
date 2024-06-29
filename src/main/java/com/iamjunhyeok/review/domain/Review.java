@@ -1,7 +1,10 @@
 package com.iamjunhyeok.review.domain;
 
+import com.iamjunhyeok.review.constant.ReviewStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -26,6 +29,12 @@ public class Review extends Base {
 
     private String postUrl;
 
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ReviewStatus status;
+
+    private String details;
+
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "application_id")
     private Application application;
@@ -35,6 +44,7 @@ public class Review extends Base {
         review.setReceiptUrl(receiptUrl);
         review.setBlogUrl(blogUrl);
         review.setPostUrl(postUrl);
+        review.setStatus(ReviewStatus.CONFIRM_REQUEST);
         return review;
     }
 
@@ -43,5 +53,19 @@ public class Review extends Base {
         this.blogUrl = blogUrl;
         this.postUrl = postUrl;
         return this;
+    }
+
+    public Review modifyRequest(String details) {
+        this.status = ReviewStatus.MODIFY_REQUEST;
+        this.details = details;
+        return this;
+    }
+
+    public void reconfirmRequest() {
+        this.status = ReviewStatus.RECONFIRM_REQUEST;
+    }
+
+    public void confirm() {
+        this.status = ReviewStatus.CONFIRMED;
     }
 }

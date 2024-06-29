@@ -3,6 +3,7 @@ package com.iamjunhyeok.review.service;
 import com.iamjunhyeok.review.domain.Application;
 import com.iamjunhyeok.review.domain.Review;
 import com.iamjunhyeok.review.dto.ReviewCreateRequest;
+import com.iamjunhyeok.review.dto.ReviewRejectRequest;
 import com.iamjunhyeok.review.dto.ReviewUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.ApplicationRepository;
@@ -38,5 +39,26 @@ public class ReviewService {
         return reviewRepository.findByIdAndApplicationIdAndCampaignId(id, applicationId, campaignId)
                 .orElseThrow(() -> ErrorCode.REVIEW_NOT_FOUND.build())
                 .update(request.getReceiptUrl(), request.getBlogUrl(), request.getPostUrl());
+    }
+
+    @Transactional
+    public Review modifyRequest(Long campaignId, Long applicationId, Long id, ReviewRejectRequest request) {
+        return reviewRepository.findByIdAndApplicationIdAndCampaignId(id, applicationId, campaignId)
+                .orElseThrow(() -> ErrorCode.REVIEW_NOT_FOUND.build())
+                .modifyRequest(request.getDetails());
+    }
+
+    @Transactional
+    public void reconfirmRequest(Long campaignId, Long applicationId, Long id) {
+        reviewRepository.findByIdAndApplicationIdAndCampaignId(id, applicationId, campaignId)
+                .orElseThrow(() -> ErrorCode.REVIEW_NOT_FOUND.build())
+                .reconfirmRequest();
+    }
+
+    @Transactional
+    public void confirm(Long campaignId, Long applicationId, Long id) {
+        reviewRepository.findByIdAndApplicationIdAndCampaignId(id, applicationId, campaignId)
+                .orElseThrow(() -> ErrorCode.REVIEW_NOT_FOUND.build())
+                .confirm();
     }
 }
