@@ -22,7 +22,9 @@ public enum ErrorCode {
     INQUIRY_NOT_FOUND(HttpStatus.NOT_FOUND, "문의를 찾을 수 없습니다."),
     FAQ_NOT_FOUND(HttpStatus.NOT_FOUND, "FAQ 를 찾을 수 없습니다."),
     ANSWER_NOT_FOUND(HttpStatus.NOT_FOUND, "문의에 대한 답변을 찾을 수 없습니다."),
-    PENALTY_NOT_FOUND(HttpStatus.NOT_FOUND, "패널티를 찾을 수 없습니다.");
+    PENALTY_NOT_FOUND(HttpStatus.NOT_FOUND, "패널티를 찾을 수 없습니다."),
+    REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다.");
+
 
     private final HttpStatus httpStatus;
     private final String message;

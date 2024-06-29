@@ -82,4 +82,8 @@ public class Application extends Address {
             throw ErrorCode.CAMPAIGN_CANNOT_BE_APPROVED.build();
         }
     }
+
+    public void registerReview(Review review) {
+        review.setApplication(this);
+    }
 }
