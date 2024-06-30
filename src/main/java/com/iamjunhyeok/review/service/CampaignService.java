@@ -10,6 +10,7 @@ import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.CampaignLinkRepository;
 import com.iamjunhyeok.review.repository.CampaignRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -85,7 +86,7 @@ public class CampaignService {
         campaign.delete();
     }
 
-    public List<CampaignSearchProjection> search(String query) {
-        return campaignRepository.search(query);
+    public List<CampaignSearchProjection> search(String type, String category, String filter, Pageable pageable) {
+        return campaignRepository.search(type, category, filter, pageable);
     }
 }

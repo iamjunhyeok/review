@@ -8,6 +8,7 @@ import com.iamjunhyeok.review.dto.CampaignUpdateResponse;
 import com.iamjunhyeok.review.service.CampaignService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,7 +48,10 @@ public class CampaignController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CampaignSearchProjection>> search(@RequestParam String query) {
-        return ResponseEntity.ok(campaignService.search(query));
+    public ResponseEntity<List<CampaignSearchProjection>> search(@RequestParam(required = false) String type,
+                                                                 @RequestParam(required = false) String category,
+                                                                 @RequestParam(required = false) String filter,
+                                                                 Pageable pageable) {
+        return ResponseEntity.ok(campaignService.search(type, category, filter, pageable));
     }
 }
