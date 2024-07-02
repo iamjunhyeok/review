@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface CustomCampaignRepository {
 
-    List<CampaignSearchProjection> search(String type, String category, String filter, Pageable pageable);
+    List<CampaignSearchProjection> search(String type, String category, String filter, Pageable pageable, String swlat, String swlng, String nelat, String nelng);
 }

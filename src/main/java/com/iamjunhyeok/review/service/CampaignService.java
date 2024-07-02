@@ -90,13 +90,13 @@ public class CampaignService {
         campaign.delete();
     }
 
-    public List<CampaignSearchProjection> search(String type, String category, String filter, Pageable pageable) {
-        return campaignRepository.search(type, category, filter, pageable);
+    public List<CampaignSearchProjection> search(String type, String category, String filter, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
+        return campaignRepository.search(type, category, filter, pageable, swlat, swlng, nelat, nelng);
     }
 
     public CampaignViewResponse view(Long id) {
-        List<Object[]> findBy = campaignRepository.findBy(id)
-                .orElseThrow(() -> ErrorCode.CAMPAIGN_NOT_FOUND.build());
+        List<Object[]> findBy = campaignRepository.findBy(id);
+        if (findBy.isEmpty()) throw ErrorCode.CAMPAIGN_NOT_FOUND.build();
         return transform(findBy);
     }
 

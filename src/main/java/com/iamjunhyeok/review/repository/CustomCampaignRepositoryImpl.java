@@ -30,12 +30,13 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
     private final JPAQueryFactory jpaQueryFactory;
 
     @Override
-    public List<CampaignSearchProjection> search(String type, String category, String filter, Pageable pageable) {
+    public List<CampaignSearchProjection> search(String type, String category, String filter, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
         NumberPath<Long> applicantsCount = Expressions.numberPath(Long.class, "applicantsCount");
 
         return jpaQueryFactory
                 .select(Projections.fields(
                         CampaignSearchProjection.class,
+                        campaign.id,
                         campaign.type,
                         campaign.social,
                         campaign.title,
@@ -43,10 +44,17 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
                         campaign.applicationEndDate,
                         ExpressionUtils.as(JPAExpressions.select(application.count())
                                 .from(application)
-                                .where(application.campaign.eq(campaign)), "applicantsCount")
+                                .where(application.campaign.eq(campaign)), "applicantsCount"),
+
+                        campaign.longitude,
+                        campaign.latitude
                 ))
                 .from(campaign)
-                .where(eqType(type), eqCategory(category))
+                .where(
+                        eqType(type),
+                        eqCategory(category),
+                        betweenLatLng(swlat, swlng, nelat, nelng)
+                )
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .orderBy(getOrderSpecifiers(pageable.getSort(), applicantsCount))
@@ -81,5 +89,11 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
     private BooleanExpression eqCategory(String category) {
         if (StringUtils.isEmpty(category)) return null;
         return campaign.category.eq(CampaignCategory.valueOf(category.toUpperCase()));
+    }
+
+    private BooleanExpression betweenLatLng(String swlat, String swlng, String nelat, String nelng) {
+        if (StringUtils.isEmpty(swlat) || StringUtils.isEmpty(swlng) || StringUtils.isEmpty(nelat) || StringUtils.isEmpty(nelng)) return null;
+        return campaign.latitude.between(swlat, nelat).and(campaign.longitude.between(swlng, nelng));
+
     }
 }

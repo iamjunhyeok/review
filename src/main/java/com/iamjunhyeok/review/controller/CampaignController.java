@@ -52,8 +52,13 @@ public class CampaignController {
     public ResponseEntity<List<CampaignSearchProjection>> search(@RequestParam(required = false) String type,
                                                                  @RequestParam(required = false) String category,
                                                                  @RequestParam(required = false) String filter,
-                                                                 Pageable pageable) {
-        return ResponseEntity.ok(campaignService.search(type, category, filter, pageable));
+                                                                 Pageable pageable,
+                                                                 @RequestParam(required = false) String swlat,
+                                                                 @RequestParam(required = false) String swlng,
+                                                                 @RequestParam(required = false) String nelat,
+                                                                 @RequestParam(required = false) String nelng
+                                                                 ) {
+        return ResponseEntity.ok(campaignService.search(type, category, filter, pageable, swlat, swlng, nelat, nelng));
     }
 
     @GetMapping("/{id}")

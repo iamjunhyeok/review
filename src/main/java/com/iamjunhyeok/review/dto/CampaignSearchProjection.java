@@ -12,6 +12,7 @@ import java.time.Period;
 @Getter
 @Setter
 public class CampaignSearchProjection {
+    private Long id;
     private CampaignType type;
     private CampaignSocial social;
     private String title;
@@ -22,6 +23,9 @@ public class CampaignSearchProjection {
 
     private int dDay;
     private Long applicantsCount;
+
+    private String longitude;
+    private String latitude;
 
     public int getdDay() {
         return Period.between(LocalDate.now(), applicationEndDate).getDays();

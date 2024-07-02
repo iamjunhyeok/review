@@ -43,8 +43,8 @@ public interface CampaignRepository extends JpaRepository<Campaign, Long>, Custo
                 c.latitude,
                 l.link
             from Campaign c
-            join c.links l
+            left join c.links l
             where c.id = :id
                         """)
-    Optional<List<Object[]>> findBy(Long id);
+    List<Object[]> findBy(Long id);
 }
