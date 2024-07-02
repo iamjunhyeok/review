@@ -1,5 +1,6 @@
 package com.iamjunhyeok.review.dto;
 
+import com.iamjunhyeok.review.constant.InquiryCategory;
 import com.iamjunhyeok.review.domain.Answer;
 import com.iamjunhyeok.review.domain.Inquiry;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.Setter;
 @Setter
 public class InquiryViewResponse {
     private Long id;
+    private InquiryCategory category;
     private String title;
     private String content;
     private AnswerResponse answer;
@@ -16,6 +18,7 @@ public class InquiryViewResponse {
     public static InquiryViewResponse from(Inquiry inquiry) {
         InquiryViewResponse response = new InquiryViewResponse();
         response.setId(inquiry.getId());
+        response.setCategory(inquiry.getCategory());
         response.setTitle(inquiry.getTitle());
         response.setContent(inquiry.getContent());
         if (inquiry.getAnswer() != null) {
