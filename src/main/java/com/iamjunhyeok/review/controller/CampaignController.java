@@ -5,6 +5,7 @@ import com.iamjunhyeok.review.dto.CampaignCreateResponse;
 import com.iamjunhyeok.review.dto.CampaignSearchProjection;
 import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
 import com.iamjunhyeok.review.dto.CampaignUpdateResponse;
+import com.iamjunhyeok.review.dto.CampaignViewResponse;
 import com.iamjunhyeok.review.service.CampaignService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -53,5 +54,10 @@ public class CampaignController {
                                                                  @RequestParam(required = false) String filter,
                                                                  Pageable pageable) {
         return ResponseEntity.ok(campaignService.search(type, category, filter, pageable));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CampaignViewResponse> view(@PathVariable Long id) {
+        return ResponseEntity.ok(campaignService.view(id));
     }
 }
