@@ -51,6 +51,12 @@ public class Campaign extends CampaignBase {
     @OneToMany(mappedBy = "campaign", cascade = CascadeType.PERSIST)
     private List<CampaignLink> links = new ArrayList<>();
 
+    public Campaign apply(Application application) {
+        this.applications.add(application);
+        application.setCampaign(this);
+        return this;
+    }
+
     public Campaign update(CampaignUpdateRequest request) {
         this.type = request.getType();
         this.category = request.getCategory();

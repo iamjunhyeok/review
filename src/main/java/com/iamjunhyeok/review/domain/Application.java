@@ -1,5 +1,6 @@
 package com.iamjunhyeok.review.domain;
 
+import com.iamjunhyeok.review.constant.ApplicationReason;
 import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.dto.CampaignApplyRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
@@ -25,10 +26,10 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Application extends Base {
+public class Application extends Address {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
     @Column(nullable = false)
@@ -37,7 +38,16 @@ public class Application extends Base {
     @Column(nullable = false)
     private String phoneNumber;
 
-    @ManyToOne
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private ApplicationStatus status;
+
+    @Enumerated(EnumType.STRING)
+    private ApplicationReason reason;
+
+    private String details;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
@@ -45,17 +55,15 @@ public class Application extends Base {
     @JoinColumn(name = "campaign_id")
     private Campaign campaign;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private ApplicationStatus status;
-
-    public static Application create(User user, Campaign campaign, CampaignApplyRequest request) {
+    public static Application create(User user, CampaignApplyRequest request) {
         Application application = new Application();
         application.setUser(user);
-        application.setCampaign(campaign);
         application.setName(request.getName());
         application.setPhoneNumber(request.getPhoneNumber());
         application.setStatus(ApplicationStatus.APPLIED);
+        application.setAddress(request.getAddress());
+        application.setRest(request.getRest());
+        application.setPostalCode(request.getPostalCode());
         return application;
     }
 
@@ -75,11 +83,7 @@ public class Application extends Base {
         }
     }
 
-    public void reject() {
-        if (this.status == ApplicationStatus.APPLIED) {
-            this.setStatus(ApplicationStatus.REJECTED);
-        } else {
-            throw ErrorCode.CAMPAIGN_CANNOT_BE_REJECTED.build();
-        }
+    public void registerReview(Review review) {
+        review.setApplication(this);
     }
 }

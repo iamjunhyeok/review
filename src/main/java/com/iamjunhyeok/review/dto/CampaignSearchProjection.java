@@ -1,14 +1,33 @@
 package com.iamjunhyeok.review.dto;
 
-public interface CampaignSearchProjection {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.iamjunhyeok.review.constant.CampaignSocial;
+import com.iamjunhyeok.review.constant.CampaignType;
+import lombok.Getter;
+import lombok.Setter;
 
-    String getType();
+import java.time.LocalDate;
+import java.time.Period;
 
-    String getSocial();
+@Getter
+@Setter
+public class CampaignSearchProjection {
+    private Long id;
+    private CampaignType type;
+    private CampaignSocial social;
+    private String title;
+    private Integer capacity;
 
-    String getTitle();
+    @JsonIgnore
+    LocalDate applicationEndDate;
 
-    Integer getCapacity();
+    private int dDay;
+    private Long applicantsCount;
 
-    Integer getApplicantsCount();
+    private String longitude;
+    private String latitude;
+
+    public int getdDay() {
+        return Period.between(LocalDate.now(), applicationEndDate).getDays();
+    }
 }

@@ -5,9 +5,11 @@ import com.iamjunhyeok.review.dto.CampaignCreateResponse;
 import com.iamjunhyeok.review.dto.CampaignSearchProjection;
 import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
 import com.iamjunhyeok.review.dto.CampaignUpdateResponse;
+import com.iamjunhyeok.review.dto.CampaignViewResponse;
 import com.iamjunhyeok.review.service.CampaignService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -47,7 +49,20 @@ public class CampaignController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CampaignSearchProjection>> search(@RequestParam String query) {
-        return ResponseEntity.ok(campaignService.search(query));
+    public ResponseEntity<List<CampaignSearchProjection>> search(@RequestParam(required = false) String type,
+                                                                 @RequestParam(required = false) String category,
+                                                                 @RequestParam(required = false) String filter,
+                                                                 Pageable pageable,
+                                                                 @RequestParam(required = false) String swlat,
+                                                                 @RequestParam(required = false) String swlng,
+                                                                 @RequestParam(required = false) String nelat,
+                                                                 @RequestParam(required = false) String nelng
+                                                                 ) {
+        return ResponseEntity.ok(campaignService.search(type, category, filter, pageable, swlat, swlng, nelat, nelng));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<CampaignViewResponse> view(@PathVariable Long id) {
+        return ResponseEntity.ok(campaignService.view(id));
     }
 }

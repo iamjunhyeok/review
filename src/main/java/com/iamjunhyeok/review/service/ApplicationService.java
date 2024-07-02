@@ -1,5 +1,6 @@
 package com.iamjunhyeok.review.service;
 
+import com.iamjunhyeok.review.constant.ApplicationReason;
 import com.iamjunhyeok.review.constant.PenaltyReason;
 import com.iamjunhyeok.review.domain.Application;
 import com.iamjunhyeok.review.domain.Campaign;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -30,17 +30,23 @@ public class ApplicationService {
     private final PenaltyService penaltyService;
 
     @Transactional
-    public Application apply(Long id, CampaignApplyRequest request) {
-        User user = userRepository.findById(id)
-                .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build());
+    public Application apply(Long campaignId, CampaignApplyRequest request) {
+        // 로그인 개발되면 수정할 것!!
+        User user = userRepository.getReferenceById(1L);
 
-        Campaign campaign = campaignRepository.findById(id)
+        Campaign campaign = campaignRepository.findById(campaignId)
                 .orElseThrow(() -> ErrorCode.CAMPAIGN_NOT_FOUND.build());
 
         if (applicationRepository.existsByUserIdAndCampaignId(user.getId(), campaign.getId())) {
             throw ErrorCode.DUPLICATE_APPLICATION.build();
         }
-        return applicationRepository.save(Application.create(user, campaign, request));
+
+        Application application = Application.create(user, request);
+        applicationRepository.save(application);
+
+        campaign.apply(application);
+
+        return application;
     }
 
     public Application findByIdAndCampaignId(Long campaignId, Long id) {
@@ -51,30 +57,28 @@ public class ApplicationService {
     @Transactional
     public void cancel(Long campaignId, Long id, ApplicationCancelRequest request) {
         applicationRepository.findByIdAndCampaignId(id, campaignId)
-                .ifPresentOrElse(application -> {
-                    application.cancel();
+                .orElseThrow(() -> ErrorCode.APPLICATION_NOT_FOUND.build())
+                .cancel();
 
-                    // 로그인 기능 개발되면 수정할 것!!
-                    penaltyService.create(1L, application.getId(), PenaltyReason.USER_CANCELLED);
-
-                }, () -> { throw ErrorCode.APPLICATION_NOT_FOUND.build(); });
+        // 개인 사유일 경우 패널티 부여하기!!
+        if (request.getReason() == ApplicationReason.USER_CANCEL) {
+            penaltyService.create(1L, id, PenaltyReason.USER_CANCELLED);
+        }
     }
 
     @Transactional
     public void approve(Long campaignId, Long id) {
         applicationRepository.findByIdAndCampaignId(id, campaignId)
-                .ifPresentOrElse(application -> application.approve(), () -> { throw ErrorCode.APPLICATION_NOT_FOUND.build(); });
+                .orElseThrow(() -> ErrorCode.APPLICATION_NOT_FOUND.build())
+                .approve();
+
+        // 모집 인원만큼 모두 선발되면 나머지 인원은 미선정으로 업데이트해주기!!
     }
 
-    @Transactional
-    public void reject(Long campaignId, Long id) {
-        applicationRepository.findByIdAndCampaignId(id, campaignId)
-                .ifPresentOrElse(application -> application.reject(), () -> { throw ErrorCode.APPLICATION_NOT_FOUND.build(); });
-    }
-
-    public List<User> searchApplicant(Long campaignId) {
+    public List<User> searchApplicants(Long campaignId) {
         return applicationRepository.findByCampaignIdWithUsers(campaignId)
-                .stream().map(Application::getUser)
-                .collect(Collectors.toList());
+                .stream()
+                .map(Application::getUser)
+                .toList();
     }
 }
