@@ -1,6 +1,7 @@
 package com.iamjunhyeok.review.repository;
 
 import com.iamjunhyeok.review.domain.Application;
+import com.iamjunhyeok.review.dto.ApplicationViewProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -9,11 +10,13 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ApplicationRepository extends JpaRepository<Application, Long> {
+public interface ApplicationRepository extends JpaRepository<Application, Long>, CustomApplicationRepository {
 
     boolean existsByUserIdAndCampaignId(Long userId, Long campaignId);
 
     Optional<Application> findByIdAndCampaignId(Long id, Long campaignId);
+
+    Optional<ApplicationViewProjection> findApplicationByIdAndCampaignId(Long id, Long campaignId);
 
     Optional<Application> findByUserIdAndCampaignId(Long userId, Long campaignId);
 

@@ -8,6 +8,7 @@ import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.domain.CampaignLink;
 import com.iamjunhyeok.review.dto.CampaignCreateRequest;
 import com.iamjunhyeok.review.dto.CampaignSearchProjection;
+import com.iamjunhyeok.review.dto.CampaignSummaryProjection;
 import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
 import com.iamjunhyeok.review.dto.CampaignViewResponse;
 import com.iamjunhyeok.review.exception.ErrorCode;
@@ -129,5 +130,10 @@ public class CampaignService {
             response.getLinks().add((String) row[23]);
         }
         return response;
+    }
+
+    public CampaignSummaryProjection summary(Long id) {
+        return campaignRepository.findSummaryById(id)
+                .orElseThrow(() -> ErrorCode.CAMPAIGN_NOT_FOUND.build());
     }
 }

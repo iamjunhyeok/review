@@ -3,6 +3,7 @@ package com.iamjunhyeok.review.controller;
 import com.iamjunhyeok.review.dto.CampaignCreateRequest;
 import com.iamjunhyeok.review.dto.CampaignCreateResponse;
 import com.iamjunhyeok.review.dto.CampaignSearchProjection;
+import com.iamjunhyeok.review.dto.CampaignSummaryProjection;
 import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
 import com.iamjunhyeok.review.dto.CampaignUpdateResponse;
 import com.iamjunhyeok.review.dto.CampaignViewResponse;
@@ -64,5 +65,10 @@ public class CampaignController {
     @GetMapping("/{id}")
     public ResponseEntity<CampaignViewResponse> view(@PathVariable Long id) {
         return ResponseEntity.ok(campaignService.view(id));
+    }
+
+    @GetMapping("/{id}/summary")
+    public ResponseEntity<CampaignSummaryProjection> summary(@PathVariable Long id) {
+        return ResponseEntity.ok(campaignService.summary(id));
     }
 }
