@@ -12,4 +12,6 @@ import java.util.List;
 public class CampaignViewResponse extends CampaignBase {
     private Long id;
     private List<String> links = new ArrayList<>();
+    private List<String> imageNames = new ArrayList<>();
+
 }

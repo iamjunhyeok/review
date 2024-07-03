@@ -72,7 +72,8 @@ public class CampaignService {
         campaign.addLink(links);
 
         Map<String, String> newFilenameMap = files.stream()
-                .collect(Collectors.toMap(multipartFile -> multipartFile.getOriginalFilename(), multipartFile -> UUID.randomUUID().toString()));
+                .collect(Collectors.toMap(multipartFile -> multipartFile.getOriginalFilename(), multipartFile -> String.valueOf(UUID.randomUUID())
+                                .concat(multipartFile.getOriginalFilename().substring(multipartFile.getOriginalFilename().lastIndexOf(".")))));
 
         List<CampaignImage> images = files.stream()
                 .map(multipartFile -> newFilenameMap.get(multipartFile.getOriginalFilename()))
@@ -149,6 +150,7 @@ public class CampaignService {
             response.setLongitude((String) row[21]);
             response.setLatitude((String) row[22]);
             response.getLinks().add((String) row[23]);
+            response.getImageNames().add((String) row[24]);
         }
         return response;
     }

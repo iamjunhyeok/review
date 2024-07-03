@@ -42,9 +42,11 @@ public interface CampaignRepository extends JpaRepository<Campaign, Long>, Custo
                 c.postalCode,
                 c.longitude,
                 c.latitude,
-                l.link
+                l.link,
+                i.name
             from Campaign c
             left join c.links l
+            left join c.images i
             where c.id = :id
                         """)
     List<Object[]> findBy(Long id);
