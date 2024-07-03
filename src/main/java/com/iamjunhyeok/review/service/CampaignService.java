@@ -5,6 +5,7 @@ import com.iamjunhyeok.review.constant.CampaignSocial;
 import com.iamjunhyeok.review.constant.CampaignStatus;
 import com.iamjunhyeok.review.constant.CampaignType;
 import com.iamjunhyeok.review.domain.Campaign;
+import com.iamjunhyeok.review.domain.CampaignImage;
 import com.iamjunhyeok.review.domain.CampaignLink;
 import com.iamjunhyeok.review.dto.CampaignCreateRequest;
 import com.iamjunhyeok.review.dto.CampaignSearchProjection;
@@ -14,13 +15,19 @@ import com.iamjunhyeok.review.dto.CampaignViewResponse;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.CampaignLinkRepository;
 import com.iamjunhyeok.review.repository.CampaignRepository;
+import com.iamjunhyeok.review.util.S3Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,9 +35,10 @@ import java.util.List;
 public class CampaignService {
     private final CampaignRepository campaignRepository;
     private final CampaignLinkRepository campaignLinkRepository;
+    private final S3Util s3Util;
 
     @Transactional
-    public Campaign create(CampaignCreateRequest request) {
+    public Campaign create(CampaignCreateRequest request, List<MultipartFile> files) throws IOException {
         Campaign campaign = campaignRepository.save(
                 Campaign.builder()
                         .type(request.getType())
@@ -62,6 +70,19 @@ public class CampaignService {
                 .map(CampaignLink::of)
                 .toList();
         campaign.addLink(links);
+
+        Map<String, String> newFilenameMap = files.stream()
+                .collect(Collectors.toMap(multipartFile -> multipartFile.getOriginalFilename(), multipartFile -> UUID.randomUUID().toString()));
+
+        List<CampaignImage> images = files.stream()
+                .map(multipartFile -> newFilenameMap.get(multipartFile.getOriginalFilename()))
+                .map(CampaignImage::of)
+                .toList();
+        campaign.addImage(images);
+
+        for (MultipartFile image : files) {
+            s3Util.putObject(newFilenameMap.get(image.getOriginalFilename()), image);
+        }
 
         return campaign;
     }
