@@ -30,7 +30,7 @@ public class Sns extends Base {
     @Column(nullable = false, updatable = false)
     private SnsType type;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(nullable = false, updatable = false)
     private User user;
 

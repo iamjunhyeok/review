@@ -1,5 +1,6 @@
 package com.iamjunhyeok.review.domain;
 
+import com.iamjunhyeok.review.constant.Role;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -30,8 +31,13 @@ public class User extends Address {
     @Column(nullable = false)
     private String password;
 
+    private Role role;
+
     @OneToMany(mappedBy = "user")
     private List<Penalty> penalties = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Sns> sns = new ArrayList<>();
 
     public static User createUser(String email, String nickname, String password) {
         User user = new User();
@@ -51,4 +57,6 @@ public class User extends Address {
         this.setRest(rest);
         this.setPostalCode(postalCode);
     }
+
+
 }
