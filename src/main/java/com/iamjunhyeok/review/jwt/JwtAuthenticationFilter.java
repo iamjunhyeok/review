@@ -49,4 +49,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         filterChain.doFilter(request, response);
     }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        return request.getServletPath().equals("/login") || request.getServletPath().equals("/token/refresh"); // 로그인, 토큰 갱신은 필터링하지 않도록
+    }
+
 }

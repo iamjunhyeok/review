@@ -39,12 +39,12 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
 
         // 리프레시 토큰 쿠키 생성
         CookieUtil.deleteCookie(response, "refresh_token");
-        CookieUtil.createCookie(response, "refresh_token", refreshToken, (int) Duration.ofDays(1).toSeconds());
+        CookieUtil.createCookie(response, "refresh_token", refreshToken, (int) Duration.ofDays(10).toSeconds());
 
         // 액세스 토큰 생성
-        String accessToken = JWTProvider.generate(userId, role.name(), Duration.ofMinutes(10));
+        String accessToken = JWTProvider.generate(userId, role.name(), Duration.ofMinutes(30));
         // 액세스 토큰 쿠키 생성
-        CookieUtil.createCookie(response, "access_token", accessToken, (int) Duration.ofMinutes(10).toSeconds());
+        CookieUtil.createCookie(response, "access_token", accessToken, (int) Duration.ofMinutes(30).toSeconds());
 
         // 리다이렉션
         response.sendRedirect("http://localhost:5173");

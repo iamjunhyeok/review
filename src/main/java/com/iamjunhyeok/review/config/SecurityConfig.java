@@ -65,7 +65,7 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/oauth2/**").permitAll()
+                        .requestMatchers("/oauth2/**", "/token/refresh").permitAll()
                         .requestMatchers("/campaigns/**").hasAnyRole("USER", "ADMIN")
                         .anyRequest().authenticated()
                 )
