@@ -1,6 +1,7 @@
 package com.iamjunhyeok.review.repository;
 
 import com.iamjunhyeok.review.domain.Campaign;
+import com.iamjunhyeok.review.dto.CampaignSummaryProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -41,10 +42,27 @@ public interface CampaignRepository extends JpaRepository<Campaign, Long>, Custo
                 c.postalCode,
                 c.longitude,
                 c.latitude,
-                l.link
+                l.link,
+                i.name
             from Campaign c
             left join c.links l
+            left join c.images i
             where c.id = :id
                         """)
     List<Object[]> findBy(Long id);
+
+    @Query("""
+        select
+            c.id as id,
+            c.type as type,
+            c.category as category,
+            c.social as social,
+            c.title as title,
+            c.announcementDate as announcementDate,
+            c.reviewStartDate as reviewStartDate,
+            c.reviewEndDate as reviewEndDate
+        from Campaign c
+        where c.id = :id
+    """)
+    Optional<CampaignSummaryProjection> findSummaryById(Long id);
 }

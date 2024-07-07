@@ -3,6 +3,7 @@ package com.iamjunhyeok.review.controller;
 import com.iamjunhyeok.review.dto.CampaignCreateRequest;
 import com.iamjunhyeok.review.dto.CampaignCreateResponse;
 import com.iamjunhyeok.review.dto.CampaignSearchProjection;
+import com.iamjunhyeok.review.dto.CampaignSummaryProjection;
 import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
 import com.iamjunhyeok.review.dto.CampaignUpdateResponse;
 import com.iamjunhyeok.review.dto.CampaignViewResponse;
@@ -20,9 +21,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -33,8 +37,9 @@ public class CampaignController {
     private final CampaignService campaignService;
 
     @PostMapping
-    public ResponseEntity<CampaignCreateResponse> create(@RequestBody @Valid CampaignCreateRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(CampaignCreateResponse.from(campaignService.create(request)));
+    public ResponseEntity<CampaignCreateResponse> create(@RequestPart @Valid CampaignCreateRequest request,
+                                                         @RequestPart List<MultipartFile> images) throws IOException {
+        return ResponseEntity.status(HttpStatus.CREATED).body(CampaignCreateResponse.from(campaignService.create(request, images)));
     }
 
     @PatchMapping("/{id}")
@@ -64,5 +69,10 @@ public class CampaignController {
     @GetMapping("/{id}")
     public ResponseEntity<CampaignViewResponse> view(@PathVariable Long id) {
         return ResponseEntity.ok(campaignService.view(id));
+    }
+
+    @GetMapping("/{id}/summary")
+    public ResponseEntity<CampaignSummaryProjection> summary(@PathVariable Long id) {
+        return ResponseEntity.ok(campaignService.summary(id));
     }
 }

@@ -51,6 +51,10 @@ public class Campaign extends CampaignBase {
     @OneToMany(mappedBy = "campaign", cascade = CascadeType.PERSIST)
     private List<CampaignLink> links = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "campaign", cascade = CascadeType.PERSIST)
+    private List<CampaignImage> images = new ArrayList<>();
+
     public Campaign apply(Application application) {
         this.applications.add(application);
         application.setCampaign(this);
@@ -90,6 +94,13 @@ public class Campaign extends CampaignBase {
         this.links.addAll(links);
         for (CampaignLink link : links) {
             link.setCampaign(this);
+        }
+    }
+
+    public void addImage(List<CampaignImage> images) {
+        this.images.addAll(images);
+        for (CampaignImage image : images) {
+            image.setCampaign(this);
         }
     }
 }
