@@ -1,5 +1,7 @@
 package com.iamjunhyeok.review.jwt;
 
+import com.iamjunhyeok.review.constant.Role;
+import com.iamjunhyeok.review.domain.CustomOAuth2User;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -42,7 +44,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
                 List<GrantedAuthority> authorities = new ArrayList<>(List.of(new SimpleGrantedAuthority(role)));
 
-                Authentication authentication = new UsernamePasswordAuthenticationToken(userId, null, authorities);
+                Authentication authentication = new UsernamePasswordAuthenticationToken(new CustomOAuth2User(userId, Role.valueOf(role)), null, authorities);
                 securityContext.setAuthentication(authentication);
                 SecurityContextHolder.setContext(securityContext);
             }
