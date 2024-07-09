@@ -11,7 +11,6 @@ import java.util.List;
 @Setter
 public class CampaignViewResponse extends CampaignBase {
     private Long id;
-    private List<String> links = new ArrayList<>();
-    private List<String> imageNames = new ArrayList<>();
-
+    private List<CampaignLinkDto> links = new ArrayList<>();
+    private List<CampaignImageDto> images = new ArrayList<>();
 }

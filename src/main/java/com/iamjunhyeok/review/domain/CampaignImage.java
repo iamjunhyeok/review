@@ -19,6 +19,7 @@ public class CampaignImage extends Base {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
+    @Column(nullable = false)
     private String name;
 
     @ManyToOne

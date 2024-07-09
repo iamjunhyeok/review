@@ -10,5 +10,5 @@ import java.util.List;
 @Getter
 @Setter
 public class CampaignCreateRequest extends CampaignBase {
-    private List<String> links = new ArrayList<>();
+    private List<CampaignLinkDto> links = new ArrayList<>();
 }

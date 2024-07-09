@@ -6,7 +6,7 @@ import com.iamjunhyeok.review.dto.CampaignSearchProjection;
 import com.iamjunhyeok.review.dto.CampaignSummaryProjection;
 import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
 import com.iamjunhyeok.review.dto.CampaignUpdateResponse;
-import com.iamjunhyeok.review.dto.CampaignViewResponse;
+import com.iamjunhyeok.review.repository.CampaignViewProjection;
 import com.iamjunhyeok.review.service.CampaignService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -38,13 +37,15 @@ public class CampaignController {
 
     @PostMapping
     public ResponseEntity<CampaignCreateResponse> create(@RequestPart @Valid CampaignCreateRequest request,
-                                                         @RequestPart List<MultipartFile> images) throws IOException {
-        return ResponseEntity.status(HttpStatus.CREATED).body(CampaignCreateResponse.from(campaignService.create(request, images)));
+                                                         @RequestPart List<MultipartFile> files) throws IOException {
+        return ResponseEntity.status(HttpStatus.CREATED).body(CampaignCreateResponse.from(campaignService.create(request, files)));
     }
 
     @PatchMapping("/{id}")
-    public ResponseEntity<CampaignUpdateResponse> update(@PathVariable Long id, @RequestBody @Valid CampaignUpdateRequest request) {
-        return ResponseEntity.ok(CampaignUpdateResponse.from(campaignService.update(id, request)));
+    public ResponseEntity<CampaignUpdateResponse> update(@PathVariable Long id,
+                                                         @RequestPart @Valid CampaignUpdateRequest request,
+                                                         @RequestPart(required = false) List<MultipartFile> files) throws IOException {
+        return ResponseEntity.ok(CampaignUpdateResponse.from(campaignService.update(id, request, files)));
     }
 
     @DeleteMapping("/{id}")
@@ -56,6 +57,7 @@ public class CampaignController {
     @GetMapping
     public ResponseEntity<List<CampaignSearchProjection>> search(@RequestParam(required = false) String type,
                                                                  @RequestParam(required = false) String category,
+                                                                 @RequestParam(required = false) String social,
                                                                  @RequestParam(required = false) String filter,
                                                                  Pageable pageable,
                                                                  @RequestParam(required = false) String swlat,
@@ -63,12 +65,12 @@ public class CampaignController {
                                                                  @RequestParam(required = false) String nelat,
                                                                  @RequestParam(required = false) String nelng
                                                                  ) {
-        return ResponseEntity.ok(campaignService.search(type, category, filter, pageable, swlat, swlng, nelat, nelng));
+        return ResponseEntity.ok(campaignService.search(type, category, social, filter, pageable, swlat, swlng, nelat, nelng));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<CampaignViewResponse> view(@PathVariable Long id) {
-        return ResponseEntity.ok(campaignService.view(id));
+    public ResponseEntity<CampaignViewProjection> fetchById(@PathVariable Long id) {
+        return ResponseEntity.ok(campaignService.fetchById(id));
     }
 
     @GetMapping("/{id}/summary")

@@ -10,5 +10,8 @@ import java.util.List;
 @Getter
 @Setter
 public class CampaignUpdateRequest extends CampaignBase {
-    List<String> links = new ArrayList<>();
+    List<CampaignLinkDto> links = new ArrayList<>();
+
+    List<Long> deleteLinkIds = new ArrayList<>();
+    List<Long> deleteImageIds = new ArrayList<>();
 }
