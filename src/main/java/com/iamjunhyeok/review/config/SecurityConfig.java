@@ -67,7 +67,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         .requestMatchers("/oauth2/**", "/token/refresh").permitAll()
                         .requestMatchers("/campaigns/**").hasAnyRole("USER", "ADMIN")
-                        .anyRequest().authenticated()
+//                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
 
                 .oauth2Login(oauth2 -> oauth2
