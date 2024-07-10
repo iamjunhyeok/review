@@ -82,6 +82,10 @@ public class CampaignBase extends CampaignAddress {
 
     @Column(nullable = false)
     @NotBlank
+    String offeringSummary;
+
+    @Column(nullable = false)
+    @NotBlank
     String keyword;
 
     @Column(nullable = false)
@@ -103,4 +107,6 @@ public class CampaignBase extends CampaignAddress {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     CampaignStatus status;
+
+    String storeInformation;
 }

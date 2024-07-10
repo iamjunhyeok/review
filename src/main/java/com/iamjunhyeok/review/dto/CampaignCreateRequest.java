@@ -1,6 +1,5 @@
 package com.iamjunhyeok.review.dto;
 
-import com.iamjunhyeok.review.domain.CampaignBase;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -9,6 +8,6 @@ import java.util.List;
 
 @Getter
 @Setter
-public class CampaignCreateRequest extends CampaignBase {
+public class CampaignCreateRequest extends CampaignBaseDto {
     private List<CampaignLinkDto> links = new ArrayList<>();
 }

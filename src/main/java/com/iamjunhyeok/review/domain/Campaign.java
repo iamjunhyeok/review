@@ -73,6 +73,7 @@ public class Campaign extends CampaignBase {
         this.reviewStartDate = request.getReviewStartDate();
         this.reviewEndDate = request.getReviewEndDate();
         this.offering = request.getOffering();
+        this.offeringSummary = request.getOfferingSummary();
         this.keyword = request.getKeyword();
         this.hashtag = request.getHashtag();
         this.mission = request.getMission();
@@ -83,6 +84,7 @@ public class Campaign extends CampaignBase {
         this.postalCode = request.getPostalCode();
         this.longitude = request.getLongitude();
         this.latitude = request.getLatitude();
+        this.storeInformation = request.getStoreInformation();
         return this;
     }
 

@@ -53,6 +53,7 @@ public class CampaignService {
                         .reviewStartDate(request.getReviewStartDate())
                         .reviewEndDate(request.getReviewEndDate())
                         .offering(request.getOffering())
+                        .offeringSummary(request.getOfferingSummary())
                         .keyword(request.getKeyword())
                         .hashtag(request.getHashtag())
                         .mission(request.getMission())
@@ -64,6 +65,7 @@ public class CampaignService {
                         .longitude(request.getLongitude())
                         .latitude(request.getLatitude())
                         .status(request.getApplicationStartDate().isAfter(LocalDate.now()) ? CampaignStatus.PLANNED : CampaignStatus.ONGOING)
+                        .storeInformation(request.getStoreInformation())
                         .build()
         );
 
@@ -179,7 +181,6 @@ public class CampaignService {
                 .toList();
 
         // 이미지 삭제
-        // REMOVE, orphanremoval 처리해야할 것으로 예상
         campaignImageRepository.deleteAllByIdInBatch(request.getDeleteImageIds());
 
         // 새로운 이미지 추가
