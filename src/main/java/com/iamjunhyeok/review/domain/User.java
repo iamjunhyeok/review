@@ -56,6 +56,8 @@ public class User extends Address {
 
     private Role role;
 
+    private String profileImageName;
+
     @OneToMany(mappedBy = "user")
     private List<Penalty> penalties = new ArrayList<>();
 
@@ -87,5 +89,8 @@ public class User extends Address {
         return this;
     }
 
-
+    public User updateProfileImageName(String newProfileImageName) {
+        this.profileImageName = newProfileImageName;
+        return this;
+    }
 }
