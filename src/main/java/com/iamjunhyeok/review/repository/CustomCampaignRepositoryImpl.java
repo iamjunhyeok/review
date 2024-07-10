@@ -125,10 +125,11 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
 
     @Override
     public <T> Optional<T> fetchById(Long id, Class<T> type) {
-        CriteriaBuilder<Campaign> cb = criteriaBuilderFactory.create(entityManager, Campaign.class)
-                .where("id").eq(id);
-        CriteriaBuilder<T> builder = entityViewManager.applySetting(EntityViewSetting.create(type), cb);
         try {
+            CriteriaBuilder<Campaign> cb = criteriaBuilderFactory.create(entityManager, Campaign.class)
+                    .where("id").eq(id);
+            CriteriaBuilder<T> builder = entityViewManager.applySetting(EntityViewSetting.create(type), cb);
+
             return Optional.of(builder.getSingleResult());
         } catch (NoResultException e) {
             return Optional.empty();
