@@ -6,7 +6,7 @@ import com.iamjunhyeok.review.dto.CampaignSearchProjection;
 import com.iamjunhyeok.review.dto.CampaignSummaryProjection;
 import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
 import com.iamjunhyeok.review.dto.CampaignUpdateResponse;
-import com.iamjunhyeok.review.repository.CampaignViewProjection;
+import com.iamjunhyeok.review.dto.CampaignViewProjection;
 import com.iamjunhyeok.review.service.CampaignService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

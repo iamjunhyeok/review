@@ -14,7 +14,7 @@ import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.CampaignImageRepository;
 import com.iamjunhyeok.review.repository.CampaignLinkRepository;
 import com.iamjunhyeok.review.repository.CampaignRepository;
-import com.iamjunhyeok.review.repository.CampaignViewProjection;
+import com.iamjunhyeok.review.dto.CampaignViewProjection;
 import com.iamjunhyeok.review.util.S3Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
