@@ -4,6 +4,7 @@ import com.iamjunhyeok.review.domain.CustomOAuth2User;
 import com.iamjunhyeok.review.dto.UserSearchProjection;
 import com.iamjunhyeok.review.dto.UserUpdateInfoRequest;
 import com.iamjunhyeok.review.dto.UserUpdateInfoResponse;
+import com.iamjunhyeok.review.dto.UserViewProjection;
 import com.iamjunhyeok.review.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -42,5 +43,10 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserSearchProjection>> search() {
         return ResponseEntity.ok(userService.search());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserViewProjection> view(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.view(id));
     }
 }

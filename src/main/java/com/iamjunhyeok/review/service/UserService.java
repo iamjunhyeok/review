@@ -3,6 +3,7 @@ package com.iamjunhyeok.review.service;
 import com.iamjunhyeok.review.domain.User;
 import com.iamjunhyeok.review.dto.UserSearchProjection;
 import com.iamjunhyeok.review.dto.UserUpdateInfoRequest;
+import com.iamjunhyeok.review.dto.UserViewProjection;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.UserRepository;
 import com.iamjunhyeok.review.util.S3Util;
@@ -71,5 +72,10 @@ public class UserService {
 
     public List<UserSearchProjection> search() {
         return userRepository.search();
+    }
+
+    public UserViewProjection view(Long id) {
+        return userRepository.fetchById(id)
+                .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build());
     }
 }
