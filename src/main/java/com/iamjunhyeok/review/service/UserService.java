@@ -1,6 +1,8 @@
 package com.iamjunhyeok.review.service;
 
+import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.domain.User;
+import com.iamjunhyeok.review.dto.UserCampaignSearchProjection;
 import com.iamjunhyeok.review.dto.UserSearchProjection;
 import com.iamjunhyeok.review.dto.UserUpdateInfoRequest;
 import com.iamjunhyeok.review.dto.UserViewProjection;
@@ -77,5 +79,9 @@ public class UserService {
     public UserViewProjection view(Long id) {
         return userRepository.fetchById(id)
                 .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build());
+    }
+
+    public List<UserCampaignSearchProjection> fetchUserCampaigns(Long id, ApplicationStatus applicationStatus) {
+        return userRepository.fetchAllByUserIdAndApplicationStatus(id, applicationStatus);
     }
 }

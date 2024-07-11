@@ -1,6 +1,8 @@
 package com.iamjunhyeok.review.controller;
 
+import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.domain.CustomOAuth2User;
+import com.iamjunhyeok.review.dto.UserCampaignSearchProjection;
 import com.iamjunhyeok.review.dto.UserSearchProjection;
 import com.iamjunhyeok.review.dto.UserUpdateInfoRequest;
 import com.iamjunhyeok.review.dto.UserUpdateInfoResponse;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -48,5 +51,17 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<UserViewProjection> view(@PathVariable Long id) {
         return ResponseEntity.ok(userService.view(id));
+    }
+
+    @GetMapping("/me/campaigns")
+    public ResponseEntity<List<UserCampaignSearchProjection>> myCampaigns(@RequestParam String status,
+                                                                        @AuthenticationPrincipal CustomOAuth2User user) {
+        return ResponseEntity.ok(userService.fetchUserCampaigns(user.getUserId(), ApplicationStatus.valueOf(status.toUpperCase())));
+    }
+
+    @GetMapping("/{id}/campaigns")
+    public ResponseEntity<List<UserCampaignSearchProjection>> userCampaigns(@PathVariable Long id,
+                                                                            @RequestParam String status) {
+        return ResponseEntity.ok(userService.fetchUserCampaigns(id, ApplicationStatus.valueOf(status.toUpperCase())));
     }
 }

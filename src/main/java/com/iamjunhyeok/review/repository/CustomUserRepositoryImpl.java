@@ -4,7 +4,10 @@ import com.blazebit.persistence.CriteriaBuilder;
 import com.blazebit.persistence.CriteriaBuilderFactory;
 import com.blazebit.persistence.view.EntityViewManager;
 import com.blazebit.persistence.view.EntityViewSetting;
+import com.iamjunhyeok.review.constant.ApplicationStatus;
+import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.domain.User;
+import com.iamjunhyeok.review.dto.UserCampaignSearchProjection;
 import com.iamjunhyeok.review.dto.UserSearchProjection;
 import com.iamjunhyeok.review.dto.UserViewProjection;
 import jakarta.persistence.EntityManager;
@@ -41,4 +44,15 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
             return Optional.empty();
         }
     }
+
+    @Override
+    public List<UserCampaignSearchProjection> fetchAllByUserIdAndApplicationStatus(Long userId, ApplicationStatus status) {
+        CriteriaBuilder<Campaign> campaignCriteriaBuilder = criteriaBuilderFactory.create(entityManager, Campaign.class)
+                .innerJoinDefault("applications", "a")
+                .where("a.user.id").eq(userId)
+                .where("a.status").eq(status);
+        CriteriaBuilder<UserCampaignSearchProjection> myCampaignSearchProjectionCriteriaBuilder = entityViewManager.applySetting(EntityViewSetting.create(UserCampaignSearchProjection.class), campaignCriteriaBuilder);
+        return myCampaignSearchProjectionCriteriaBuilder.getResultList();
+    }
+
 }
