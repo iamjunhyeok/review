@@ -1,4 +1,4 @@
-package com.iamjunhyeok.review.repository;
+package com.iamjunhyeok.review.dto;
 
 import com.blazebit.persistence.view.EntityView;
 import com.blazebit.persistence.view.IdMapping;
@@ -7,8 +7,6 @@ import com.iamjunhyeok.review.constant.CampaignSocial;
 import com.iamjunhyeok.review.constant.CampaignStatus;
 import com.iamjunhyeok.review.constant.CampaignType;
 import com.iamjunhyeok.review.domain.Campaign;
-import com.iamjunhyeok.review.dto.CampaignImageProjection;
-import com.iamjunhyeok.review.dto.CampaignLinkProjection;
 
 import java.time.LocalDate;
 import java.util.List;
