@@ -1,6 +1,7 @@
 package com.iamjunhyeok.review.service;
 
 import com.iamjunhyeok.review.domain.User;
+import com.iamjunhyeok.review.dto.UserSearchProjection;
 import com.iamjunhyeok.review.dto.UserUpdateInfoRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.UserRepository;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -65,5 +67,9 @@ public class UserService {
     @Transactional
     public User updateUserInfo(Long id, UserUpdateInfoRequest request) {
         return updateUserInfo(id, request, null);
+    }
+
+    public List<UserSearchProjection> search() {
+        return userRepository.search();
     }
 }
