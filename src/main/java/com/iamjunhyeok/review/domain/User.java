@@ -1,6 +1,7 @@
 package com.iamjunhyeok.review.domain;
 
 import com.iamjunhyeok.review.constant.Gender;
+import com.iamjunhyeok.review.constant.Role;
 import com.iamjunhyeok.review.dto.UserUpdateInfoRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -53,8 +54,15 @@ public class User extends Address {
 
     private String accountHolder;
 
+    private Role role;
+
+    private String profileImageName;
+
     @OneToMany(mappedBy = "user")
     private List<Penalty> penalties = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Sns> sns = new ArrayList<>();
 
     public static User createUser(String email, String nickname, String password) {
         User user = new User();
@@ -78,6 +86,11 @@ public class User extends Address {
         this.address = request.getAddress();
         this.rest = request.getRest();
         this.postalCode = request.getPostalCode();
+        return this;
+    }
+
+    public User updateProfileImageName(String newProfileImageName) {
+        this.profileImageName = newProfileImageName;
         return this;
     }
 }

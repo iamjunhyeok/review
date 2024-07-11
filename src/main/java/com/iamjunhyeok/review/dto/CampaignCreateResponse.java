@@ -43,7 +43,7 @@ public class CampaignCreateResponse extends CampaignBase {
                 .status(campaign.getStatus())
                 .links(
                         campaign.getLinks()
-                                .stream().map(CampaignLink::getLink)
+                                .stream().map(CampaignLink::getUrl)
                                 .toList()
                 )
                 .build();

@@ -51,6 +51,10 @@ public class Campaign extends CampaignBase {
     @OneToMany(mappedBy = "campaign", cascade = CascadeType.PERSIST)
     private List<CampaignLink> links = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "campaign", cascade = CascadeType.PERSIST)
+    private List<CampaignImage> images = new ArrayList<>();
+
     public Campaign apply(Application application) {
         this.applications.add(application);
         application.setCampaign(this);
@@ -69,6 +73,7 @@ public class Campaign extends CampaignBase {
         this.reviewStartDate = request.getReviewStartDate();
         this.reviewEndDate = request.getReviewEndDate();
         this.offering = request.getOffering();
+        this.offeringSummary = request.getOfferingSummary();
         this.keyword = request.getKeyword();
         this.hashtag = request.getHashtag();
         this.mission = request.getMission();
@@ -79,6 +84,7 @@ public class Campaign extends CampaignBase {
         this.postalCode = request.getPostalCode();
         this.longitude = request.getLongitude();
         this.latitude = request.getLatitude();
+        this.storeInformation = request.getStoreInformation();
         return this;
     }
 
@@ -90,6 +96,13 @@ public class Campaign extends CampaignBase {
         this.links.addAll(links);
         for (CampaignLink link : links) {
             link.setCampaign(this);
+        }
+    }
+
+    public void addImage(List<CampaignImage> images) {
+        this.images.addAll(images);
+        for (CampaignImage image : images) {
+            image.setCampaign(this);
         }
     }
 }

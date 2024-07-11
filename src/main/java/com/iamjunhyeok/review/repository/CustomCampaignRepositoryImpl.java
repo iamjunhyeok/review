@@ -1,8 +1,13 @@
 package com.iamjunhyeok.review.repository;
 
 
+import com.blazebit.persistence.CriteriaBuilder;
+import com.blazebit.persistence.CriteriaBuilderFactory;
+import com.blazebit.persistence.view.EntityViewManager;
+import com.blazebit.persistence.view.EntityViewSetting;
 import com.iamjunhyeok.review.constant.CampaignCategory;
 import com.iamjunhyeok.review.constant.CampaignType;
+import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.dto.CampaignSearchProjection;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Order;
@@ -14,12 +19,15 @@ import com.querydsl.core.types.dsl.NumberPath;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import io.micrometer.common.util.StringUtils;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.iamjunhyeok.review.domain.QApplication.application;
 import static com.iamjunhyeok.review.domain.QCampaign.campaign;
@@ -29,9 +37,28 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
 
     private final JPAQueryFactory jpaQueryFactory;
 
+    private final CriteriaBuilderFactory criteriaBuilderFactory;
+
+    private final EntityManager entityManager;
+
+    private final EntityViewManager entityViewManager;
+
     @Override
-    public List<CampaignSearchProjection> search(String type, String category, String filter, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
+    public List<CampaignSearchProjection> search(String type, String category, String social, String filter, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
         NumberPath<Long> applicantsCount = Expressions.numberPath(Long.class, "applicantsCount");
+
+//        List<CampaignType> types = Arrays.stream(type.split(","))
+//                .map(String::toUpperCase)
+//                .map(CampaignType::valueOf)
+//                .toList();
+//        List<CampaignCategory> categories = Arrays.stream(category.split(","))
+//                .map(String::toUpperCase)
+//                .map(CampaignCategory::valueOf)
+//                .toList();
+//        List<CampaignSocial> socials = Arrays.stream(social.split(","))
+//                .map(String::toUpperCase)
+//                .map(CampaignSocial::valueOf)
+//                .toList();
 
         return jpaQueryFactory
                 .select(Projections.fields(
@@ -94,6 +121,18 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
     private BooleanExpression betweenLatLng(String swlat, String swlng, String nelat, String nelng) {
         if (StringUtils.isEmpty(swlat) || StringUtils.isEmpty(swlng) || StringUtils.isEmpty(nelat) || StringUtils.isEmpty(nelng)) return null;
         return campaign.latitude.between(swlat, nelat).and(campaign.longitude.between(swlng, nelng));
+    }
 
+    @Override
+    public <T> Optional<T> fetchById(Long id, Class<T> type) {
+        try {
+            CriteriaBuilder<Campaign> cb = criteriaBuilderFactory.create(entityManager, Campaign.class)
+                    .where("id").eq(id);
+            CriteriaBuilder<T> builder = entityViewManager.applySetting(EntityViewSetting.create(type), cb);
+
+            return Optional.of(builder.getSingleResult());
+        } catch (NoResultException e) {
+            return Optional.empty();
+        }
     }
 }

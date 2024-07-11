@@ -6,6 +6,7 @@ import com.iamjunhyeok.review.domain.Application;
 import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.domain.User;
 import com.iamjunhyeok.review.dto.ApplicationCancelRequest;
+import com.iamjunhyeok.review.dto.ApplicationViewProjection;
 import com.iamjunhyeok.review.dto.CampaignApplyRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.ApplicationRepository;
@@ -51,6 +52,11 @@ public class ApplicationService {
 
     public Application findByIdAndCampaignId(Long campaignId, Long id) {
         return applicationRepository.findByIdAndCampaignId(id, campaignId)
+                .orElseThrow(() -> ErrorCode.APPLICATION_NOT_FOUND.build());
+    }
+
+    public ApplicationViewProjection findByIdAndCampaignIdWithCampaign(Long campaignId, Long id) {
+        return applicationRepository.findApplicationByIdAndCampaignId(id, campaignId)
                 .orElseThrow(() -> ErrorCode.APPLICATION_NOT_FOUND.build());
     }
 
