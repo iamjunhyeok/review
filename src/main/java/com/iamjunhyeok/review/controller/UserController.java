@@ -2,6 +2,7 @@ package com.iamjunhyeok.review.controller;
 
 import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.domain.CustomOAuth2User;
+import com.iamjunhyeok.review.dto.UserCampaignApplicationProjection;
 import com.iamjunhyeok.review.dto.UserCampaignSearchProjection;
 import com.iamjunhyeok.review.dto.UserSearchProjection;
 import com.iamjunhyeok.review.dto.UserUpdateInfoRequest;
@@ -63,5 +64,19 @@ public class UserController {
     public ResponseEntity<List<UserCampaignSearchProjection>> userCampaigns(@PathVariable Long id,
                                                                             @RequestParam String status) {
         return ResponseEntity.ok(userService.fetchUserCampaigns(id, ApplicationStatus.valueOf(status.toUpperCase())));
+    }
+
+    @GetMapping("/{userId}/campaigns/{campaignId}/applications/{applicationId}")
+    public ResponseEntity<UserCampaignApplicationProjection> userCampaignApplication(@PathVariable Long userId,
+                                                                                     @PathVariable Long campaignId,
+                                                                                     @PathVariable Long applicationId) {
+        return ResponseEntity.ok(userService.fetchUserCampaignApplication(userId, campaignId, applicationId));
+    }
+
+    @GetMapping("/me/campaigns/{campaignId}/applications/{applicationId}")
+    public ResponseEntity<UserCampaignApplicationProjection> userCampaignApplication(@AuthenticationPrincipal CustomOAuth2User user,
+                                                                                     @PathVariable Long campaignId,
+                                                                                     @PathVariable Long applicationId) {
+        return ResponseEntity.ok(userService.fetchUserCampaignApplication(user.getUserId(), campaignId, applicationId));
     }
 }

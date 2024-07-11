@@ -2,6 +2,7 @@ package com.iamjunhyeok.review.service;
 
 import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.domain.User;
+import com.iamjunhyeok.review.dto.UserCampaignApplicationProjection;
 import com.iamjunhyeok.review.dto.UserCampaignSearchProjection;
 import com.iamjunhyeok.review.dto.UserSearchProjection;
 import com.iamjunhyeok.review.dto.UserUpdateInfoRequest;
@@ -83,5 +84,9 @@ public class UserService {
 
     public List<UserCampaignSearchProjection> fetchUserCampaigns(Long id, ApplicationStatus applicationStatus) {
         return userRepository.fetchAllByUserIdAndApplicationStatus(id, applicationStatus);
+    }
+
+    public UserCampaignApplicationProjection fetchUserCampaignApplication(Long userId, Long campaignId, Long applicationId) {
+        return userRepository.fetchUserCampaignApplication(userId, campaignId, applicationId);
     }
 }

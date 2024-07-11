@@ -1,6 +1,7 @@
 package com.iamjunhyeok.review.repository;
 
 import com.iamjunhyeok.review.constant.ApplicationStatus;
+import com.iamjunhyeok.review.dto.UserCampaignApplicationProjection;
 import com.iamjunhyeok.review.dto.UserCampaignSearchProjection;
 import com.iamjunhyeok.review.dto.UserSearchProjection;
 import com.iamjunhyeok.review.dto.UserViewProjection;
@@ -15,4 +16,6 @@ public interface CustomUserRepository {
     Optional<UserViewProjection> fetchById(Long id);
 
     List<UserCampaignSearchProjection> fetchAllByUserIdAndApplicationStatus(Long userId, ApplicationStatus status);
+
+    UserCampaignApplicationProjection fetchUserCampaignApplication(Long userId, Long campaignId, Long applicationId);
 }
