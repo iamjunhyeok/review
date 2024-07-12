@@ -28,6 +28,8 @@ public class Penalty extends Base {
     @Column(nullable = false)
     private PenaltyReason reason;
 
+    private String details;
+
     private int point;
 
     private boolean deleted = false;
