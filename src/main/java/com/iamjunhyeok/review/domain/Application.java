@@ -53,6 +53,8 @@ public class Application extends Address {
 
     private String details;
 
+    private boolean deleted = false;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -104,5 +106,12 @@ public class Application extends Address {
             review.setStatus(ReviewStatus.CONFIRM_REQUEST);
             review.setApplication(this);
         }
+    }
+
+    public void delete() {
+        if (this.status != ApplicationStatus.REJECTED) {
+            throw ErrorCode.APPLICATION_CANNOT_BE_DELETED.build();
+        }
+        this.deleted = true;
     }
 }

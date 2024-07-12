@@ -24,9 +24,8 @@ public enum ErrorCode {
     ANSWER_NOT_FOUND(HttpStatus.NOT_FOUND, "문의에 대한 답변을 찾을 수 없습니다."),
     PENALTY_NOT_FOUND(HttpStatus.NOT_FOUND, "패널티를 찾을 수 없습니다."),
     REVIEW_NOT_FOUND(HttpStatus.NOT_FOUND, "리뷰를 찾을 수 없습니다."),
-    DATA_DICTIONARY_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "항목을 찾을 수 없습니다.");
-
-
+    DATA_DICTIONARY_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "항목을 찾을 수 없습니다."),
+    APPLICATION_CANNOT_BE_DELETED(HttpStatus.BAD_REQUEST, "내역을 삭제할 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

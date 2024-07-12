@@ -1,6 +1,7 @@
 package com.iamjunhyeok.review.service;
 
 import com.iamjunhyeok.review.constant.ApplicationStatus;
+import com.iamjunhyeok.review.domain.CustomOAuth2User;
 import com.iamjunhyeok.review.domain.User;
 import com.iamjunhyeok.review.dto.UserCampaignApplicationProjection;
 import com.iamjunhyeok.review.dto.UserCampaignSearchProjection;
@@ -8,6 +9,7 @@ import com.iamjunhyeok.review.dto.UserSearchProjection;
 import com.iamjunhyeok.review.dto.UserUpdateInfoRequest;
 import com.iamjunhyeok.review.dto.UserViewProjection;
 import com.iamjunhyeok.review.exception.ErrorCode;
+import com.iamjunhyeok.review.repository.ApplicationRepository;
 import com.iamjunhyeok.review.repository.UserRepository;
 import com.iamjunhyeok.review.util.S3Util;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +30,7 @@ public class UserService {
     private final UserRepository userRepository;
 
     private final S3Util s3Util;
+    private final ApplicationRepository applicationRepository;
 
     /**
      * 사용자의 기본정보를 업데이트하고, 프로필 이미지 변경이 존재하면 S3 에서 기존 오브젝트 삭제 후 새 오브젝트 추가
@@ -88,5 +91,12 @@ public class UserService {
 
     public UserCampaignApplicationProjection fetchUserCampaignApplication(Long userId, Long campaignId, Long applicationId) {
         return userRepository.fetchUserCampaignApplication(userId, campaignId, applicationId);
+    }
+
+    @Transactional
+    public void delete(Long id, CustomOAuth2User user) {
+        applicationRepository.findById(id)
+                .orElseThrow(() -> ErrorCode.APPLICATION_NOT_FOUND.build())
+                .delete();
     }
 }
