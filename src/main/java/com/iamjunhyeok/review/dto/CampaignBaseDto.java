@@ -79,7 +79,6 @@ public class CampaignBaseDto extends AddressDto {
     @NotBlank
     private String information;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     private CampaignStatus status;
 

@@ -2,8 +2,10 @@ package com.iamjunhyeok.review.domain;
 
 import com.iamjunhyeok.review.constant.ApplicationReason;
 import com.iamjunhyeok.review.constant.ApplicationStatus;
+import com.iamjunhyeok.review.constant.ReviewStatus;
 import com.iamjunhyeok.review.dto.CampaignApplyRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -14,11 +16,15 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -55,6 +61,9 @@ public class Application extends Address {
     @JoinColumn(name = "campaign_id")
     private Campaign campaign;
 
+    @OneToMany(mappedBy = "application", cascade = CascadeType.PERSIST)
+    private List<Review> reviews = new ArrayList<>();
+
     public static Application create(User user, CampaignApplyRequest request) {
         Application application = new Application();
         application.setUser(user);
@@ -84,6 +93,16 @@ public class Application extends Address {
     }
 
     public void registerReview(Review review) {
+        this.reviews.add(review);
+        review.setStatus(ReviewStatus.CONFIRM_REQUEST);
         review.setApplication(this);
+    }
+
+    public void registerReviews(List<Review> reviews) {
+        this.reviews.addAll(reviews);
+        for (Review review : reviews) {
+            review.setStatus(ReviewStatus.CONFIRM_REQUEST);
+            review.setApplication(this);
+        }
     }
 }

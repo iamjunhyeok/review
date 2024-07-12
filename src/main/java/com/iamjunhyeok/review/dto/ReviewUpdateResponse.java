@@ -4,20 +4,19 @@ import com.iamjunhyeok.review.domain.Review;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 public class ReviewUpdateResponse {
-    private Long id;
-    private String receiptUrl;
-    private String blogUrl;
-    private String postUrl;
+    private List<ReviewDto> reviews = new ArrayList<>();
 
-    public static ReviewUpdateResponse from(Review review) {
+    public static ReviewUpdateResponse from(List<Review> reviews) {
         ReviewUpdateResponse response = new ReviewUpdateResponse();
-        response.setId(review.getId());
-        response.setReceiptUrl(review.getReceiptUrl());
-        response.setBlogUrl(review.getBlogUrl());
-        response.setPostUrl(review.getPostUrl());
+        response.setReviews(
+                reviews.stream().map(ReviewDto::from).toList()
+        );
         return response;
     }
 }

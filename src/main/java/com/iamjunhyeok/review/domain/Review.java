@@ -1,6 +1,7 @@
 package com.iamjunhyeok.review.domain;
 
 import com.iamjunhyeok.review.constant.ReviewStatus;
+import com.iamjunhyeok.review.constant.ReviewType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,7 +11,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,11 +24,10 @@ public class Review extends Base {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    private String receiptUrl;
+    @Enumerated(EnumType.STRING)
+    private ReviewType type;
 
-    private String blogUrl;
-
-    private String postUrl;
+    private String url;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -35,24 +35,15 @@ public class Review extends Base {
 
     private String details;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "application_id")
     private Application application;
 
-    public static Review of(String receiptUrl, String blogUrl, String postUrl) {
+    public static Review of(ReviewType type, String url) {
         Review review = new Review();
-        review.setReceiptUrl(receiptUrl);
-        review.setBlogUrl(blogUrl);
-        review.setPostUrl(postUrl);
-        review.setStatus(ReviewStatus.CONFIRM_REQUEST);
+        review.setType(type);
+        review.setUrl(url);
         return review;
-    }
-
-    public Review update(String receiptUrl, String blogUrl, String postUrl) {
-        this.receiptUrl = receiptUrl;
-        this.blogUrl = blogUrl;
-        this.postUrl = postUrl;
-        return this;
     }
 
     public Review modifyRequest(String details) {

@@ -26,17 +26,20 @@ public class ReviewController {
 
     @PostMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews")
     public ResponseEntity<ReviewCreateResponse> create(@PathVariable Long campaignId,
-                                                       @PathVariable Long applicationId,
-                                                       @RequestBody @Valid ReviewCreateRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ReviewCreateResponse.from(reviewService.create(campaignId, applicationId, request)));
+                                                             @PathVariable Long applicationId,
+                                                             @RequestBody @Valid ReviewCreateRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                ReviewCreateResponse.from(reviewService.create(campaignId, applicationId, request))
+        );
     }
 
-    @PatchMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews/{id}")
+    @PatchMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews")
     public ResponseEntity<ReviewUpdateResponse> update(@PathVariable Long campaignId,
                                                        @PathVariable Long applicationId,
-                                                       @PathVariable Long id,
                                                        @RequestBody @Valid ReviewUpdateRequest request) {
-        return ResponseEntity.ok(ReviewUpdateResponse.from(reviewService.update(campaignId, applicationId, id, request)));
+        return ResponseEntity.ok(
+                ReviewUpdateResponse.from(reviewService.update(campaignId, applicationId, request))
+        );
     }
 
     @PatchMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews/{id}/modify-request")

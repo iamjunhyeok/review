@@ -3,10 +3,11 @@ package com.iamjunhyeok.review.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @Setter
 public class ReviewCreateRequest {
-    private String receiptUrl;
-    private String blogUrl;
-    private String postUrl;
+    private List<ReviewDto> reviews = new ArrayList<>();
 }
