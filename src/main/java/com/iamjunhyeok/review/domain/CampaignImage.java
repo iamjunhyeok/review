@@ -22,7 +22,8 @@ public class CampaignImage extends Base {
     @Column(nullable = false)
     private String name;
 
-    private boolean main = false;
+    @Column(name = "orders")
+    private Integer order;
 
     @ManyToOne
     @JoinColumn(name = "campaign_id")
@@ -32,9 +33,5 @@ public class CampaignImage extends Base {
         CampaignImage image = new CampaignImage();
         image.setName(name);
         return image;
-    }
-
-    public void makeMain() {
-        this.main = true;
     }
 }
