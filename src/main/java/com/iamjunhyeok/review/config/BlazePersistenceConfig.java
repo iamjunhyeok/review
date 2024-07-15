@@ -8,6 +8,7 @@ import com.blazebit.persistence.view.EntityViews;
 import com.blazebit.persistence.view.spi.EntityViewConfiguration;
 import com.iamjunhyeok.review.dto.CampaignImageProjection;
 import com.iamjunhyeok.review.dto.CampaignLinkProjection;
+import com.iamjunhyeok.review.dto.CampaignSearchProjection;
 import com.iamjunhyeok.review.dto.CampaignSummaryProjection;
 import com.iamjunhyeok.review.dto.CampaignViewProjection;
 import com.iamjunhyeok.review.dto.PointSearchProjection;
@@ -57,6 +58,7 @@ public class BlazePersistenceConfig {
         config.addEntityView(PointSearchProjection.class);
         config.addEntityView(PointSearchProjection.ApplicationProjection.class);
         config.addEntityView(PointSearchProjection.ApplicationProjection.CampaignProjection.class);
+        config.addEntityView(CampaignSearchProjection.class);
         return config.createEntityViewManager(cbf);
     }
 }

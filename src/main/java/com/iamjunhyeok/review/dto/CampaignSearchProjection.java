@@ -1,33 +1,30 @@
 package com.iamjunhyeok.review.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.blazebit.persistence.view.EntityView;
+import com.blazebit.persistence.view.IdMapping;
+import com.blazebit.persistence.view.Mapping;
 import com.iamjunhyeok.review.constant.CampaignSocial;
 import com.iamjunhyeok.review.constant.CampaignType;
-import lombok.Getter;
-import lombok.Setter;
+import com.iamjunhyeok.review.domain.Campaign;
 
 import java.time.LocalDate;
-import java.time.Period;
 
-@Getter
-@Setter
-public class CampaignSearchProjection {
-    private Long id;
-    private CampaignType type;
-    private CampaignSocial social;
-    private String title;
-    private Integer capacity;
+@EntityView(Campaign.class)
+public interface CampaignSearchProjection {
+    @IdMapping
+    Long getId();
 
-    @JsonIgnore
-    LocalDate applicationEndDate;
+    CampaignType getType();
+    CampaignSocial getSocial();
 
-    private int dDay;
-    private Long applicantsCount;
+    String getTitle();
+    Integer getCapacity();
 
-    private String longitude;
-    private String latitude;
+    LocalDate getApplicationEndDate();
 
-    public int getdDay() {
-        return Period.between(LocalDate.now(), applicationEndDate).getDays();
-    }
+    @Mapping("size(applications)")
+    Long getApplicantsCount();
+
+    String getLongitude();
+    String getLatitude();
 }

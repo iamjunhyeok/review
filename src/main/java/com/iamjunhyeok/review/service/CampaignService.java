@@ -10,11 +10,11 @@ import com.iamjunhyeok.review.dto.CampaignLinkDto;
 import com.iamjunhyeok.review.dto.CampaignSearchProjection;
 import com.iamjunhyeok.review.dto.CampaignSummaryProjection;
 import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
+import com.iamjunhyeok.review.dto.CampaignViewProjection;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.CampaignImageRepository;
 import com.iamjunhyeok.review.repository.CampaignLinkRepository;
 import com.iamjunhyeok.review.repository.CampaignRepository;
-import com.iamjunhyeok.review.dto.CampaignViewProjection;
 import com.iamjunhyeok.review.util.S3Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -205,8 +205,8 @@ public class CampaignService {
         campaign.delete();
     }
 
-    public List<CampaignSearchProjection> search(String type, String category, String social, String filter, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
-        return campaignRepository.search(type, category, social, filter, pageable, swlat, swlng, nelat, nelng);
+    public List<CampaignSearchProjection> search(String type, String categories, String socials, String options, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
+        return campaignRepository.fetchAll(type, categories, socials, options, pageable, swlat, swlng, nelat, nelng);
     }
 
 

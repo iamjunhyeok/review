@@ -56,16 +56,16 @@ public class CampaignController {
 
     @GetMapping
     public ResponseEntity<List<CampaignSearchProjection>> search(@RequestParam(required = false) String type,
-                                                                 @RequestParam(required = false) String category,
-                                                                 @RequestParam(required = false) String social,
-                                                                 @RequestParam(required = false) String filter,
-                                                                 Pageable pageable,
-                                                                 @RequestParam(required = false) String swlat,
-                                                                 @RequestParam(required = false) String swlng,
-                                                                 @RequestParam(required = false) String nelat,
-                                                                 @RequestParam(required = false) String nelng
-                                                                 ) {
-        return ResponseEntity.ok(campaignService.search(type, category, social, filter, pageable, swlat, swlng, nelat, nelng));
+                                                                  @RequestParam(required = false) String categories,
+                                                                  @RequestParam(required = false) String socials,
+                                                                  @RequestParam(required = false) String options,
+                                                                  Pageable pageable,
+                                                                  @RequestParam(required = false) String swlat,
+                                                                  @RequestParam(required = false) String swlng,
+                                                                  @RequestParam(required = false) String nelat,
+                                                                  @RequestParam(required = false) String nelng
+    ) {
+        return ResponseEntity.ok(campaignService.search(type, categories, socials, options, pageable, swlat, swlng, nelat, nelng));
     }
 
     @GetMapping("/{id}")

@@ -20,7 +20,9 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -45,7 +47,7 @@ public class Campaign extends CampaignBase {
     private boolean deleted = false;
 
     @OneToMany(mappedBy = "campaign")
-    private List<Application> applications = new ArrayList<>();
+    private Set<Application> applications = new HashSet<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "campaign", cascade = CascadeType.PERSIST)
