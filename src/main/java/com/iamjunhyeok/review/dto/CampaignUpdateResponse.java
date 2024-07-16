@@ -1,7 +1,6 @@
 package com.iamjunhyeok.review.dto;
 
 import com.iamjunhyeok.review.domain.Campaign;
-import com.iamjunhyeok.review.domain.CampaignBase;
 import com.iamjunhyeok.review.domain.CampaignLink;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,7 +11,7 @@ import java.util.List;
 @Getter
 @Setter
 @SuperBuilder
-public class CampaignUpdateResponse extends CampaignBase {
+public class CampaignUpdateResponse extends CampaignBaseDto {
     private Long id;
     private List<String> links;
 
@@ -32,7 +31,6 @@ public class CampaignUpdateResponse extends CampaignBase {
                 .offering(campaign.getOffering())
                 .keyword(campaign.getKeyword())
                 .hashtag(campaign.getHashtag())
-                .mission(campaign.getMission())
                 .guide(campaign.getGuide())
                 .information(campaign.getInformation())
                 .address(campaign.getAddress())
@@ -41,9 +39,20 @@ public class CampaignUpdateResponse extends CampaignBase {
                 .longitude(campaign.getLongitude())
                 .latitude(campaign.getLatitude())
                 .status(campaign.getStatus())
+                .storeInformation(campaign.getStoreInformation())
                 .links(
                         campaign.getLinks()
                                 .stream().map(CampaignLink::getUrl)
+                                .toList()
+                )
+                .missions(
+                        campaign.getMissions()
+                                .stream().map(CampaignMissionDto::from)
+                                .toList()
+                )
+                .options(
+                        campaign.getOptions()
+                                .stream().map(CampaignOptionDto::from)
                                 .toList()
                 )
                 .build();

@@ -11,15 +11,21 @@ import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@SuperBuilder
+@NoArgsConstructor
+@AllArgsConstructor
 public class CampaignBaseDto extends AddressDto {
     @NotNull
     @Enumerated(EnumType.STRING)
@@ -73,9 +79,6 @@ public class CampaignBaseDto extends AddressDto {
     private String hashtag;
 
     @NotBlank
-    private String mission;
-
-    @NotBlank
     private String guide;
 
     @NotBlank
@@ -87,7 +90,10 @@ public class CampaignBaseDto extends AddressDto {
     @NotBlank
     private String storeInformation;
 
-    private List<CampaignCodeDto> missionCodes = new ArrayList<>();
+    @PositiveOrZero
+    private Integer point;
 
-    private List<CampaignCodeDto> optionCodes = new ArrayList<>();
+    private List<CampaignMissionDto> missions;
+
+    private List<CampaignOptionDto> options;
 }

@@ -17,6 +17,7 @@ import lombok.experimental.SuperBuilder;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.util.CollectionUtils;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -86,7 +87,6 @@ public class Campaign extends CampaignBase {
         this.offeringSummary = request.getOfferingSummary();
         this.keyword = request.getKeyword();
         this.hashtag = request.getHashtag();
-        this.mission = request.getMission();
         this.guide = request.getGuide();
         this.information = request.getInformation();
         this.address = request.getAddress();
@@ -103,6 +103,7 @@ public class Campaign extends CampaignBase {
     }
 
     public void addLink(List<CampaignLink> links) {
+        if (CollectionUtils.isEmpty(links)) return;
         this.links.addAll(links);
         for (CampaignLink link : links) {
             link.setCampaign(this);
@@ -110,6 +111,7 @@ public class Campaign extends CampaignBase {
     }
 
     public void addImage(List<CampaignImage> images) {
+        if (CollectionUtils.isEmpty(images)) return;
         this.images.addAll(images);
         for (CampaignImage image : images) {
             image.setCampaign(this);
@@ -117,12 +119,14 @@ public class Campaign extends CampaignBase {
     }
 
     public void addMission(List<Code> missions, List<String> arguments) {
+        if (CollectionUtils.isEmpty(missions) || CollectionUtils.isEmpty(arguments)) return;
         for (int i = 0; i < missions.size(); i++) {
             this.missions.add(CampaignMission.of(arguments.get(i),this, missions.get(i)));
         }
     }
 
     public void addOption(List<Code> options) {
+        if (CollectionUtils.isEmpty(options)) return;
         for (Code option : options) {
             this.options.add(CampaignOption.of(this, option));
         }

@@ -95,10 +95,6 @@ public class CampaignBase extends CampaignAddress {
 
     @Column(nullable = false)
     @NotBlank
-    String mission;
-
-    @Column(nullable = false)
-    @NotBlank
     String guide;
 
     @Column(nullable = false)

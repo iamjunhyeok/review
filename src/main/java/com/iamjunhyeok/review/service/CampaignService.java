@@ -2,14 +2,15 @@ package com.iamjunhyeok.review.service;
 
 import com.iamjunhyeok.review.constant.CampaignStatus;
 import com.iamjunhyeok.review.domain.Campaign;
-import com.iamjunhyeok.review.domain.CampaignMission;
 import com.iamjunhyeok.review.domain.CampaignImage;
 import com.iamjunhyeok.review.domain.CampaignLink;
+import com.iamjunhyeok.review.domain.CampaignMission;
 import com.iamjunhyeok.review.domain.Code;
-import com.iamjunhyeok.review.dto.CampaignCodeDto;
 import com.iamjunhyeok.review.dto.CampaignCreateRequest;
 import com.iamjunhyeok.review.dto.CampaignImageNameProjection;
 import com.iamjunhyeok.review.dto.CampaignLinkDto;
+import com.iamjunhyeok.review.dto.CampaignMissionDto;
+import com.iamjunhyeok.review.dto.CampaignOptionDto;
 import com.iamjunhyeok.review.dto.CampaignSearchProjection;
 import com.iamjunhyeok.review.dto.CampaignSummaryProjection;
 import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
@@ -25,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -63,7 +65,6 @@ public class CampaignService {
                         .offeringSummary(request.getOfferingSummary())
                         .keyword(request.getKeyword())
                         .hashtag(request.getHashtag())
-                        .mission(request.getMission())
                         .guide(request.getGuide())
                         .information(request.getInformation())
                         .address(request.getAddress())
@@ -75,11 +76,12 @@ public class CampaignService {
                         .storeInformation(request.getStoreInformation())
                         .build()
         );
-        List<Code> missions = codeRepository.findAllByCodeIn(request.getMissionCodes().stream().map(CampaignCodeDto::getCode).toList());
-        List<String> arguments = request.getMissionCodes().stream().map(CampaignCodeDto::getArguments).toList();
+
+        List<Code> missions = codeRepository.findAllById(request.getMissions().stream().map(CampaignMissionDto::getId).toList());
+        List<String> arguments = request.getMissions().stream().map(CampaignMissionDto::getArguments).toList();
         campaign.addMission(missions, arguments);
 
-        List<Code> options = codeRepository.findAllByCodeIn(request.getOptionCodes().stream().map(CampaignCodeDto::getCode).toList());
+        List<Code> options = codeRepository.findAllById(request.getOptions().stream().map(CampaignOptionDto::getId).toList());
         campaign.addOption(options);
 
         List<CampaignLink> links = convertDtoToEntity(request.getLinks());
@@ -101,6 +103,7 @@ public class CampaignService {
      * @throws IOException
      */
     private void putObjectAllFiles(List<MultipartFile> files, Map<String, String> newFilenameMap) throws IOException {
+        if (CollectionUtils.isEmpty(files)) return;
         for (MultipartFile file : files) {
             s3Util.putObject(newFilenameMap.get(file.getOriginalFilename()), file);
         }
@@ -113,6 +116,7 @@ public class CampaignService {
      * @return
      */
     private static List<CampaignImage> convertFileToEntityUsingMap(List<MultipartFile> files, Map<String, String> newFilenameMap) {
+        if (CollectionUtils.isEmpty(files)) return null;
         return files.stream()
                 .map(multipartFile -> newFilenameMap.get(multipartFile.getOriginalFilename()))
                 .map(CampaignImage::of)
@@ -136,6 +140,7 @@ public class CampaignService {
      * @return
      */
     private static Map<String, String> generateNewFilenameMap(List<MultipartFile> files) {
+        if (CollectionUtils.isEmpty(files)) return null;
         return files.stream()
                 .collect(Collectors.toMap(multipartFile -> multipartFile.getOriginalFilename(), multipartFile -> generateNewFilename(multipartFile)));
 
@@ -159,30 +164,28 @@ public class CampaignService {
 
         campaignCodeRepository.deleteAllByIdInBatch(request.getDeleteMissionIds());
 
-        Map<Boolean, List<CampaignCodeDto>> collect1 = request.getMissionCodes().stream().collect(Collectors.partitioningBy(dto -> dto.getId() != null));
-        List<CampaignCodeDto> existingMissions = collect1.get(true);
-        List<CampaignCodeDto> newMissions = collect1.get(false);
 
-        List<Code> missions = codeRepository.findAllByCodeIn(newMissions.stream().map(CampaignCodeDto::getCode).toList());
-        List<String> arguments = newMissions.stream().map(CampaignCodeDto::getArguments).toList();
+        Map<Boolean, List<CampaignMissionDto>> collect1 = request.getMissions().stream().collect(Collectors.partitioningBy(dto -> dto.getId() != null));
+        List<CampaignMissionDto> existingMissions = collect1.get(true);
+        List<CampaignMissionDto> newMissions = collect1.get(false);
+
+        List<Code> missions = codeRepository.findAllById(newMissions.stream().map(CampaignMissionDto::getId).toList());
+        List<String> arguments = newMissions.stream().map(CampaignMissionDto::getArguments).toList();
         campaign.addMission(missions, arguments);
 
         // 1. 캠페인 코드 ID 로 엔티티 조회
-        List<CampaignMission> existingCampaignMissionEntities = campaignCodeRepository.findAllById(existingMissions.stream().map(CampaignCodeDto::getId).toList());
+        List<CampaignMission> existingCampaignMissionEntities = campaignCodeRepository.findAllById(existingMissions.stream().map(CampaignMissionDto::getId).toList());
 
         // 2. 변경 내용을 Map 으로 변환하여 저장 (Key: 캠페인 코드 ID, Value: DTO)
-        Map<Long, String> collect2 = existingMissions.stream().collect(Collectors.toMap(CampaignCodeDto::getId, CampaignCodeDto::getArguments));
+        Map<Long, String> collect2 = existingMissions.stream().collect(Collectors.toMap(CampaignMissionDto::getId, CampaignMissionDto::getArguments));
 
         // 3. 반복문을 통해서 update 메소드 호출
         existingCampaignMissionEntities.forEach(entity -> entity.update(collect2.get(entity.getId())));
 
-
         campaignCodeRepository.deleteAllByIdInBatch(request.getDeleteOptionIds());
 
-        List<Code> options = codeRepository.findAllByCodeIn(request.getOptionCodes().stream().map(CampaignCodeDto::getCode).toList());
+        List<Code> options = codeRepository.findAllById(request.getOptions().stream().map(CampaignOptionDto::getId).toList());
         campaign.addOption(options);
-
-
 
         // 삭제 ID 리스트로 들어온 항목들 일괄 삭제
         campaignLinkRepository.deleteAllByIdInBatch(request.getDeleteLinkIds());

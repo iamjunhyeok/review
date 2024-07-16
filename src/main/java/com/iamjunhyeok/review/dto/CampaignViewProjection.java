@@ -42,8 +42,6 @@ public interface CampaignViewProjection {
 
     String getHashtag();
 
-    String getMission();
-
     String getGuide();
 
     String getInformation();
