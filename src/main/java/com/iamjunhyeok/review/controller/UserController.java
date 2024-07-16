@@ -13,6 +13,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -42,16 +43,34 @@ public class UserController {
         return ResponseEntity.ok(UserUpdateInfoResponse.from(userService.updateUserInfo(user.getUserId(), request, file)));
     }
 
+    /**
+     * 사용자 정보 업데이트
+     * @param id
+     * @param request
+     * @return
+     */
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
     public ResponseEntity<UserUpdateInfoResponse> updateUserInfo(@PathVariable Long id, @RequestBody @Valid UserUpdateInfoRequest request) {
         return ResponseEntity.ok(UserUpdateInfoResponse.from(userService.updateUserInfo(id, request)));
     }
 
+    /**
+     * 전체 사용자 조회
+     * @return
+     */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<UserSearchProjection>> search() {
         return ResponseEntity.ok(userService.search());
     }
 
+    /**
+     * 사용자 상세정보 조회
+     * @param id
+     * @return
+     */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<UserViewProjection> view(@PathVariable Long id) {
         return ResponseEntity.ok(userService.view(id));
@@ -63,6 +82,13 @@ public class UserController {
         return ResponseEntity.ok(userService.fetchUserCampaigns(user.getUserId(), ApplicationStatus.valueOf(status.toUpperCase())));
     }
 
+    /**
+     * 특정 사용자의 캠페인 조회
+     * @param id
+     * @param status
+     * @return
+     */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}/campaigns")
     public ResponseEntity<List<UserCampaignSearchProjection>> userCampaigns(@PathVariable Long id,
                                                                             @RequestParam String status) {
