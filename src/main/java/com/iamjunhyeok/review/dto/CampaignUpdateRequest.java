@@ -13,4 +13,7 @@ public class CampaignUpdateRequest extends CampaignBaseDto {
 
     List<Long> deleteLinkIds = new ArrayList<>();
     List<Long> deleteImageIds = new ArrayList<>();
+
+    List<Long> deleteMissionIds = new ArrayList<>();
+    List<Long> deleteOptionIds = new ArrayList<>();
 }

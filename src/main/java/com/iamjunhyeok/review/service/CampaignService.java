@@ -2,8 +2,11 @@ package com.iamjunhyeok.review.service;
 
 import com.iamjunhyeok.review.constant.CampaignStatus;
 import com.iamjunhyeok.review.domain.Campaign;
+import com.iamjunhyeok.review.domain.CampaignCode;
 import com.iamjunhyeok.review.domain.CampaignImage;
 import com.iamjunhyeok.review.domain.CampaignLink;
+import com.iamjunhyeok.review.domain.Code;
+import com.iamjunhyeok.review.dto.CampaignCodeDto;
 import com.iamjunhyeok.review.dto.CampaignCreateRequest;
 import com.iamjunhyeok.review.dto.CampaignImageNameProjection;
 import com.iamjunhyeok.review.dto.CampaignLinkDto;
@@ -12,9 +15,11 @@ import com.iamjunhyeok.review.dto.CampaignSummaryProjection;
 import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
 import com.iamjunhyeok.review.dto.CampaignViewProjection;
 import com.iamjunhyeok.review.exception.ErrorCode;
+import com.iamjunhyeok.review.repository.CampaignCodeRepository;
 import com.iamjunhyeok.review.repository.CampaignImageRepository;
 import com.iamjunhyeok.review.repository.CampaignLinkRepository;
 import com.iamjunhyeok.review.repository.CampaignRepository;
+import com.iamjunhyeok.review.repository.CodeRepository;
 import com.iamjunhyeok.review.util.S3Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +41,9 @@ public class CampaignService {
     private final CampaignRepository campaignRepository;
     private final CampaignLinkRepository campaignLinkRepository;
     private final CampaignImageRepository campaignImageRepository;
+    private final CodeRepository codeRepository;
     private final S3Util s3Util;
+    private final CampaignCodeRepository campaignCodeRepository;
 
     @Transactional
     public Campaign create(CampaignCreateRequest request, List<MultipartFile> files) throws IOException {
@@ -68,6 +75,12 @@ public class CampaignService {
                         .storeInformation(request.getStoreInformation())
                         .build()
         );
+        List<Code> missions = codeRepository.findAllByCodeIn(request.getMissionCodes().stream().map(CampaignCodeDto::getCode).toList());
+        List<String> arguments = request.getMissionCodes().stream().map(CampaignCodeDto::getArguments).toList();
+        campaign.addMission(missions, arguments);
+
+        List<Code> options = codeRepository.findAllByCodeIn(request.getOptionCodes().stream().map(CampaignCodeDto::getCode).toList());
+        campaign.addOption(options);
 
         List<CampaignLink> links = convertDtoToEntity(request.getLinks());
         campaign.addLink(links);
@@ -143,6 +156,33 @@ public class CampaignService {
                 .orElseThrow(() -> ErrorCode.CAMPAIGN_NOT_FOUND.build());
         // 캠페인 기본정보 업데이트
         campaign.update(request);
+
+        campaignCodeRepository.deleteAllByIdInBatch(request.getDeleteMissionIds());
+
+        Map<Boolean, List<CampaignCodeDto>> collect1 = request.getMissionCodes().stream().collect(Collectors.partitioningBy(dto -> dto.getId() != null));
+        List<CampaignCodeDto> existingMissions = collect1.get(true);
+        List<CampaignCodeDto> newMissions = collect1.get(false);
+
+        List<Code> missions = codeRepository.findAllByCodeIn(newMissions.stream().map(CampaignCodeDto::getCode).toList());
+        List<String> arguments = newMissions.stream().map(CampaignCodeDto::getArguments).toList();
+        campaign.addMission(missions, arguments);
+
+        // 1. 캠페인 코드 ID 로 엔티티 조회
+        List<CampaignCode> existingCampaignCodeEntities = campaignCodeRepository.findAllById(existingMissions.stream().map(CampaignCodeDto::getId).toList());
+
+        // 2. 변경 내용을 Map 으로 변환하여 저장 (Key: 캠페인 코드 ID, Value: DTO)
+        Map<Long, String> collect2 = existingMissions.stream().collect(Collectors.toMap(CampaignCodeDto::getId, CampaignCodeDto::getArguments));
+
+        // 3. 반복문을 통해서 update 메소드 호출
+        existingCampaignCodeEntities.forEach(entity -> entity.update(collect2.get(entity.getId())));
+
+
+        campaignCodeRepository.deleteAllByIdInBatch(request.getDeleteOptionIds());
+
+        List<Code> options = codeRepository.findAllByCodeIn(request.getOptionCodes().stream().map(CampaignCodeDto::getCode).toList());
+        campaign.addOption(options);
+
+
 
         // 삭제 ID 리스트로 들어온 항목들 일괄 삭제
         campaignLinkRepository.deleteAllByIdInBatch(request.getDeleteLinkIds());

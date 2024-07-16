@@ -15,6 +15,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -84,4 +86,8 @@ public class CampaignBaseDto extends AddressDto {
 
     @NotBlank
     private String storeInformation;
+
+    private List<CampaignCodeDto> missionCodes = new ArrayList<>();
+
+    private List<CampaignCodeDto> optionCodes = new ArrayList<>();
 }

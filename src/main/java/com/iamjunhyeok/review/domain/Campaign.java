@@ -1,5 +1,6 @@
 package com.iamjunhyeok.review.domain;
 
+import com.iamjunhyeok.review.constant.CampaignCodeType;
 import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -57,6 +58,14 @@ public class Campaign extends CampaignBase {
     @OneToMany(mappedBy = "campaign", cascade = CascadeType.PERSIST)
     private List<CampaignImage> images = new ArrayList<>();
 
+    @Builder.Default
+    @OneToMany(mappedBy = "campaign", cascade = CascadeType.PERSIST)
+    private List<CampaignCode> missions = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "campaign", cascade = CascadeType.PERSIST)
+    private List<CampaignCode> options = new ArrayList<>();
+
     public Campaign apply(Application application) {
         this.applications.add(application);
         application.setCampaign(this);
@@ -105,6 +114,18 @@ public class Campaign extends CampaignBase {
         this.images.addAll(images);
         for (CampaignImage image : images) {
             image.setCampaign(this);
+        }
+    }
+
+    public void addMission(List<Code> missions, List<String> arguments) {
+        for (int i = 0; i < missions.size(); i++) {
+            this.missions.add(CampaignCode.of(CampaignCodeType.MISSION, arguments.get(i), this, missions.get(i)));
+        }
+    }
+
+    public void addOption(List<Code> options) {
+        for (Code option : options) {
+            this.options.add(CampaignCode.of(CampaignCodeType.OPTION, this, option));
         }
     }
 }
