@@ -63,4 +63,8 @@ public interface CampaignViewProjection {
     List<CampaignLinkProjection> getLinks();
 
     List<CampaignImageProjection> getImages();
+
+    List<CampaignMissionProjection> getMissions();
+
+    List<CampaignOptionProjection> getOptions();
 }

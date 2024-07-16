@@ -1,6 +1,5 @@
 package com.iamjunhyeok.review.domain;
 
-import com.iamjunhyeok.review.constant.CampaignCodeType;
 import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -60,11 +59,11 @@ public class Campaign extends CampaignBase {
 
     @Builder.Default
     @OneToMany(mappedBy = "campaign", cascade = CascadeType.PERSIST)
-    private List<CampaignCode> missions = new ArrayList<>();
+    private List<CampaignMission> missions = new ArrayList<>();
 
     @Builder.Default
     @OneToMany(mappedBy = "campaign", cascade = CascadeType.PERSIST)
-    private List<CampaignCode> options = new ArrayList<>();
+    private List<CampaignOption> options = new ArrayList<>();
 
     public Campaign apply(Application application) {
         this.applications.add(application);
@@ -119,13 +118,13 @@ public class Campaign extends CampaignBase {
 
     public void addMission(List<Code> missions, List<String> arguments) {
         for (int i = 0; i < missions.size(); i++) {
-            this.missions.add(CampaignCode.of(CampaignCodeType.MISSION, arguments.get(i), this, missions.get(i)));
+            this.missions.add(CampaignMission.of(arguments.get(i),this, missions.get(i)));
         }
     }
 
     public void addOption(List<Code> options) {
         for (Code option : options) {
-            this.options.add(CampaignCode.of(CampaignCodeType.OPTION, this, option));
+            this.options.add(CampaignOption.of(this, option));
         }
     }
 }

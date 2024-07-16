@@ -2,7 +2,7 @@ package com.iamjunhyeok.review.service;
 
 import com.iamjunhyeok.review.constant.CampaignStatus;
 import com.iamjunhyeok.review.domain.Campaign;
-import com.iamjunhyeok.review.domain.CampaignCode;
+import com.iamjunhyeok.review.domain.CampaignMission;
 import com.iamjunhyeok.review.domain.CampaignImage;
 import com.iamjunhyeok.review.domain.CampaignLink;
 import com.iamjunhyeok.review.domain.Code;
@@ -168,13 +168,13 @@ public class CampaignService {
         campaign.addMission(missions, arguments);
 
         // 1. 캠페인 코드 ID 로 엔티티 조회
-        List<CampaignCode> existingCampaignCodeEntities = campaignCodeRepository.findAllById(existingMissions.stream().map(CampaignCodeDto::getId).toList());
+        List<CampaignMission> existingCampaignMissionEntities = campaignCodeRepository.findAllById(existingMissions.stream().map(CampaignCodeDto::getId).toList());
 
         // 2. 변경 내용을 Map 으로 변환하여 저장 (Key: 캠페인 코드 ID, Value: DTO)
         Map<Long, String> collect2 = existingMissions.stream().collect(Collectors.toMap(CampaignCodeDto::getId, CampaignCodeDto::getArguments));
 
         // 3. 반복문을 통해서 update 메소드 호출
-        existingCampaignCodeEntities.forEach(entity -> entity.update(collect2.get(entity.getId())));
+        existingCampaignMissionEntities.forEach(entity -> entity.update(collect2.get(entity.getId())));
 
 
         campaignCodeRepository.deleteAllByIdInBatch(request.getDeleteOptionIds());
