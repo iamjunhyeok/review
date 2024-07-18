@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,6 +32,12 @@ public class InquiryController {
 
     private final InquiryService inquiryService;
 
+    /**
+     * 문의 등록
+     * @param request
+     * @return
+     */
+    @PreAuthorize("hasRole('USER')")
     @PostMapping
     public ResponseEntity<InquiryCreateResponse> create(@RequestBody @Valid InquiryCreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(InquiryCreateResponse.from(inquiryService.create(request)));
@@ -41,6 +48,12 @@ public class InquiryController {
         return ResponseEntity.ok(InquiryUpdateResponse.from(inquiryService.update(id, request)));
     }
 
+    /**
+     * 전체 문의 목록
+     * @param category
+     * @return
+     */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<List<InquirySearchResponse>> search(@RequestParam(required = false) String category) {
         return ResponseEntity.ok(
@@ -55,8 +68,6 @@ public class InquiryController {
     public ResponseEntity<InquiryViewResponse> view(@PathVariable Long id) {
         return ResponseEntity.ok(InquiryViewResponse.from(inquiryService.findById(id)));
     }
-
-
 
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)

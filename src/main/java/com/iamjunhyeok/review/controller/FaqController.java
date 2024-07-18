@@ -11,6 +11,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -31,6 +32,7 @@ public class FaqController {
 
     private final FaqService faqService;
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<FaqCreateResponse> create(@RequestBody @Valid FaqCreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(FaqCreateResponse.from(faqService.create(request)));
@@ -50,11 +52,17 @@ public class FaqController {
         return ResponseEntity.ok(FaqViewResponse.from(faqService.findById(id)));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
     public ResponseEntity<FaqUpdateResponse> update(@PathVariable Long id, @RequestBody @Valid FaqUpdateRequest request) {
         return ResponseEntity.ok(FaqUpdateResponse.from(faqService.update(id, request)));
     }
 
+    /**
+     * FAQ 삭제
+     * @param id
+     */
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {

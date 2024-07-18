@@ -9,6 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,11 +24,25 @@ public class AnswerController {
 
     private final AnswerService answerService;
 
+    /**
+     * 문의에 대한 답변등록
+     * @param inquiryId
+     * @param request
+     * @return
+     */
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/{inquiryId}/answers")
     public ResponseEntity<AnswerCreateResponse> create(@PathVariable Long inquiryId, @RequestBody @Valid AnswerCreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(AnswerCreateResponse.from(answerService.create(inquiryId, request)));
     }
 
+    /**
+     * 문의에 대한 답변수정
+     * @param inquiryId
+     * @param request
+     * @return
+     */
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{inquiryId}/answers/{id}")
     public ResponseEntity<AnswerUpdateResponse> update(@PathVariable Long inquiryId, @PathVariable Long id, @RequestBody @Valid AnswerUpdateRequest request) {
         return ResponseEntity.ok().body(AnswerUpdateResponse.from(answerService.update(inquiryId, id, request)));
