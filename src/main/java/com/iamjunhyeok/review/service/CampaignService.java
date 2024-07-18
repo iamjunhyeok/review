@@ -23,6 +23,7 @@ import com.iamjunhyeok.review.repository.CampaignRepository;
 import com.iamjunhyeok.review.repository.CodeRepository;
 import com.iamjunhyeok.review.util.S3Util;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,12 +75,15 @@ public class CampaignService {
                         .latitude(request.getLatitude())
                         .status(request.getApplicationStartDate().isAfter(LocalDate.now()) ? CampaignStatus.PLANNED : CampaignStatus.ONGOING)
                         .storeInformation(request.getStoreInformation())
+                        .point(request.getPoint())
                         .build()
         );
 
         List<Code> missions = codeRepository.findAllById(request.getMissions().stream().map(CampaignMissionDto::getId).toList());
-        List<String> arguments = request.getMissions().stream().map(CampaignMissionDto::getArguments).toList();
-        campaign.addMission(missions, arguments);
+        Map<Long, String> argumentsMap = request.getMissions().stream()
+                .filter(dto -> Strings.isNotBlank(dto.getArguments()))
+                .collect(Collectors.toMap(CampaignMissionDto::getId, CampaignMissionDto::getArguments));
+        campaign.addMission(missions, argumentsMap);
 
         List<Code> options = codeRepository.findAllById(request.getOptions().stream().map(CampaignOptionDto::getId).toList());
         campaign.addOption(options);
@@ -170,8 +174,10 @@ public class CampaignService {
         List<CampaignMissionDto> newMissions = collect1.get(false);
 
         List<Code> missions = codeRepository.findAllById(newMissions.stream().map(CampaignMissionDto::getId).toList());
-        List<String> arguments = newMissions.stream().map(CampaignMissionDto::getArguments).toList();
-        campaign.addMission(missions, arguments);
+        Map<Long, String> argumentsMap = request.getMissions().stream()
+                .filter(dto -> Strings.isNotBlank(dto.getArguments()))
+                .collect(Collectors.toMap(CampaignMissionDto::getId, CampaignMissionDto::getArguments));
+        campaign.addMission(missions, argumentsMap);
 
         // 1. 캠페인 코드 ID 로 엔티티 조회
         List<CampaignMission> existingCampaignMissionEntities = campaignCodeRepository.findAllById(existingMissions.stream().map(CampaignMissionDto::getId).toList());

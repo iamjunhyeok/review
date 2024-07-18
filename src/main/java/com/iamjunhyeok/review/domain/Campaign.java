@@ -23,6 +23,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Getter
@@ -118,10 +119,10 @@ public class Campaign extends CampaignBase {
         }
     }
 
-    public void addMission(List<Code> missions, List<String> arguments) {
-        if (CollectionUtils.isEmpty(missions) || CollectionUtils.isEmpty(arguments)) return;
+    public void addMission(List<Code> missions, Map<Long, String> argumentsMap) {
+        if (CollectionUtils.isEmpty(missions)) return;
         for (int i = 0; i < missions.size(); i++) {
-            this.missions.add(CampaignMission.of(arguments.get(i),this, missions.get(i)));
+            this.missions.add(CampaignMission.of(argumentsMap.getOrDefault(missions.get(i).getId(), null),this, missions.get(i)));
         }
     }
 
