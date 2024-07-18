@@ -2,6 +2,7 @@ package com.iamjunhyeok.review.dto;
 
 import com.blazebit.persistence.view.EntityView;
 import com.blazebit.persistence.view.IdMapping;
+import com.blazebit.persistence.view.Mapping;
 import com.iamjunhyeok.review.constant.CampaignCategory;
 import com.iamjunhyeok.review.constant.CampaignSocial;
 import com.iamjunhyeok.review.constant.CampaignStatus;
@@ -38,6 +39,8 @@ public interface CampaignViewProjection {
 
     String getOffering();
 
+    String getOfferingSummary();
+
     String getKeyword();
 
     String getHashtag();
@@ -47,6 +50,10 @@ public interface CampaignViewProjection {
     String getInformation();
 
     CampaignStatus getStatus();
+
+    String getStoreInformation();
+
+    Integer getPoint();
 
     String getAddress();
 
@@ -65,4 +72,7 @@ public interface CampaignViewProjection {
     List<CampaignMissionProjection> getMissions();
 
     List<CampaignOptionProjection> getOptions();
+
+    @Mapping("size(applications)")
+    Long getApplicantsCount();
 }
