@@ -6,7 +6,7 @@ INSERT IGNORE INTO code (orders, id, parent_id, code, value) VALUES(1, 3, 2, 'TA
 INSERT IGNORE INTO code (orders, id, parent_id, code, value) VALUES(2, 4, 2, 'RESERVATION', '예약필수');
 INSERT IGNORE INTO code (orders, id, parent_id, code, value) VALUES(1, 5, 1, 'KEYWORD', '키워드 필수');
 INSERT IGNORE INTO code (orders, id, parent_id, code, value) VALUES(2, 6, 1, 'PHOTO', '사진 {}장 이상');
-INSERT IGNORE INTO code (orders, id, parent_id, code, value) VALUES(3, 7, 1, 'VIDEO', '글자수 {}자 이상');
+INSERT IGNORE INTO code (orders, id, parent_id, code, value) VALUES(3, 7, 1, 'VIDEO', '영상 {}개 이상');
 INSERT IGNORE INTO code (orders, id, parent_id, code, value) VALUES(4, 8, 1, 'CHARACTER', '글자수 {}자 이상');
 INSERT IGNORE INTO code (orders, id, parent_id, code, value) VALUES(5, 9, 1, 'MAP', '지도 필수');
 INSERT IGNORE INTO code (orders, id, parent_id, code, value) VALUES(6, 10, 1, 'BANNER', '배너 필수');
