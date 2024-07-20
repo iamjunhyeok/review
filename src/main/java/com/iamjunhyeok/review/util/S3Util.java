@@ -27,6 +27,14 @@ public class S3Util {
         s3Client.putObject(objectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
     }
 
+    public void putObject(MultipartFile file) throws IOException {
+        PutObjectRequest objectRequest = PutObjectRequest.builder()
+                .bucket(BUCKET_NAME)
+                .key(file.getOriginalFilename())
+                .build();
+        s3Client.putObject(objectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+    }
+
     public void deleteObject(String filename) throws IOException {
         DeleteObjectRequest objectRequest = DeleteObjectRequest.builder()
                 .bucket(BUCKET_NAME)
