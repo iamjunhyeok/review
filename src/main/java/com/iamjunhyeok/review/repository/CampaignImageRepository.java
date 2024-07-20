@@ -11,4 +11,6 @@ import java.util.List;
 public interface CampaignImageRepository extends JpaRepository<CampaignImage, Long> {
 
     List<CampaignImageNameProjection> findByIdIn(List<Long> ids);
+
+    void deleteAllByNameIn(List<String> names);
 }

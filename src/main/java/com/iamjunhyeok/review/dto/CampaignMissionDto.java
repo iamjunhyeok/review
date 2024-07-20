@@ -9,6 +9,7 @@ import lombok.Setter;
 public class CampaignMissionDto {
     private Long id;
     private String arguments;
+    private CodeDto code;
 
     public static CampaignMissionDto from(CampaignMission campaignMission) {
         CampaignMissionDto campaignMissionDto = new CampaignMissionDto();

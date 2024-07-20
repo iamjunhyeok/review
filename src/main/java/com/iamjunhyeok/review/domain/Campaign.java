@@ -122,7 +122,7 @@ public class Campaign extends CampaignBase {
     public void addMission(List<Code> missions, Map<Long, String> argumentsMap) {
         if (CollectionUtils.isEmpty(missions)) return;
         for (int i = 0; i < missions.size(); i++) {
-            this.missions.add(CampaignMission.of(argumentsMap.getOrDefault(missions.get(i).getId(), null),this, missions.get(i)));
+            this.missions.add(CampaignMission.of(argumentsMap.get(missions.get(i).getId()),this, missions.get(i)));
         }
     }
 

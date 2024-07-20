@@ -1,15 +1,15 @@
 package com.iamjunhyeok.review.repository;
 
-import com.iamjunhyeok.review.domain.CampaignLink;
+import com.iamjunhyeok.review.domain.CampaignOption;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface CampaignLinkRepository extends JpaRepository<CampaignLink, Long> {
+public interface CampaignOptionRepository extends JpaRepository<CampaignOption, Long> {
 
     @Modifying
-    @Query("delete from CampaignLink l where l.campaign.id = :campaignId")
+    @Query("delete from CampaignOption o where o.campaign.id = :campaignId")
     void deleteAllByCampaignId(Long campaignId);
 }

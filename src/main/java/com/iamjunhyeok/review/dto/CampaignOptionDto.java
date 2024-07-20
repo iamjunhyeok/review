@@ -8,6 +8,7 @@ import lombok.Setter;
 @Setter
 public class CampaignOptionDto {
     private Long id;
+    private CodeDto code;
 
     public static CampaignOptionDto from(CampaignOption campaignOption) {
         CampaignOptionDto campaignOptionDto = new CampaignOptionDto();

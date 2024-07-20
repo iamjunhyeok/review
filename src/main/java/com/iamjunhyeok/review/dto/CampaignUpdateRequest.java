@@ -14,9 +14,5 @@ import java.util.List;
 public class CampaignUpdateRequest extends CampaignBaseDto {
     List<CampaignLinkDto> links;
 
-    List<Long> deleteLinkIds;
-    List<Long> deleteImageIds;
-
-    List<Long> deleteMissionIds;
-    List<Long> deleteOptionIds;
+    List<String> deleteImageNames;
 }
