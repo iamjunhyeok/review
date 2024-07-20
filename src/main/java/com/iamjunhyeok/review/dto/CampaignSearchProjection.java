@@ -8,6 +8,7 @@ import com.iamjunhyeok.review.constant.CampaignType;
 import com.iamjunhyeok.review.domain.Campaign;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @EntityView(Campaign.class)
 public interface CampaignSearchProjection {
@@ -22,9 +23,14 @@ public interface CampaignSearchProjection {
 
     LocalDate getApplicationEndDate();
 
+    String getOfferingSummary();
+
     @Mapping("size(applications)")
     Long getApplicantsCount();
 
     String getLongitude();
     String getLatitude();
+
+    List<CampaignImageProjection> getImages();
+
 }
