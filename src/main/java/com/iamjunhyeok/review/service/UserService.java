@@ -12,6 +12,7 @@ import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.ApplicationRepository;
 import com.iamjunhyeok.review.repository.UserRepository;
 import com.iamjunhyeok.review.util.S3Util;
+import io.jsonwebtoken.lang.Objects;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
@@ -42,13 +43,13 @@ public class UserService {
     @Transactional
     public User updateUserInfo(Long id, UserUpdateInfoRequest request, MultipartFile file) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build());
-        user.update(request);
+                .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build())
+                .update(request);
 
         // 새로운 프로필 이미지가 업로드되었고, 이미지가 기존의 이미지와 다르면 기존의 이미지 S3 에서 삭제 처리
         String newProfileImageName = request.getProfileImageName();
         String originProfileImageName = user.getProfileImageName();
-        if (!file.isEmpty() && Strings.isNotBlank(newProfileImageName)
+        if (!Objects.isEmpty(file) && Strings.isNotBlank(newProfileImageName)
                 && !newProfileImageName.equals(originProfileImageName)) {
             try {
                 s3Util.deleteObject(originProfileImageName);
