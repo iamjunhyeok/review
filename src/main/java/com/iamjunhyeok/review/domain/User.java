@@ -54,6 +54,7 @@ public class User extends Address {
 
     private String accountHolder;
 
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     private String profileImageName;
@@ -69,6 +70,7 @@ public class User extends Address {
         user.setEmail(email);
         user.setNickname(nickname);
         user.setPassword(password);
+        user.setRole(Role.ROLE_USER);
         return user;
     }
 
