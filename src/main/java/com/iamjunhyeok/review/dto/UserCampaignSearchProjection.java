@@ -1,6 +1,7 @@
 package com.iamjunhyeok.review.dto;
 
 import com.blazebit.persistence.view.EntityView;
+import com.blazebit.persistence.view.IdMapping;
 import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.constant.CampaignSocial;
 import com.iamjunhyeok.review.constant.CampaignType;
@@ -11,6 +12,9 @@ import java.time.LocalDate;
 
 @EntityView(Campaign.class)
 public interface UserCampaignSearchProjection {
+    @IdMapping
+    Long getId();
+
     CampaignType getType();
 
     CampaignSocial getSocial();
