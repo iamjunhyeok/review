@@ -34,4 +34,10 @@ public interface UserViewProjection {
     String getAccountHolder();
 
     Role getRole();
+
+    String getAddress();
+
+    String getRest();
+
+    String getPostalCode();
 }
