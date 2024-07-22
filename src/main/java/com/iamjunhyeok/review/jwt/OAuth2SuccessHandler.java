@@ -47,6 +47,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         CookieUtil.createCookie(response, "access_token", accessToken, (int) Duration.ofMinutes(30).toSeconds());
 
         // 리다이렉션
-        response.sendRedirect("http://localhost:5173");
+        response.sendRedirect("http://localhost:3000");
     }
 }
