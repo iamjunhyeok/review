@@ -34,7 +34,8 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         String registrationId = userRequest.getClientRegistration().getRegistrationId();
         String clientName = userRequest.getClientRegistration().getClientName();
 
-        Long userId = null;
+        Long userId;
+        Role role;
         if (registrationId.equals("naver")) {
             NaverOAuth2Response naverOAuth2Response = new ObjectMapper().convertValue(oAuth2User.getAttributes(), NaverOAuth2Response.class);
 
@@ -52,9 +53,10 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
                     });
             User user = sns.getUser();
             userId = user.getId();
+            role = user.getRole();
         } else {
             return null;
         }
-        return new CustomOAuth2User(userId, Role.ROLE_USER);
+        return new CustomOAuth2User(userId, role);
     }
 }
