@@ -3,6 +3,7 @@ package com.iamjunhyeok.review.service;
 import com.iamjunhyeok.review.domain.Inquiry;
 import com.iamjunhyeok.review.domain.User;
 import com.iamjunhyeok.review.dto.InquiryCreateRequest;
+import com.iamjunhyeok.review.dto.InquiryProjection;
 import com.iamjunhyeok.review.dto.InquiryUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.InquiryRepository;
@@ -23,25 +24,13 @@ public class InquiryService {
     private final UserRepository userRepository;
 
     @Transactional
-    public Inquiry create(InquiryCreateRequest request) {
-        // 로그인 개발 시, 수정할 것!!
-//        User user = userRepository.findById(1L)
-//                .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build());
-        User user = userRepository.getReferenceById(1L);
+    public Inquiry register(InquiryCreateRequest request, Long userId) {
+        User user = userRepository.getReferenceById(userId);
         return inquiryRepository.save(Inquiry.of(request.getCategory(), request.getTitle(), request.getContent(), user));
     }
 
-    public List<Inquiry> search(String category) {
-        return inquiryRepository.findAll();
-    }
-
-    public Inquiry findById(Long id) {
-        return inquiryRepository.findById(id)
-                .orElseThrow(() -> ErrorCode.INQUIRY_NOT_FOUND.build());
-    }
-
     @Transactional
-    public Inquiry update(Long id, InquiryUpdateRequest request) {
+    public Inquiry modify(Long id, InquiryUpdateRequest request) {
         return inquiryRepository.findById(id)
                 .orElseThrow(() -> ErrorCode.INQUIRY_NOT_FOUND.build())
                 .update(request.getCategory(), request.getTitle(), request.getContent());
@@ -52,5 +41,18 @@ public class InquiryService {
         inquiryRepository.findById(id)
                 .orElseThrow(() -> ErrorCode.INQUIRY_NOT_FOUND.build())
                 .delete();
+    }
+
+    public List<InquiryProjection> fetchAllInquiriesForAuthenticatedUser(String category) {
+        return inquiryRepository.fetchAllInquiriesForAuthenticatedUser(category);
+    }
+
+    public List<InquiryProjection> fetchAllInquiries(String category) {
+        return inquiryRepository.fetchAllInquiries(category);
+    }
+
+    public InquiryProjection fetchOne(Long id) {
+        return inquiryRepository.fetchOne(id)
+                .orElseThrow(() -> ErrorCode.INQUIRY_NOT_FOUND.build());
     }
 }

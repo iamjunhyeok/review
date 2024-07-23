@@ -14,6 +14,7 @@ import com.iamjunhyeok.review.dto.CampaignSearchProjection;
 import com.iamjunhyeok.review.dto.CampaignSummaryProjection;
 import com.iamjunhyeok.review.dto.CampaignViewProjection;
 import com.iamjunhyeok.review.dto.CodeProjection;
+import com.iamjunhyeok.review.dto.InquiryProjection;
 import com.iamjunhyeok.review.dto.PointSearchProjection;
 import com.iamjunhyeok.review.dto.UserCampaignApplicationProjection;
 import com.iamjunhyeok.review.dto.UserCampaignSearchProjection;
@@ -65,6 +66,7 @@ public class BlazePersistenceConfig {
         config.addEntityView(CampaignMissionProjection.class);
         config.addEntityView(CampaignOptionProjection.class);
         config.addEntityView(CodeProjection.class);
+        config.addEntityView(InquiryProjection.class);
         return config.createEntityViewManager(cbf);
     }
 }
