@@ -27,6 +27,9 @@ public class RefreshTokenService {
 
         if (authorizationHeader != null && authorizationHeader.startsWith(tokenType)) {
             String token = authorizationHeader.substring(tokenType.length());
+            if (!jwtProvider.isValid(token)) {
+                throw new IllegalArgumentException("Invalid token");
+            }
             Long userId = jwtProvider.getUserId(token);
             if (userId != null) {
                 // 토큰이 유효한지와 사용자의 리프레시 토큰이 맞는지 확인
