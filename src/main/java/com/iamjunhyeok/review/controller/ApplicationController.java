@@ -5,6 +5,7 @@ import com.iamjunhyeok.review.dto.ApplicationCancelRequest;
 import com.iamjunhyeok.review.dto.ApplicationViewProjection;
 import com.iamjunhyeok.review.dto.CampaignApplyRequest;
 import com.iamjunhyeok.review.dto.CampaignApplyResponse;
+import com.iamjunhyeok.review.dto.UserCampaignApplicationProjection;
 import com.iamjunhyeok.review.service.ApplicationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -58,6 +59,11 @@ public class ApplicationController {
                         .map(ApplicantSearchResponse::from)
                         .toList()
         );
+    }
+
+    @GetMapping("/users/me/campaigns/{campaignId}/applications/{applicationId}")
+    public ResponseEntity<List<UserCampaignApplicationProjection>> fetchAuthenticatedUserCampaignApplication(@PathVariable Long campaignId, @PathVariable Long applicationId) {
+        return ResponseEntity.ok(applicationService.fetchAuthenticatedUserCampaignApplication(campaignId, applicationId));
     }
 
 }

@@ -8,6 +8,7 @@ import com.iamjunhyeok.review.domain.User;
 import com.iamjunhyeok.review.dto.ApplicationCancelRequest;
 import com.iamjunhyeok.review.dto.ApplicationViewProjection;
 import com.iamjunhyeok.review.dto.CampaignApplyRequest;
+import com.iamjunhyeok.review.dto.UserCampaignApplicationProjection;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.ApplicationRepository;
 import com.iamjunhyeok.review.repository.CampaignRepository;
@@ -86,5 +87,9 @@ public class ApplicationService {
                 .stream()
                 .map(Application::getUser)
                 .toList();
+    }
+
+    public List<UserCampaignApplicationProjection> fetchAuthenticatedUserCampaignApplication(Long campaignId, Long applicationId) {
+        return applicationRepository.fetchAuthenticatedUserCampaignApplication(campaignId, applicationId);
     }
 }

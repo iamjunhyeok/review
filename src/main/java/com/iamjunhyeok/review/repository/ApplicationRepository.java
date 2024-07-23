@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ApplicationRepository extends JpaRepository<Application, Long> {
+public interface ApplicationRepository extends JpaRepository<Application, Long>, CustomApplicationRepository {
 
     boolean existsByUserIdAndCampaignId(Long userId, Long campaignId);
 
