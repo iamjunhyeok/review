@@ -4,6 +4,7 @@ import com.iamjunhyeok.review.domain.Faq;
 import com.iamjunhyeok.review.dto.request.FaqCreateRequest;
 import com.iamjunhyeok.review.dto.request.FaqUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
+import com.iamjunhyeok.review.projection.FaqProjection;
 import com.iamjunhyeok.review.repository.FaqRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,16 +20,16 @@ public class FaqService {
     private final FaqRepository faqRepository;
 
     @Transactional
-    public Faq create(FaqCreateRequest request) {
+    public Faq register(FaqCreateRequest request) {
         return faqRepository.save(Faq.of(request.getCategory(), request.getQuestion(), request.getAnswer()));
     }
 
-    public List<Faq> search(String category) {
-        return faqRepository.findAll();
+    public List<FaqProjection> fetchAll(String category) {
+        return faqRepository.fetchAll(category);
     }
 
-    public Faq findById(Long id) {
-        return faqRepository.findById(id)
+    public FaqProjection fetchOne(Long id) {
+        return faqRepository.fetchOne(id)
                 .orElseThrow(() -> ErrorCode.FAQ_NOT_FOUND.build());
     }
 

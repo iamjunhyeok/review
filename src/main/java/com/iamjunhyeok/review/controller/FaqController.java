@@ -3,9 +3,8 @@ package com.iamjunhyeok.review.controller;
 import com.iamjunhyeok.review.dto.request.FaqCreateRequest;
 import com.iamjunhyeok.review.dto.request.FaqUpdateRequest;
 import com.iamjunhyeok.review.dto.response.FaqCreateResponse;
-import com.iamjunhyeok.review.dto.response.FaqSearchResponse;
 import com.iamjunhyeok.review.dto.response.FaqUpdateResponse;
-import com.iamjunhyeok.review.dto.response.FaqViewResponse;
+import com.iamjunhyeok.review.projection.FaqProjection;
 import com.iamjunhyeok.review.service.FaqService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -32,29 +31,46 @@ public class FaqController {
 
     private final FaqService faqService;
 
+    /**
+     * FAQ 등록
+     * @param request
+     * @return
+     */
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<FaqCreateResponse> create(@RequestBody @Valid FaqCreateRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(FaqCreateResponse.from(faqService.create(request)));
+    public ResponseEntity<FaqCreateResponse> register(@RequestBody @Valid FaqCreateRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(FaqCreateResponse.from(faqService.register(request)));
     }
 
+    /**
+     * 전체 FAQ 조회
+     * @param category
+     * @return
+     */
     @GetMapping
-    public ResponseEntity<List<FaqSearchResponse>> search(@RequestParam(required = false) String category) {
-        return ResponseEntity.ok(
-                faqService.search(category)
-                        .stream().map(FaqSearchResponse::from)
-                        .toList()
-        );
+    public ResponseEntity<List<FaqProjection>> fetchAll(@RequestParam(required = false) String category) {
+        return ResponseEntity.ok(faqService.fetchAll(category));
     }
 
+    /**
+     * 개별 FAQ 조회
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}")
-    public ResponseEntity<FaqViewResponse> view(@PathVariable Long id) {
-        return ResponseEntity.ok(FaqViewResponse.from(faqService.findById(id)));
+    public ResponseEntity<FaqProjection> fetchOne(@PathVariable Long id) {
+        return ResponseEntity.ok(faqService.fetchOne(id));
     }
 
+    /**
+     * FAQ 수정
+     * @param id
+     * @param request
+     * @return
+     */
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
-    public ResponseEntity<FaqUpdateResponse> update(@PathVariable Long id, @RequestBody @Valid FaqUpdateRequest request) {
+    public ResponseEntity<FaqUpdateResponse> modify(@PathVariable Long id, @RequestBody @Valid FaqUpdateRequest request) {
         return ResponseEntity.ok(FaqUpdateResponse.from(faqService.update(id, request)));
     }
 
