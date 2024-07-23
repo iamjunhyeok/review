@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class AnswerUpdateRequest {
+public class InquiryAnswerModifyRequest {
 
     @NotBlank
     private String title;

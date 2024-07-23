@@ -1,7 +1,7 @@
 package com.iamjunhyeok.review.dto;
 
 import com.iamjunhyeok.review.constant.InquiryCategory;
-import com.iamjunhyeok.review.domain.Answer;
+import com.iamjunhyeok.review.domain.InquiryAnswer;
 import com.iamjunhyeok.review.domain.Inquiry;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,8 +21,8 @@ public class InquiryViewResponse {
         response.setCategory(inquiry.getCategory());
         response.setTitle(inquiry.getTitle());
         response.setContent(inquiry.getContent());
-        if (inquiry.getAnswer() != null) {
-            response.setAnswer(AnswerResponse.from(inquiry.getAnswer()));
+        if (inquiry.getInquiryAnswer() != null) {
+            response.setAnswer(AnswerResponse.from(inquiry.getInquiryAnswer()));
         }
         return response;
     }
@@ -34,11 +34,11 @@ public class InquiryViewResponse {
         private String title;
         private String content;
 
-        public static AnswerResponse from(Answer answer) {
+        public static AnswerResponse from(InquiryAnswer inquiryAnswer) {
             AnswerResponse response = new AnswerResponse();
-            response.setId(answer.getId());
-            response.setTitle(answer.getTitle());
-            response.setContent(answer.getContent());
+            response.setId(inquiryAnswer.getId());
+            response.setTitle(inquiryAnswer.getTitle());
+            response.setContent(inquiryAnswer.getContent());
             return response;
         }
     }

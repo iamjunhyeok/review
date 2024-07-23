@@ -42,7 +42,7 @@ public class Inquiry extends Base {
     private User user;
 
     @OneToOne
-    private Answer answer;
+    private InquiryAnswer inquiryAnswer;
 
     public static Inquiry of(InquiryCategory category, String title, String content, User user) {
         Inquiry inquiry = new Inquiry();
@@ -54,7 +54,7 @@ public class Inquiry extends Base {
     }
 
     public Inquiry update(InquiryCategory category, String title, String content) {
-        if (this.answer != null) {
+        if (this.inquiryAnswer != null) {
             throw ErrorCode.INQUIRY_CANNOT_BE_MODIFIED.build();
         }
         this.category = category;
@@ -64,17 +64,17 @@ public class Inquiry extends Base {
     }
 
     public void delete() {
-        if (this.answer != null) {
+        if (this.inquiryAnswer != null) {
             throw ErrorCode.INQUIRY_CANNOT_BE_DELETED.build();
         }
         this.deleted = true;
     }
 
-    public void registerAnswer(Answer answer) {
-        if (this.answer != null) {
+    public void registerAnswer(InquiryAnswer inquiryAnswer) {
+        if (this.inquiryAnswer != null) {
             throw ErrorCode.INQUIRY_ANSWER_ALREADY_REGISTERED.build();
         }
-        this.answer = answer;
-        answer.setInquiry(this);
+        this.inquiryAnswer = inquiryAnswer;
+        inquiryAnswer.setInquiry(this);
     }
 }

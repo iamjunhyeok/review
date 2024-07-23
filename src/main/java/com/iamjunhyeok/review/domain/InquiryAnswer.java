@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-public class Answer extends Base {
+public class InquiryAnswer extends Base {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id", nullable = false, updatable = false)
@@ -29,14 +29,14 @@ public class Answer extends Base {
     @JoinColumn(name = "inquiry_id")
     private Inquiry inquiry;
 
-    public static Answer of(String title, String content) {
-        Answer answer = new Answer();
-        answer.setTitle(title);
-        answer.setContent(content);
-        return answer;
+    public static InquiryAnswer of(String title, String content) {
+        InquiryAnswer inquiryAnswer = new InquiryAnswer();
+        inquiryAnswer.setTitle(title);
+        inquiryAnswer.setContent(content);
+        return inquiryAnswer;
     }
 
-    public Answer update(String title, String content) {
+    public InquiryAnswer update(String title, String content) {
         this.title = title;
         this.content = content;
         return this;
