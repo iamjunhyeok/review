@@ -26,13 +26,18 @@ public class PenaltyService {
     private final ApplicationRepository applicationRepository;
 
     @Transactional
-    public void create(Long userId, Long applicationId, PenaltyReason reason) {
+    public void givePenaltyPoints(Long userId, Long applicationId, PenaltyReason reason) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build());
 
         Application application = applicationRepository.findById(applicationId)
                 .orElseThrow(() -> ErrorCode.APPLICATION_NOT_FOUND.build());
 
+        penaltyRepository.save(Penalty.of(user, application, reason));
+    }
+
+    @Transactional
+    public void givePenaltyPoints(User user, Application application, PenaltyReason reason) {
         penaltyRepository.save(Penalty.of(user, application, reason));
     }
 

@@ -6,6 +6,7 @@ import com.blazebit.persistence.spi.CriteriaBuilderConfiguration;
 import com.blazebit.persistence.view.EntityViewManager;
 import com.blazebit.persistence.view.EntityViews;
 import com.blazebit.persistence.view.spi.EntityViewConfiguration;
+import com.iamjunhyeok.review.dto.ApplicantProjection;
 import com.iamjunhyeok.review.dto.CampaignImageProjection;
 import com.iamjunhyeok.review.dto.CampaignLinkProjection;
 import com.iamjunhyeok.review.dto.CampaignMissionProjection;
@@ -18,6 +19,7 @@ import com.iamjunhyeok.review.dto.InquiryProjection;
 import com.iamjunhyeok.review.dto.PointSearchProjection;
 import com.iamjunhyeok.review.dto.UserCampaignApplicationProjection;
 import com.iamjunhyeok.review.dto.UserCampaignSearchProjection;
+import com.iamjunhyeok.review.dto.UserProjection;
 import com.iamjunhyeok.review.dto.UserSearchProjection;
 import com.iamjunhyeok.review.dto.UserViewProjection;
 import jakarta.persistence.EntityManagerFactory;
@@ -67,6 +69,8 @@ public class BlazePersistenceConfig {
         config.addEntityView(CampaignOptionProjection.class);
         config.addEntityView(CodeProjection.class);
         config.addEntityView(InquiryProjection.class);
+        config.addEntityView(ApplicantProjection.class);
+        config.addEntityView(UserProjection.class);
         return config.createEntityViewManager(cbf);
     }
 }

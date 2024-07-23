@@ -18,10 +18,12 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +67,10 @@ public class Application extends Address {
 
     @OneToMany(mappedBy = "application", cascade = CascadeType.PERSIST)
     private List<Review> reviews = new ArrayList<>();
+
+    @Builder.Default
+    @OneToMany(mappedBy = "application", cascade = CascadeType.PERSIST)
+    private List<ApplicationImage> images = new ArrayList<>();
 
     public static Application create(User user, CampaignApplyRequest request) {
         Application application = new Application();
@@ -113,5 +119,21 @@ public class Application extends Address {
             throw ErrorCode.APPLICATION_CANNOT_BE_DELETED.build();
         }
         this.deleted = true;
+    }
+
+    public void addImage(List<ApplicationImage> images) {
+        if (CollectionUtils.isEmpty(images)) return;
+        this.images.addAll(images);
+        for (ApplicationImage image : images) {
+            image.setApplication(this);
+        }
+    }
+
+    public void reject() {
+        if (this.status == ApplicationStatus.APPLIED) {
+            this.setStatus(ApplicationStatus.REJECTED);
+        } else {
+            throw ErrorCode.CAMPAIGN_CANNOT_BE_REJECTED.build();
+        }
     }
 }

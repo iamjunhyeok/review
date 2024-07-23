@@ -1,5 +1,6 @@
 package com.iamjunhyeok.review.repository;
 
+import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.domain.Application;
 import com.iamjunhyeok.review.dto.ApplicationViewProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -24,4 +25,6 @@ public interface ApplicationRepository extends JpaRepository<Application, Long>,
     List<Application> findByCampaignIdWithUsers(Long campaignId);
 
     Optional<Application> findByIdAndUserId(Long id, Long userId);
+
+    List<Application> findAllByCampaignIdAndStatus(Long campaignId, ApplicationStatus status);
 }

@@ -6,6 +6,8 @@ import com.blazebit.persistence.view.EntityViewManager;
 import com.blazebit.persistence.view.EntityViewSetting;
 import com.iamjunhyeok.review.domain.Application;
 import com.iamjunhyeok.review.domain.CustomOAuth2User;
+import com.iamjunhyeok.review.dto.ApplicantProjection;
+import com.iamjunhyeok.review.dto.ApplicationProjection;
 import com.iamjunhyeok.review.dto.UserCampaignApplicationProjection;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
@@ -30,5 +32,20 @@ public class CustomApplicationRepositoryImpl implements CustomApplicationReposit
                 .where("a.campaign.id").eq(campaignId)
                 .where("a.id").eq(applicationId);
         return entityViewManager.applySetting(EntityViewSetting.create(UserCampaignApplicationProjection.class), campaignCriteriaBuilder).getResultList();
+    }
+
+    @Override
+    public ApplicationProjection fetchOne(Long campaignId, Long applicationId) {
+        CriteriaBuilder<Application> cb = criteriaBuilderFactory.create(entityManager, Application.class, "a")
+                .where("a.campaign.id").eq(campaignId)
+                .where("a.id").eq(applicationId);
+        return entityViewManager.applySetting(EntityViewSetting.create(ApplicationProjection.class), cb).getSingleResult();
+    }
+
+    @Override
+    public List<ApplicantProjection> fetchAllApplicants(Long campaignId) {
+        CriteriaBuilder<Application> cb = criteriaBuilderFactory.create(entityManager, Application.class, "a")
+                        .where("a.campaign.id").eq(campaignId);
+        return entityViewManager.applySetting(EntityViewSetting.create(ApplicantProjection.class), cb).getResultList();
     }
 }
