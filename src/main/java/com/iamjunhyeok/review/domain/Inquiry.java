@@ -1,6 +1,7 @@
 package com.iamjunhyeok.review.domain;
 
 import com.iamjunhyeok.review.constant.InquiryCategory;
+import com.iamjunhyeok.review.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -53,6 +54,9 @@ public class Inquiry extends Base {
     }
 
     public Inquiry update(InquiryCategory category, String title, String content) {
+        if (this.answer != null) {
+            throw ErrorCode.INQUIRY_CANNOT_BE_MODIFIED.build();
+        }
         this.category = category;
         this.title = title;
         this.content = content;
@@ -60,10 +64,16 @@ public class Inquiry extends Base {
     }
 
     public void delete() {
+        if (this.answer != null) {
+            throw ErrorCode.INQUIRY_CANNOT_BE_DELETED.build();
+        }
         this.deleted = true;
     }
 
     public void registerAnswer(Answer answer) {
+        if (this.answer != null) {
+            throw ErrorCode.INQUIRY_ANSWER_ALREADY_REGISTERED.build();
+        }
         this.answer = answer;
         answer.setInquiry(this);
     }
