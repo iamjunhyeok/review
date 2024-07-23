@@ -1,7 +1,7 @@
 package com.iamjunhyeok.review.repository;
 
 import com.iamjunhyeok.review.domain.Code;
-import com.iamjunhyeok.review.dto.CodeProjection;
+import com.iamjunhyeok.review.projection.CodeProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

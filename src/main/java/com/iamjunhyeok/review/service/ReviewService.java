@@ -2,10 +2,10 @@ package com.iamjunhyeok.review.service;
 
 import com.iamjunhyeok.review.domain.Application;
 import com.iamjunhyeok.review.domain.Review;
-import com.iamjunhyeok.review.dto.ReviewCreateRequest;
 import com.iamjunhyeok.review.dto.ReviewDto;
-import com.iamjunhyeok.review.dto.ReviewRejectRequest;
-import com.iamjunhyeok.review.dto.ReviewUpdateRequest;
+import com.iamjunhyeok.review.dto.request.ReviewCreateRequest;
+import com.iamjunhyeok.review.dto.request.ReviewRejectRequest;
+import com.iamjunhyeok.review.dto.request.ReviewUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.ApplicationRepository;
 import com.iamjunhyeok.review.repository.ReviewRepository;

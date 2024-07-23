@@ -1,11 +1,11 @@
 package com.iamjunhyeok.review.controller;
 
-import com.iamjunhyeok.review.dto.ReviewCreateRequest;
-import com.iamjunhyeok.review.dto.ReviewCreateResponse;
-import com.iamjunhyeok.review.dto.ReviewRejectRequest;
-import com.iamjunhyeok.review.dto.ReviewRejectResponse;
-import com.iamjunhyeok.review.dto.ReviewUpdateRequest;
-import com.iamjunhyeok.review.dto.ReviewUpdateResponse;
+import com.iamjunhyeok.review.dto.request.ReviewCreateRequest;
+import com.iamjunhyeok.review.dto.request.ReviewRejectRequest;
+import com.iamjunhyeok.review.dto.request.ReviewUpdateRequest;
+import com.iamjunhyeok.review.dto.response.ReviewCreateResponse;
+import com.iamjunhyeok.review.dto.response.ReviewRejectResponse;
+import com.iamjunhyeok.review.dto.response.ReviewUpdateResponse;
 import com.iamjunhyeok.review.service.ReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,8 +26,8 @@ public class ReviewController {
 
     @PostMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews")
     public ResponseEntity<ReviewCreateResponse> create(@PathVariable Long campaignId,
-                                                             @PathVariable Long applicationId,
-                                                             @RequestBody @Valid ReviewCreateRequest request) {
+                                                       @PathVariable Long applicationId,
+                                                       @RequestBody @Valid ReviewCreateRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(
                 ReviewCreateResponse.from(reviewService.create(campaignId, applicationId, request))
         );
@@ -44,9 +44,9 @@ public class ReviewController {
 
     @PatchMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews/{id}/modify-request")
     public ResponseEntity<ReviewRejectResponse> modifyRequest(@PathVariable Long campaignId,
-                                                       @PathVariable Long applicationId,
-                                                       @PathVariable Long id,
-                                                       @RequestBody @Valid ReviewRejectRequest request) {
+                                                              @PathVariable Long applicationId,
+                                                              @PathVariable Long id,
+                                                              @RequestBody @Valid ReviewRejectRequest request) {
         return ResponseEntity.ok(ReviewRejectResponse.from(reviewService.modifyRequest(campaignId, applicationId, id, request)));
     }
 

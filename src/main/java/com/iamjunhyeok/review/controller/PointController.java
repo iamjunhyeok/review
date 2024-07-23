@@ -1,7 +1,7 @@
 package com.iamjunhyeok.review.controller;
 
 import com.iamjunhyeok.review.domain.CustomOAuth2User;
-import com.iamjunhyeok.review.dto.PointSearchProjection;
+import com.iamjunhyeok.review.projection.PointSearchProjection;
 import com.iamjunhyeok.review.service.PointService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

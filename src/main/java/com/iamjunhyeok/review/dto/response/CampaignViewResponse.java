@@ -1,6 +1,8 @@
 package com.iamjunhyeok.review.dto.response;
 
 import com.iamjunhyeok.review.domain.CampaignBase;
+import com.iamjunhyeok.review.dto.CampaignImageDto;
+import com.iamjunhyeok.review.dto.CampaignLinkDto;
 import lombok.Getter;
 import lombok.Setter;
 

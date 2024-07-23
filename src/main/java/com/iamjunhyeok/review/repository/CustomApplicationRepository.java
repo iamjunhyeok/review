@@ -1,8 +1,8 @@
 package com.iamjunhyeok.review.repository;
 
-import com.iamjunhyeok.review.dto.ApplicantProjection;
-import com.iamjunhyeok.review.dto.ApplicationProjection;
-import com.iamjunhyeok.review.dto.UserCampaignApplicationProjection;
+import com.iamjunhyeok.review.projection.ApplicantProjection;
+import com.iamjunhyeok.review.projection.ApplicationProjection;
+import com.iamjunhyeok.review.projection.UserCampaignApplicationProjection;
 
 import java.util.List;
 

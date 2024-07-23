@@ -2,6 +2,9 @@ package com.iamjunhyeok.review.dto.response;
 
 import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.domain.CampaignLink;
+import com.iamjunhyeok.review.dto.CampaignBaseDto;
+import com.iamjunhyeok.review.dto.CampaignMissionDto;
+import com.iamjunhyeok.review.dto.CampaignOptionDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;

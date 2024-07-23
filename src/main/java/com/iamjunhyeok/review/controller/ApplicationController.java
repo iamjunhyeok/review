@@ -1,11 +1,11 @@
 package com.iamjunhyeok.review.controller;
 
 import com.iamjunhyeok.review.domain.CustomOAuth2User;
-import com.iamjunhyeok.review.dto.ApplicantProjection;
-import com.iamjunhyeok.review.dto.ApplicationCancelRequest;
-import com.iamjunhyeok.review.dto.ApplicationProjection;
-import com.iamjunhyeok.review.dto.CampaignApplyRequest;
-import com.iamjunhyeok.review.dto.CampaignApplyResponse;
+import com.iamjunhyeok.review.dto.request.ApplicationCancelRequest;
+import com.iamjunhyeok.review.dto.request.CampaignApplyRequest;
+import com.iamjunhyeok.review.dto.response.CampaignApplyResponse;
+import com.iamjunhyeok.review.projection.ApplicantProjection;
+import com.iamjunhyeok.review.projection.ApplicationProjection;
 import com.iamjunhyeok.review.service.ApplicationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

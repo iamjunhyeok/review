@@ -1,6 +1,6 @@
 package com.iamjunhyeok.review.domain;
 
-import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
+import com.iamjunhyeok.review.dto.request.CampaignUpdateRequest;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

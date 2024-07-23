@@ -1,11 +1,11 @@
 package com.iamjunhyeok.review.controller;
 
-import com.iamjunhyeok.review.dto.FaqCreateRequest;
-import com.iamjunhyeok.review.dto.FaqCreateResponse;
-import com.iamjunhyeok.review.dto.FaqSearchResponse;
-import com.iamjunhyeok.review.dto.FaqUpdateRequest;
-import com.iamjunhyeok.review.dto.FaqUpdateResponse;
-import com.iamjunhyeok.review.dto.FaqViewResponse;
+import com.iamjunhyeok.review.dto.request.FaqCreateRequest;
+import com.iamjunhyeok.review.dto.request.FaqUpdateRequest;
+import com.iamjunhyeok.review.dto.response.FaqCreateResponse;
+import com.iamjunhyeok.review.dto.response.FaqSearchResponse;
+import com.iamjunhyeok.review.dto.response.FaqUpdateResponse;
+import com.iamjunhyeok.review.dto.response.FaqViewResponse;
 import com.iamjunhyeok.review.service.FaqService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

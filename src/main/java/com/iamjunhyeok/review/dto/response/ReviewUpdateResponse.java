@@ -1,6 +1,7 @@
 package com.iamjunhyeok.review.dto.response;
 
 import com.iamjunhyeok.review.domain.Review;
+import com.iamjunhyeok.review.dto.ReviewDto;
 import lombok.Getter;
 import lombok.Setter;
 

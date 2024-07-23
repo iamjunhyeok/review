@@ -1,6 +1,6 @@
 package com.iamjunhyeok.review.domain;
 
-import com.iamjunhyeok.review.dto.DataDictionaryUpdateRequest;
+import com.iamjunhyeok.review.dto.request.DataDictionaryUpdateRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

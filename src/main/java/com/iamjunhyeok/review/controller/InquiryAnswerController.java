@@ -1,9 +1,9 @@
 package com.iamjunhyeok.review.controller;
 
-import com.iamjunhyeok.review.dto.InquiryAnswerModifyRequest;
-import com.iamjunhyeok.review.dto.InquiryAnswerModifyResponse;
-import com.iamjunhyeok.review.dto.InquiryAnswerRegisterRequest;
-import com.iamjunhyeok.review.dto.InquiryAnswerRegisterResponse;
+import com.iamjunhyeok.review.dto.request.InquiryAnswerModifyRequest;
+import com.iamjunhyeok.review.dto.request.InquiryAnswerRegisterRequest;
+import com.iamjunhyeok.review.dto.response.InquiryAnswerModifyResponse;
+import com.iamjunhyeok.review.dto.response.InquiryAnswerRegisterResponse;
 import com.iamjunhyeok.review.service.InquiryAnswerService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

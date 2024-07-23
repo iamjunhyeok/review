@@ -1,10 +1,10 @@
 package com.iamjunhyeok.review.repository;
 
 import com.iamjunhyeok.review.constant.ApplicationStatus;
-import com.iamjunhyeok.review.dto.UserCampaignApplicationProjection;
-import com.iamjunhyeok.review.dto.UserCampaignSearchProjection;
-import com.iamjunhyeok.review.dto.UserSearchProjection;
-import com.iamjunhyeok.review.dto.UserViewProjection;
+import com.iamjunhyeok.review.projection.UserCampaignApplicationProjection;
+import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
+import com.iamjunhyeok.review.projection.UserSearchProjection;
+import com.iamjunhyeok.review.projection.UserViewProjection;
 
 import java.util.List;
 import java.util.Optional;

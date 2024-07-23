@@ -2,7 +2,7 @@ package com.iamjunhyeok.review.repository;
 
 import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.domain.Application;
-import com.iamjunhyeok.review.dto.ApplicationViewProjection;
+import com.iamjunhyeok.review.projection.ApplicationViewProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;

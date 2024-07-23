@@ -5,7 +5,7 @@ import com.blazebit.persistence.CriteriaBuilderFactory;
 import com.blazebit.persistence.view.EntityViewManager;
 import com.blazebit.persistence.view.EntityViewSetting;
 import com.iamjunhyeok.review.domain.Point;
-import com.iamjunhyeok.review.dto.PointSearchProjection;
+import com.iamjunhyeok.review.projection.PointSearchProjection;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 

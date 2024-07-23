@@ -1,6 +1,6 @@
 package com.iamjunhyeok.review.repository;
 
-import com.iamjunhyeok.review.dto.InquiryProjection;
+import com.iamjunhyeok.review.projection.InquiryProjection;
 
 import java.util.List;
 

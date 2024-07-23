@@ -1,5 +1,7 @@
 package com.iamjunhyeok.review.dto.request;
 
+import com.iamjunhyeok.review.dto.CampaignBaseDto;
+import com.iamjunhyeok.review.dto.CampaignLinkDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

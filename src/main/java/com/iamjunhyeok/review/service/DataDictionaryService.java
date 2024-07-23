@@ -1,14 +1,13 @@
 package com.iamjunhyeok.review.service;
 
 import com.iamjunhyeok.review.domain.DataDictionary;
-import com.iamjunhyeok.review.dto.DataDictionaryCreateRequest;
-import com.iamjunhyeok.review.dto.DataDictionarySearchProjection;
-import com.iamjunhyeok.review.dto.DataDictionaryUpdateRequest;
-import com.iamjunhyeok.review.dto.DataDictionaryViewProjection;
+import com.iamjunhyeok.review.dto.request.DataDictionaryCreateRequest;
+import com.iamjunhyeok.review.dto.request.DataDictionaryUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
+import com.iamjunhyeok.review.projection.DataDictionarySearchProjection;
+import com.iamjunhyeok.review.projection.DataDictionaryViewProjection;
 import com.iamjunhyeok.review.repository.DataDictionaryRepository;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

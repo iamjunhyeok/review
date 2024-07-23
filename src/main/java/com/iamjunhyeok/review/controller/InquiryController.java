@@ -1,11 +1,11 @@
 package com.iamjunhyeok.review.controller;
 
 import com.iamjunhyeok.review.domain.CustomOAuth2User;
-import com.iamjunhyeok.review.dto.InquiryCreateRequest;
-import com.iamjunhyeok.review.dto.InquiryCreateResponse;
-import com.iamjunhyeok.review.dto.InquiryProjection;
-import com.iamjunhyeok.review.dto.InquiryUpdateRequest;
-import com.iamjunhyeok.review.dto.InquiryUpdateResponse;
+import com.iamjunhyeok.review.dto.request.InquiryCreateRequest;
+import com.iamjunhyeok.review.dto.request.InquiryUpdateRequest;
+import com.iamjunhyeok.review.dto.response.InquiryCreateResponse;
+import com.iamjunhyeok.review.dto.response.InquiryUpdateResponse;
+import com.iamjunhyeok.review.projection.InquiryProjection;
 import com.iamjunhyeok.review.service.InquiryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class InquiryController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/support/inquiries")
     public ResponseEntity<InquiryCreateResponse> register(@RequestBody @Valid InquiryCreateRequest request,
-                                                        @AuthenticationPrincipal CustomOAuth2User principal) {
+                                                          @AuthenticationPrincipal CustomOAuth2User principal) {
         return ResponseEntity.status(HttpStatus.CREATED).body(InquiryCreateResponse.from(inquiryService.register(request, principal.getUserId())));
     }
 

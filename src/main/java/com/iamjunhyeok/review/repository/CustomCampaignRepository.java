@@ -1,8 +1,8 @@
 package com.iamjunhyeok.review.repository;
 
 import com.iamjunhyeok.review.constant.ApplicationStatus;
-import com.iamjunhyeok.review.dto.CampaignSearchProjection;
-import com.iamjunhyeok.review.dto.UserCampaignSearchProjection;
+import com.iamjunhyeok.review.projection.CampaignSearchProjection;
+import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;

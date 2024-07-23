@@ -6,7 +6,7 @@ import com.blazebit.persistence.view.EntityViewManager;
 import com.blazebit.persistence.view.EntityViewSetting;
 import com.iamjunhyeok.review.domain.CustomOAuth2User;
 import com.iamjunhyeok.review.domain.Inquiry;
-import com.iamjunhyeok.review.dto.InquiryProjection;
+import com.iamjunhyeok.review.projection.InquiryProjection;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;

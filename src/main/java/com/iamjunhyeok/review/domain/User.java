@@ -2,7 +2,7 @@ package com.iamjunhyeok.review.domain;
 
 import com.iamjunhyeok.review.constant.Gender;
 import com.iamjunhyeok.review.constant.Role;
-import com.iamjunhyeok.review.dto.UserUpdateInfoRequest;
+import com.iamjunhyeok.review.dto.request.UserUpdateInfoRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;

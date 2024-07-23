@@ -1,14 +1,14 @@
 package com.iamjunhyeok.review.controller;
 
 import com.iamjunhyeok.review.constant.ApplicationStatus;
-import com.iamjunhyeok.review.dto.CampaignCreateRequest;
-import com.iamjunhyeok.review.dto.CampaignCreateResponse;
-import com.iamjunhyeok.review.dto.CampaignSearchProjection;
-import com.iamjunhyeok.review.dto.CampaignSummaryProjection;
-import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
-import com.iamjunhyeok.review.dto.CampaignUpdateResponse;
-import com.iamjunhyeok.review.dto.CampaignViewProjection;
-import com.iamjunhyeok.review.dto.UserCampaignSearchProjection;
+import com.iamjunhyeok.review.dto.request.CampaignCreateRequest;
+import com.iamjunhyeok.review.dto.request.CampaignUpdateRequest;
+import com.iamjunhyeok.review.dto.response.CampaignCreateResponse;
+import com.iamjunhyeok.review.dto.response.CampaignUpdateResponse;
+import com.iamjunhyeok.review.projection.CampaignSearchProjection;
+import com.iamjunhyeok.review.projection.CampaignSummaryProjection;
+import com.iamjunhyeok.review.projection.CampaignViewProjection;
+import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
 import com.iamjunhyeok.review.service.CampaignService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -60,14 +60,14 @@ public class CampaignController {
 
     @GetMapping("/campaigns")
     public ResponseEntity<List<CampaignSearchProjection>> search(@RequestParam(required = false) String type,
-                                                                  @RequestParam(required = false) String categories,
-                                                                  @RequestParam(required = false) String socials,
-                                                                  @RequestParam(required = false) String options,
-                                                                  Pageable pageable,
-                                                                  @RequestParam(required = false) String swlat,
-                                                                  @RequestParam(required = false) String swlng,
-                                                                  @RequestParam(required = false) String nelat,
-                                                                  @RequestParam(required = false) String nelng
+                                                                 @RequestParam(required = false) String categories,
+                                                                 @RequestParam(required = false) String socials,
+                                                                 @RequestParam(required = false) String options,
+                                                                 Pageable pageable,
+                                                                 @RequestParam(required = false) String swlat,
+                                                                 @RequestParam(required = false) String swlng,
+                                                                 @RequestParam(required = false) String nelat,
+                                                                 @RequestParam(required = false) String nelng
     ) {
         return ResponseEntity.ok(campaignService.search(type, categories, socials, options, pageable, swlat, swlng, nelat, nelng));
     }

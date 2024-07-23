@@ -1,6 +1,6 @@
 package com.iamjunhyeok.review.service;
 
-import com.iamjunhyeok.review.dto.CodeProjection;
+import com.iamjunhyeok.review.projection.CodeProjection;
 import com.iamjunhyeok.review.repository.CodeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

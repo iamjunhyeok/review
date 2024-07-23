@@ -1,8 +1,8 @@
 package com.iamjunhyeok.review.service;
 
 import com.iamjunhyeok.review.domain.Faq;
-import com.iamjunhyeok.review.dto.FaqCreateRequest;
-import com.iamjunhyeok.review.dto.FaqUpdateRequest;
+import com.iamjunhyeok.review.dto.request.FaqCreateRequest;
+import com.iamjunhyeok.review.dto.request.FaqUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.FaqRepository;
 import lombok.RequiredArgsConstructor;

@@ -2,10 +2,10 @@ package com.iamjunhyeok.review.service;
 
 import com.iamjunhyeok.review.domain.Inquiry;
 import com.iamjunhyeok.review.domain.User;
-import com.iamjunhyeok.review.dto.InquiryCreateRequest;
-import com.iamjunhyeok.review.dto.InquiryProjection;
-import com.iamjunhyeok.review.dto.InquiryUpdateRequest;
+import com.iamjunhyeok.review.dto.request.InquiryCreateRequest;
+import com.iamjunhyeok.review.dto.request.InquiryUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
+import com.iamjunhyeok.review.projection.InquiryProjection;
 import com.iamjunhyeok.review.repository.InquiryRepository;
 import com.iamjunhyeok.review.repository.UserRepository;
 import lombok.RequiredArgsConstructor;

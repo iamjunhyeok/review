@@ -1,6 +1,6 @@
 package com.iamjunhyeok.review.controller;
 
-import com.iamjunhyeok.review.dto.PenaltySearchResponse;
+import com.iamjunhyeok.review.dto.response.PenaltySearchResponse;
 import com.iamjunhyeok.review.service.PenaltyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

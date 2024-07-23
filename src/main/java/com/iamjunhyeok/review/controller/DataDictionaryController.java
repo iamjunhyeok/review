@@ -1,9 +1,9 @@
 package com.iamjunhyeok.review.controller;
 
-import com.iamjunhyeok.review.dto.DataDictionaryCreateRequest;
-import com.iamjunhyeok.review.dto.DataDictionarySearchProjection;
-import com.iamjunhyeok.review.dto.DataDictionaryUpdateRequest;
-import com.iamjunhyeok.review.dto.DataDictionaryViewProjection;
+import com.iamjunhyeok.review.dto.request.DataDictionaryCreateRequest;
+import com.iamjunhyeok.review.dto.request.DataDictionaryUpdateRequest;
+import com.iamjunhyeok.review.projection.DataDictionarySearchProjection;
+import com.iamjunhyeok.review.projection.DataDictionaryViewProjection;
 import com.iamjunhyeok.review.service.DataDictionaryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

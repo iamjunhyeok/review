@@ -3,7 +3,7 @@ package com.iamjunhyeok.review.domain;
 import com.iamjunhyeok.review.constant.ApplicationReason;
 import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.constant.ReviewStatus;
-import com.iamjunhyeok.review.dto.CampaignApplyRequest;
+import com.iamjunhyeok.review.dto.request.CampaignApplyRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

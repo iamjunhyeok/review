@@ -6,7 +6,7 @@ import com.iamjunhyeok.review.constant.SnsType;
 import com.iamjunhyeok.review.domain.CustomOAuth2User;
 import com.iamjunhyeok.review.domain.Sns;
 import com.iamjunhyeok.review.domain.User;
-import com.iamjunhyeok.review.dto.NaverOAuth2Response;
+import com.iamjunhyeok.review.dto.response.NaverOAuth2Response;
 import com.iamjunhyeok.review.repository.SnsRepository;
 import com.iamjunhyeok.review.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,8 +15,6 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-
-import static com.iamjunhyeok.review.dto.NaverOAuth2Response.Details;
 
 @Service
 @RequiredArgsConstructor
@@ -39,7 +37,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         if (registrationId.equals("naver")) {
             NaverOAuth2Response naverOAuth2Response = new ObjectMapper().convertValue(oAuth2User.getAttributes(), NaverOAuth2Response.class);
 
-            Details response = naverOAuth2Response.getResponse();
+            NaverOAuth2Response.Details response = naverOAuth2Response.getResponse();
 
             String snsId = response.getId();
 

@@ -2,8 +2,8 @@ package com.iamjunhyeok.review.service;
 
 import com.iamjunhyeok.review.domain.Inquiry;
 import com.iamjunhyeok.review.domain.InquiryAnswer;
-import com.iamjunhyeok.review.dto.InquiryAnswerModifyRequest;
-import com.iamjunhyeok.review.dto.InquiryAnswerRegisterRequest;
+import com.iamjunhyeok.review.dto.request.InquiryAnswerModifyRequest;
+import com.iamjunhyeok.review.dto.request.InquiryAnswerRegisterRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.repository.InquiryAnswerRepository;
 import com.iamjunhyeok.review.repository.InquiryRepository;

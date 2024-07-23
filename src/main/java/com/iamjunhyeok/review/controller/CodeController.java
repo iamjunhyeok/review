@@ -1,6 +1,6 @@
 package com.iamjunhyeok.review.controller;
 
-import com.iamjunhyeok.review.dto.CodeProjection;
+import com.iamjunhyeok.review.projection.CodeProjection;
 import com.iamjunhyeok.review.service.CodeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
