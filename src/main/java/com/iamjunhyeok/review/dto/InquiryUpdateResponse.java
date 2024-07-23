@@ -8,12 +8,14 @@ import lombok.Setter;
 @Getter
 @Setter
 public class InquiryUpdateResponse {
+    private Long id;
     private InquiryCategory category;
     private String title;
     private String content;
 
     public static InquiryUpdateResponse from(Inquiry inquiry) {
         InquiryUpdateResponse response = new InquiryUpdateResponse();
+        response.setId(inquiry.getId());
         response.setCategory(inquiry.getCategory());
         response.setTitle(inquiry.getTitle());
         response.setContent(inquiry.getContent());
