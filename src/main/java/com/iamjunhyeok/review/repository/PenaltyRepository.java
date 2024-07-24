@@ -1,6 +1,7 @@
 package com.iamjunhyeok.review.repository;
 
 import com.iamjunhyeok.review.domain.Penalty;
+import com.iamjunhyeok.review.projection.PenaltyProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -14,4 +15,6 @@ public interface PenaltyRepository extends JpaRepository<Penalty, Long> {
 
     @Query("select p from Penalty p join fetch p.application a join fetch a.campaign c where p.user.id = :userId")
     List<Penalty> findByUserIdWithCampaign(Long userId);
+
+    List<PenaltyProjection> findAllByUserId(Long userId);
 }

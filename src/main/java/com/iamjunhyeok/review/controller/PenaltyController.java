@@ -1,10 +1,11 @@
 package com.iamjunhyeok.review.controller;
 
-import com.iamjunhyeok.review.dto.response.PenaltySearchResponse;
+import com.iamjunhyeok.review.projection.PenaltyProjection;
 import com.iamjunhyeok.review.service.PenaltyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,27 +22,34 @@ public class PenaltyController {
 
     private final PenaltyService penaltyService;
 
+    /**
+     * 특정 사용자의 패널티 조회
+     * @param userId
+     * @return
+     */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{userId}/penalties")
-    public ResponseEntity<List<PenaltySearchResponse>> search(@PathVariable Long userId) {
-        return ResponseEntity.ok(
-                penaltyService.search(userId)
-                        .stream()
-                        .map(PenaltySearchResponse::from)
-                        .toList()
-        );
+    public ResponseEntity<List<PenaltyProjection>> fetchAll(@PathVariable Long userId) {
+        return ResponseEntity.ok(penaltyService.fetchAll(userId));
     }
 
+    /**
+     * 마이페이지의 내 패널티 조회
+     * 인증된 사용자의 패널티 조회
+     * @return
+     */
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/me/penalties")
-    public ResponseEntity<List<PenaltySearchResponse>> search() {
-        // 로그인 기능 개발되면 수정할 것!!
-        return ResponseEntity.ok(
-                penaltyService.search(1L)
-                        .stream()
-                        .map(PenaltySearchResponse::from)
-                        .toList()
-        );
+    public ResponseEntity<List<PenaltyProjection>> fetchAllPenaltiesForAuthenticatedUser() {
+        return ResponseEntity.ok(penaltyService.fetchAllPenaltiesForAuthenticatedUser());
     }
 
+    /**
+     * 패널티 내역 삭제
+     * @param userId
+     * @param id
+     */
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{userId}/penalties/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long userId, @PathVariable Long id) {
