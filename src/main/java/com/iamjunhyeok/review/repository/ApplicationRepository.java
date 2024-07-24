@@ -27,4 +27,7 @@ public interface ApplicationRepository extends JpaRepository<Application, Long>,
     Optional<Application> findByIdAndUserId(Long id, Long userId);
 
     List<Application> findAllByCampaignIdAndStatus(Long campaignId, ApplicationStatus status);
+
+    @Query("select a.user.id from Application a where a.id = :id")
+    Long findUserIdByApplicationId(Long id);
 }

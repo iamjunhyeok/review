@@ -35,7 +35,7 @@ public class ReviewController {
      * @param request
      * @return
      */
-    @PreAuthorize("hasPermission(#applicationId, 'review', 'ADMIN')")
+    @PreAuthorize("hasPermission(#applicationId, 'application', 'ADMIN')")
     @PostMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews")
     public ResponseEntity<ReviewRegisterResponse> register(@PathVariable Long campaignId,
                                                          @PathVariable Long applicationId,
@@ -52,7 +52,7 @@ public class ReviewController {
      * @param request
      * @return
      */
-    @PreAuthorize("hasPermission(#applicationId, 'review', 'ADMIN')")
+    @PreAuthorize("hasPermission(#applicationId, 'application', 'ADMIN')")
     @PatchMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews")
     public ResponseEntity<ReviewModifyResponse> modify(@PathVariable Long campaignId,
                                                        @PathVariable Long applicationId,
@@ -85,7 +85,7 @@ public class ReviewController {
      * @param applicationId
      * @param id
      */
-    @PreAuthorize("hasPermission(#applicationId, 'review', 'ADMIN')")
+    @PreAuthorize("hasPermission(#applicationId, 'application', 'ADMIN')")
     @PostMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews/{id}/reconfirm-request")
     @ResponseStatus(HttpStatus.OK)
     public void reconfirmRequest(@PathVariable Long campaignId,
@@ -115,7 +115,7 @@ public class ReviewController {
      * @param applicationId
      * @return
      */
-//    @PreAuthorize("hasPermission(#applicationId, 'review', 'ADMIN')")
+    @PreAuthorize("hasPermission(#applicationId, 'application', 'ADMIN')")
     @GetMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews")
     public ResponseEntity<List<ReviewProjection>> fetchAll(@PathVariable Long campaignId,
                                                            @PathVariable Long applicationId) {

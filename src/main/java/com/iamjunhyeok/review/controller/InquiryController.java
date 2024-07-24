@@ -101,7 +101,7 @@ public class InquiryController {
      * @param id
      * @return
      */
-    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    @PreAuthorize("hasPermission(#id, 'inquiry', 'ADMIN')")
     @GetMapping("/support/inquiries/{id}")
     public ResponseEntity<InquiryProjection> fetchOne(@PathVariable Long id) {
         return ResponseEntity.ok(inquiryService.fetchOne(id));

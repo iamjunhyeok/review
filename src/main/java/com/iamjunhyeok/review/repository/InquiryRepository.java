@@ -13,4 +13,7 @@ public interface InquiryRepository extends JpaRepository<Inquiry, Long>, CustomI
 
     @Query("select i from Inquiry i where i.id = :id")
     Optional<InquiryProjection> fetchOne(Long id);
+
+    @Query("select i.user.id from Inquiry i where i.id = :id")
+    Long findUserIdByInquiryId(Long id);
 }
