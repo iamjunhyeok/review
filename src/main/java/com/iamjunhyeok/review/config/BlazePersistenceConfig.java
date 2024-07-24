@@ -7,10 +7,13 @@ import com.blazebit.persistence.view.EntityViewManager;
 import com.blazebit.persistence.view.EntityViews;
 import com.blazebit.persistence.view.spi.EntityViewConfiguration;
 import com.iamjunhyeok.review.projection.ApplicantProjection;
+import com.iamjunhyeok.review.projection.ApplicationCampaignProjection;
+import com.iamjunhyeok.review.projection.ApplicationIdStatusProjection;
 import com.iamjunhyeok.review.projection.CampaignImageProjection;
 import com.iamjunhyeok.review.projection.CampaignLinkProjection;
 import com.iamjunhyeok.review.projection.CampaignMissionProjection;
 import com.iamjunhyeok.review.projection.CampaignOptionProjection;
+import com.iamjunhyeok.review.projection.CampaignProjection;
 import com.iamjunhyeok.review.projection.CampaignSearchProjection;
 import com.iamjunhyeok.review.projection.CampaignSummaryProjection;
 import com.iamjunhyeok.review.projection.CampaignViewProjection;
@@ -62,11 +65,8 @@ public class BlazePersistenceConfig {
         config.addEntityView(UserSearchProjection.class);
         config.addEntityView(UserViewProjection.class);
         config.addEntityView(UserCampaignSearchProjection.class);
-        config.addEntityView(UserCampaignSearchProjection.ApplicationProjection.class);
         config.addEntityView(UserCampaignApplicationProjection.class);
         config.addEntityView(PointSearchProjection.class);
-        config.addEntityView(PointSearchProjection.ApplicationProjection.class);
-        config.addEntityView(PointSearchProjection.ApplicationProjection.CampaignProjection.class);
         config.addEntityView(CampaignSearchProjection.class);
         config.addEntityView(CampaignMissionProjection.class);
         config.addEntityView(CampaignOptionProjection.class);
@@ -77,6 +77,9 @@ public class BlazePersistenceConfig {
         config.addEntityView(FaqProjection.class);
         config.addEntityView(PenaltyProjection.class);
         config.addEntityView(ReviewProjection.class);
+        config.addEntityView(CampaignProjection.class);
+        config.addEntityView(ApplicationIdStatusProjection.class);
+        config.addEntityView(ApplicationCampaignProjection.class);
         return config.createEntityViewManager(cbf);
     }
 }

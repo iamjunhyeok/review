@@ -2,10 +2,8 @@ package com.iamjunhyeok.review.projection;
 
 import com.blazebit.persistence.view.EntityView;
 import com.blazebit.persistence.view.IdMapping;
-import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.constant.CampaignSocial;
 import com.iamjunhyeok.review.constant.CampaignType;
-import com.iamjunhyeok.review.domain.Application;
 import com.iamjunhyeok.review.domain.Campaign;
 
 import java.time.LocalDate;
@@ -27,12 +25,5 @@ public interface UserCampaignSearchProjection {
 
     LocalDate getReviewEndDate();
 
-    ApplicationProjection getApplications();
-
-    @EntityView(Application.class)
-    interface ApplicationProjection {
-        Long getId();
-
-        ApplicationStatus getStatus();
-    }
+    ApplicationIdStatusProjection getApplications();
 }
