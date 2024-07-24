@@ -19,6 +19,7 @@ import com.iamjunhyeok.review.projection.FaqProjection;
 import com.iamjunhyeok.review.projection.InquiryProjection;
 import com.iamjunhyeok.review.projection.PenaltyProjection;
 import com.iamjunhyeok.review.projection.PointSearchProjection;
+import com.iamjunhyeok.review.projection.ReviewProjection;
 import com.iamjunhyeok.review.projection.UserCampaignApplicationProjection;
 import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
 import com.iamjunhyeok.review.projection.UserProjection;
@@ -75,6 +76,7 @@ public class BlazePersistenceConfig {
         config.addEntityView(UserProjection.class);
         config.addEntityView(FaqProjection.class);
         config.addEntityView(PenaltyProjection.class);
+        config.addEntityView(ReviewProjection.class);
         return config.createEntityViewManager(cbf);
     }
 }

@@ -3,10 +3,11 @@ package com.iamjunhyeok.review.service;
 import com.iamjunhyeok.review.domain.Application;
 import com.iamjunhyeok.review.domain.Review;
 import com.iamjunhyeok.review.dto.ReviewDto;
-import com.iamjunhyeok.review.dto.request.ReviewCreateRequest;
+import com.iamjunhyeok.review.dto.request.ReviewModifyRequest;
+import com.iamjunhyeok.review.dto.request.ReviewRegisterRequest;
 import com.iamjunhyeok.review.dto.request.ReviewRejectRequest;
-import com.iamjunhyeok.review.dto.request.ReviewUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
+import com.iamjunhyeok.review.projection.ReviewProjection;
 import com.iamjunhyeok.review.repository.ApplicationRepository;
 import com.iamjunhyeok.review.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class ReviewService {
     private final ReviewRepository reviewRepository;
 
     @Transactional
-    public List<Review> create(Long campaignId, Long applicationId, ReviewCreateRequest request) {
+    public List<Review> register(Long campaignId, Long applicationId, ReviewRegisterRequest request) {
         Application application = applicationRepository.findByIdAndCampaignId(applicationId, campaignId)
                 .orElseThrow(() -> ErrorCode.APPLICATION_NOT_FOUND.build());
 
@@ -42,7 +43,7 @@ public class ReviewService {
     }
 
     @Transactional
-    public List<Review> update(Long campaignId, Long applicationId, ReviewUpdateRequest request) {
+    public List<Review> modify(Long campaignId, Long applicationId, ReviewModifyRequest request) {
         Application application = applicationRepository.findByIdAndCampaignId(applicationId, campaignId)
                 .orElseThrow(() -> ErrorCode.APPLICATION_NOT_FOUND.build());
 
@@ -93,5 +94,9 @@ public class ReviewService {
         reviewRepository.findByIdAndApplicationIdAndCampaignId(id, applicationId, campaignId)
                 .orElseThrow(() -> ErrorCode.REVIEW_NOT_FOUND.build())
                 .confirm();
+    }
+
+    public List<ReviewProjection> fetchAll(Long campaignId, Long applicationId) {
+        return reviewRepository.fetchAll(campaignId, applicationId);
     }
 }

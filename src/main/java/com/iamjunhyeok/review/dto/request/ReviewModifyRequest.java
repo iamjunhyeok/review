@@ -9,6 +9,8 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ReviewCreateRequest {
-    private List<ReviewDto> reviews = new ArrayList<>();
+public class ReviewModifyRequest {
+    List<ReviewDto> reviews = new ArrayList<>();
+
+    List<Long> deleteReviewIds = new ArrayList<>();
 }

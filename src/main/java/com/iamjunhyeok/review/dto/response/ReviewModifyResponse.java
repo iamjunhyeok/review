@@ -10,11 +10,11 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ReviewCreateResponse {
-    List<ReviewDto> reviews = new ArrayList<>();
+public class ReviewModifyResponse {
+    private List<ReviewDto> reviews = new ArrayList<>();
 
-    public static ReviewCreateResponse from(List<Review> reviews) {
-        ReviewCreateResponse response = new ReviewCreateResponse();
+    public static ReviewModifyResponse from(List<Review> reviews) {
+        ReviewModifyResponse response = new ReviewModifyResponse();
         response.setReviews(
                 reviews.stream().map(ReviewDto::from).toList()
         );
