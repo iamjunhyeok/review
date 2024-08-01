@@ -3,6 +3,7 @@ package com.iamjunhyeok.review.projection;
 import com.blazebit.persistence.view.EntityView;
 import com.blazebit.persistence.view.IdMapping;
 import com.blazebit.persistence.view.Mapping;
+import com.iamjunhyeok.review.constant.CampaignCategory;
 import com.iamjunhyeok.review.constant.CampaignSocial;
 import com.iamjunhyeok.review.constant.CampaignType;
 import com.iamjunhyeok.review.domain.Campaign;
@@ -16,6 +17,7 @@ public interface CampaignSearchProjection {
     Long getId();
 
     CampaignType getType();
+    CampaignCategory getCategory();
     CampaignSocial getSocial();
 
     String getTitle();
