@@ -37,7 +37,10 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
 
     @Override
     public List<CampaignSearchProjection> fetchAll(String type, String categories, String socials, String options, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
-        CriteriaBuilder<Campaign> cb = criteriaBuilderFactory.create(entityManager, Campaign.class, "c");
+        CriteriaBuilder<Campaign> cb = criteriaBuilderFactory.create(entityManager, Campaign.class, "c")
+                .innerJoinDefault("c.images", "i")
+                .innerJoinDefault("c.options", "o")
+                .innerJoinDefault("o.code", "co");
         if (Strings.isNotBlank(type)) {
             cb.where("c.type").eq(CampaignType.valueOf(type.toUpperCase()));
         }
@@ -52,6 +55,12 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
             cb.where("c.social").in(
                     Arrays.stream(socials.toUpperCase().split(","))
                             .map(CampaignSocial::valueOf)
+                            .toList()
+            );
+        }
+        if (Strings.isNotBlank(options)) {
+            cb.where("co.code").in(
+                    Arrays.stream(options.toUpperCase().split(","))
                             .toList()
             );
         }

@@ -35,4 +35,5 @@ public interface CampaignSearchProjection {
 
     List<CampaignImageProjection> getImages();
 
+    List<CampaignOptionProjection> getOptions();
 }
