@@ -39,8 +39,8 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
     public List<CampaignSearchProjection> fetchAll(String type, String categories, String socials, String options, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
         CriteriaBuilder<Campaign> cb = criteriaBuilderFactory.create(entityManager, Campaign.class, "c")
                 .innerJoinDefault("c.images", "i")
-                .innerJoinDefault("c.options", "o")
-                .innerJoinDefault("o.code", "co");
+                .leftJoinDefault("c.options", "o")
+                .leftJoinDefault("o.code", "co");
         if (Strings.isNotBlank(type)) {
             cb.where("c.type").eq(CampaignType.valueOf(type.toUpperCase()));
         }
