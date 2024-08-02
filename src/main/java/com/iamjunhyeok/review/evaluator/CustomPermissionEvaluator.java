@@ -17,6 +17,8 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
 
     private final ApplicationRepository applicationRepository;
 
+    private final String ROLE_PREFIX = "ROLE_";
+
     @Override
     public boolean hasPermission(Authentication authentication, Object targetDomainObject, Object permission) {
         return false;
@@ -29,7 +31,7 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
         }
         boolean isAdmin = authentication.getAuthorities()
                 .stream()
-                .anyMatch(a -> a.getAuthority().equals(permission.toString()));
+                .anyMatch(a -> a.getAuthority().equals(ROLE_PREFIX.concat(permission.toString())));
         if (isAdmin) return true;
 
         PermissionEvaluator evaluator = null;
