@@ -115,7 +115,7 @@ public class Application extends Address {
     }
 
     public void delete() {
-        if (this.status != ApplicationStatus.REJECTED) {
+        if (this.status == ApplicationStatus.APPLIED) {
             throw ErrorCode.APPLICATION_CANNOT_BE_DELETED.build();
         }
         this.deleted = true;

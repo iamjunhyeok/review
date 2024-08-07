@@ -25,7 +25,9 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -80,7 +82,9 @@ public class ApplicationService {
             penaltyService.givePenaltyPoints(user, application, PenaltyReason.USER_CANCELLED);
         }
 
-        List<ApplicationImage> images = files.stream()
+        List<ApplicationImage> images = Optional.ofNullable(files)
+                .orElse(Collections.emptyList())
+                .stream()
                 .map(MultipartFile::getOriginalFilename)
                 .map(ApplicationImage::of)
                 .toList();
@@ -119,5 +123,12 @@ public class ApplicationService {
 
     public List<UserCampaignApplicationProjection> fetchAuthenticatedUserCampaignApplication(Long campaignId, Long applicationId) {
         return applicationRepository.fetchAuthenticatedUserCampaignApplication(campaignId, applicationId);
+    }
+
+    @Transactional
+    public void delete(Long campaignId, Long applicationId) {
+        applicationRepository.findByIdAndCampaignId(applicationId, campaignId)
+                .orElseThrow(() -> ErrorCode.APPLICATION_NOT_FOUND.build())
+                .delete();
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -76,7 +77,7 @@ public class ApplicationController {
     public void cancel(@PathVariable Long campaignId,
                        @PathVariable Long applicationId,
                        @RequestPart @Valid ApplicationCancelRequest request,
-                       @RequestPart List<MultipartFile> files,
+                       @RequestPart(required = false) List<MultipartFile> files,
                        @AuthenticationPrincipal CustomOAuth2User principal) throws IOException {
         applicationService.cancel(campaignId, applicationId, request, files, principal.getUserId());
     }
@@ -102,5 +103,12 @@ public class ApplicationController {
     @GetMapping("/{campaignId}/applications")
     public ResponseEntity<List<ApplicantProjection>> fetchAllApplicants(@PathVariable Long campaignId) {
         return ResponseEntity.ok(applicationService.fetchAllApplicants(campaignId));
+    }
+
+    @PreAuthorize("hasPermission(#applicationId, 'application', 'ADMIN')")
+    @DeleteMapping("/{campaignId}/applications/{applicationId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable Long campaignId, @PathVariable Long applicationId) {
+        applicationService.delete(campaignId, applicationId);
     }
 }
