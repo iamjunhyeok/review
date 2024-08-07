@@ -99,7 +99,8 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
         CriteriaBuilder<Campaign> campaignCriteriaBuilder = criteriaBuilderFactory.create(entityManager, Campaign.class)
                 .innerJoinDefault("applications", "a")
                 .where("a.user.id").eq(principal.getUserId())
-                .where("a.status").in(statuses);
+                .where("a.status").in(statuses)
+                .where("a.deleted").eqLiteral(false);
         return entityViewManager.applySetting(EntityViewSetting.create(UserCampaignSearchProjection.class), campaignCriteriaBuilder).getResultList();
     }
 }
