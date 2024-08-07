@@ -257,7 +257,7 @@ public class CampaignService {
                 .orElseThrow(() -> ErrorCode.CAMPAIGN_NOT_FOUND.build());
     }
 
-    public List<UserCampaignSearchProjection> fetchAuthenticatedUserCampaigns(ApplicationStatus status) {
+    public List<UserCampaignSearchProjection> fetchAuthenticatedUserCampaigns(String status) {
         return campaignRepository.fetchAuthenticatedUserCampaigns(status);
     }
 }

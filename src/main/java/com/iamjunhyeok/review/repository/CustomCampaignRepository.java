@@ -1,6 +1,5 @@
 package com.iamjunhyeok.review.repository;
 
-import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.projection.CampaignSearchProjection;
 import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
 import org.springframework.data.domain.Pageable;
@@ -14,5 +13,5 @@ public interface CustomCampaignRepository {
 
     <T> Optional<T> fetchById(Long id, Class<T> type);
 
-    List<UserCampaignSearchProjection> fetchAuthenticatedUserCampaigns(ApplicationStatus status);
+    List<UserCampaignSearchProjection> fetchAuthenticatedUserCampaigns(String status);
 }

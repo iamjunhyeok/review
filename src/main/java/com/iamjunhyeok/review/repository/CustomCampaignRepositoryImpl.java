@@ -88,13 +88,18 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
     }
 
     @Override
-    public List<UserCampaignSearchProjection> fetchAuthenticatedUserCampaigns(ApplicationStatus status) {
+    public List<UserCampaignSearchProjection> fetchAuthenticatedUserCampaigns(String status) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         CustomOAuth2User principal = (CustomOAuth2User) authentication.getPrincipal();
+
+        List<ApplicationStatus> statuses = Arrays.stream(status.toUpperCase().split(","))
+                .map(ApplicationStatus::valueOf)
+                .toList();
+
         CriteriaBuilder<Campaign> campaignCriteriaBuilder = criteriaBuilderFactory.create(entityManager, Campaign.class)
                 .innerJoinDefault("applications", "a")
                 .where("a.user.id").eq(principal.getUserId())
-                .where("a.status").eq(status);
+                .where("a.status").in(statuses);
         return entityViewManager.applySetting(EntityViewSetting.create(UserCampaignSearchProjection.class), campaignCriteriaBuilder).getResultList();
     }
 }

@@ -84,6 +84,6 @@ public class CampaignController {
 
     @GetMapping("/users/me/campaigns")
     public ResponseEntity<List<UserCampaignSearchProjection>> fetchAuthenticatedUserCampaigns(@RequestParam String status) {
-        return ResponseEntity.ok(campaignService.fetchAuthenticatedUserCampaigns(ApplicationStatus.valueOf(status.toUpperCase())));
+        return ResponseEntity.ok(campaignService.fetchAuthenticatedUserCampaigns(status));
     }
 }
