@@ -9,6 +9,7 @@ import com.blazebit.persistence.view.spi.EntityViewConfiguration;
 import com.iamjunhyeok.review.projection.ApplicantProjection;
 import com.iamjunhyeok.review.projection.ApplicationCampaignProjection;
 import com.iamjunhyeok.review.projection.ApplicationIdStatusProjection;
+import com.iamjunhyeok.review.projection.ApplicationProjection;
 import com.iamjunhyeok.review.projection.CampaignImageProjection;
 import com.iamjunhyeok.review.projection.CampaignLinkProjection;
 import com.iamjunhyeok.review.projection.CampaignMissionProjection;
@@ -19,6 +20,7 @@ import com.iamjunhyeok.review.projection.CampaignSummaryProjection;
 import com.iamjunhyeok.review.projection.CampaignViewProjection;
 import com.iamjunhyeok.review.projection.CodeProjection;
 import com.iamjunhyeok.review.projection.FaqProjection;
+import com.iamjunhyeok.review.projection.InquiryAnswerProjection;
 import com.iamjunhyeok.review.projection.InquiryProjection;
 import com.iamjunhyeok.review.projection.PenaltyProjection;
 import com.iamjunhyeok.review.projection.PointSearchProjection;
@@ -80,6 +82,8 @@ public class BlazePersistenceConfig {
         config.addEntityView(CampaignProjection.class);
         config.addEntityView(ApplicationIdStatusProjection.class);
         config.addEntityView(ApplicationCampaignProjection.class);
+        config.addEntityView(InquiryAnswerProjection.class);
+        config.addEntityView(ApplicationProjection.class);
         return config.createEntityViewManager(cbf);
     }
 }
