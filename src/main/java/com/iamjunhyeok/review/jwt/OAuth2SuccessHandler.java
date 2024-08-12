@@ -31,7 +31,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Role role = customOAuth2User.getRole();
 
         // 리프레시 토큰 생성
-        String refreshToken = JWTProvider.generate(userId, role.name(), Duration.ofDays(10));
+        String refreshToken = JWTProvider.generate(Duration.ofDays(10));
         // 리프레시 토큰 DB 저장
         refreshTokenRepository.findByUserId(userId)
                         .ifPresentOrElse(token -> refreshTokenRepository.save(token.update(refreshToken)),

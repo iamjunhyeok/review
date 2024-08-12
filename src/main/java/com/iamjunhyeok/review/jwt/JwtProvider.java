@@ -48,6 +48,16 @@ public class JwtProvider {
                 .compact();
     }
 
+    public String generate(Duration expiredAt) {
+        Date now = new Date();
+        return Jwts.builder()
+                .issuer(issuer)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + expiredAt.toMillis()))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
     public String generate(Long userId, String role, String profileImageName, Duration expiredAt) {
         Date now = new Date();
         return Jwts.builder()
