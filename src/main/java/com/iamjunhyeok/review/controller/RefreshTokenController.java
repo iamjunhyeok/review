@@ -4,9 +4,7 @@ import com.iamjunhyeok.review.service.RefreshTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -21,8 +19,7 @@ public class RefreshTokenController {
      * @param response
      */
     @PostMapping("/token/refresh")
-    @ResponseStatus(HttpStatus.CREATED)
-    public void refresh(HttpServletRequest request, HttpServletResponse response) {
-        refreshTokenService.generateNewAccessToken(request, response);
+    public String refresh(HttpServletRequest request, HttpServletResponse response) {
+        return refreshTokenService.generateNewAccessToken(request, response);
     }
 }

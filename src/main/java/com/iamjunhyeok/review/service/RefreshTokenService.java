@@ -21,7 +21,7 @@ public class RefreshTokenService {
 
     private final JwtProvider jwtProvider;
 
-    public void generateNewAccessToken(HttpServletRequest request, HttpServletResponse response) {
+    public String generateNewAccessToken(HttpServletRequest request, HttpServletResponse response) {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         String tokenType = OAuth2AccessToken.TokenType.BEARER.getValue().concat(" ");
 
@@ -30,6 +30,7 @@ public class RefreshTokenService {
             if (!jwtProvider.isValid(token)) {
                 throw new IllegalArgumentException("Invalid token");
             }
+            String newAccessToken = null;
             Long userId = jwtProvider.getUserId(token);
             if (userId != null) {
                 // 토큰이 유효한지와 사용자의 리프레시 토큰이 맞는지 확인
@@ -38,13 +39,13 @@ public class RefreshTokenService {
                 if (!refreshToken.getUserId().equals(userId)) {
                     throw new IllegalArgumentException("User is invalid");
                 }
-                String newAccessToken = jwtProvider.generate(userId, jwtProvider.getRole(token), Duration.ofMinutes(30));
+                newAccessToken = jwtProvider.generate(userId, jwtProvider.getRole(token), Duration.ofMinutes(30));
 
                 // 리프레시 토큰 쿠키 저장
                 CookieUtil.deleteCookie(response, "access_token");
                 CookieUtil.createCookie(response, "access_token", newAccessToken, (int) Duration.ofMinutes(30).toSeconds());
             }
-            return;
+            return newAccessToken;
         }
         throw new IllegalArgumentException("Authorization header is invalid");
     }
