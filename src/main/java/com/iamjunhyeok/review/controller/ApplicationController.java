@@ -50,6 +50,11 @@ public class ApplicationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(CampaignApplyResponse.from(applicationService.apply(campaignId, request, principal.getUserId())));
     }
 
+    @GetMapping("/{campaignId}/applied")
+    public Boolean checkApplied(@PathVariable Long campaignId, @AuthenticationPrincipal CustomOAuth2User principal) {
+        return applicationService.checkApplied(campaignId, principal);
+    }
+
     /**
      * 자신이 캠페인 신청 내용만 조회 가능
      * @param campaignId

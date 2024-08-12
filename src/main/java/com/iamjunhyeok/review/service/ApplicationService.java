@@ -6,6 +6,7 @@ import com.iamjunhyeok.review.constant.PenaltyReason;
 import com.iamjunhyeok.review.domain.Application;
 import com.iamjunhyeok.review.domain.ApplicationImage;
 import com.iamjunhyeok.review.domain.Campaign;
+import com.iamjunhyeok.review.domain.CustomOAuth2User;
 import com.iamjunhyeok.review.domain.User;
 import com.iamjunhyeok.review.dto.request.ApplicationCancelRequest;
 import com.iamjunhyeok.review.dto.request.CampaignApplyRequest;
@@ -130,5 +131,10 @@ public class ApplicationService {
         applicationRepository.findByIdAndCampaignId(applicationId, campaignId)
                 .orElseThrow(() -> ErrorCode.APPLICATION_NOT_FOUND.build())
                 .delete();
+    }
+
+    public Boolean checkApplied(Long campaignId, CustomOAuth2User principal) {
+        if (principal == null) return false;
+        return applicationRepository.existsByCampaignIdAndUserIdAndStatus(campaignId, principal.getUserId(), ApplicationStatus.APPLIED);
     }
 }
