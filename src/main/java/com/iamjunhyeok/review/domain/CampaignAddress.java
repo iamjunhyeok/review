@@ -19,8 +19,6 @@ public class CampaignAddress {
     @Column(nullable = false)
     String address;
 
-    @NotBlank
-    @Column(nullable = false)
     String rest;
 
     @NotBlank

@@ -16,7 +16,6 @@ public class AddressDto {
     @NotBlank
     private String address;
 
-    @NotBlank
     private String rest;
 
     @NotBlank
