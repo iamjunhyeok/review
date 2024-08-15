@@ -30,7 +30,8 @@ public enum ErrorCode {
     DATA_DICTIONARY_ITEM_NOT_FOUND(HttpStatus.NOT_FOUND, "항목을 찾을 수 없습니다."),
     APPLICATION_CANNOT_BE_DELETED(HttpStatus.BAD_REQUEST, "내역을 삭제할 수 없습니다."),
     EXPIRED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "로그인 정보가 만료되었습니다."),
-    PENALTY_ALREADY_DELETED(HttpStatus.CONFLICT, "이미 삭제된 패널티입니다.");
+    PENALTY_ALREADY_DELETED(HttpStatus.CONFLICT, "이미 삭제된 패널티입니다."),
+    NOT_ENOUGH_POINT(HttpStatus.BAD_REQUEST, "포인트가 부족합니다.");
 
     private final HttpStatus httpStatus;
     private final String message;
