@@ -43,4 +43,8 @@ public class PointService {
         Point point = Point.of(user, application, amount);
         pointRepository.save(point);
     }
+
+    public int getCurrentPoints(Long userId) {
+        return pointRepository.getCurrentPointByUserId(userId);
+    }
 }

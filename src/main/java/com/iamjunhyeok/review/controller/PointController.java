@@ -39,4 +39,15 @@ public class PointController {
     public ResponseEntity<List<PointProjection>> fetchAll(@PathVariable Long id) {
         return ResponseEntity.ok(pointService.getPoints(id));
     }
+
+    /**
+     * 인증된 사용자의 현재 포인트 조회
+     * @param user
+     * @return
+     */
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/users/me/point")
+    public int fetchCurrentPointForAuthenticatedUser(@AuthenticationPrincipal CustomOAuth2User user) {
+        return pointService.getCurrentPoints(user.getUserId());
+    }
 }
