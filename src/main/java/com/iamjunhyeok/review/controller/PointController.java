@@ -58,14 +58,14 @@ public class PointController {
     }
 
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/users/me/points/withdraw")
+    @PostMapping("/users/me/points/withdrawals")
     @ResponseStatus(HttpStatus.CREATED)
     public void requestWithdrawal(@RequestBody PointWithdrawalRequest request, @AuthenticationPrincipal CustomOAuth2User user) {
         pointService.withdrawPoint(request, user.getUserId());
     }
 
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/users/me/points/withdraw")
+    @GetMapping("/users/me/points/withdrawals")
     public ResponseEntity<List<WithdrawalProjection>> fetchAllWithdrawalHistory(@AuthenticationPrincipal CustomOAuth2User user) {
         return ResponseEntity.ok(pointService.fetchAllWithdrawalHistory(user.getUserId()));
     }
