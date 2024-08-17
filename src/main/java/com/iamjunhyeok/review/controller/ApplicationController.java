@@ -6,6 +6,7 @@ import com.iamjunhyeok.review.dto.request.CampaignApplyRequest;
 import com.iamjunhyeok.review.dto.response.CampaignApplyResponse;
 import com.iamjunhyeok.review.projection.ApplicantProjection;
 import com.iamjunhyeok.review.projection.ApplicationProjection;
+import com.iamjunhyeok.review.projection.ApplicationSearchProjection;
 import com.iamjunhyeok.review.service.ApplicationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -29,7 +30,6 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/campaigns")
 @RequiredArgsConstructor
 public class ApplicationController {
 
@@ -43,15 +43,15 @@ public class ApplicationController {
      * @return
      */
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/{campaignId}/apply")
+    @PostMapping("/campaigns/{campaignId}/apply")
     public ResponseEntity<CampaignApplyResponse> apply(@PathVariable Long campaignId,
                                                        @RequestBody CampaignApplyRequest request,
                                                        @AuthenticationPrincipal CustomOAuth2User principal) {
         return ResponseEntity.status(HttpStatus.CREATED).body(CampaignApplyResponse.from(applicationService.apply(campaignId, request, principal.getUserId())));
     }
 
-    @GetMapping("/{campaignId}/applied")
-    public Boolean checkApplied(@PathVariable Long campaignId, @AuthenticationPrincipal CustomOAuth2User principal) {
+    @GetMapping("/campaigns/{campaignId}/applied")
+    public boolean checkApplied(@PathVariable Long campaignId, @AuthenticationPrincipal CustomOAuth2User principal) {
         return applicationService.checkApplied(campaignId, principal);
     }
 
@@ -62,7 +62,7 @@ public class ApplicationController {
      * @return
      */
     @PreAuthorize("hasPermission(#applicationId, 'application', 'ADMIN')")
-    @GetMapping("/{campaignId}/applications/{applicationId}")
+    @GetMapping("/campaigns/{campaignId}/applications/{applicationId}")
     public ResponseEntity<ApplicationProjection> fetchOne(@PathVariable Long campaignId, @PathVariable Long applicationId) {
         return ResponseEntity.ok(applicationService.fetchOne(campaignId, applicationId));
     }
@@ -77,7 +77,7 @@ public class ApplicationController {
      * @throws IOException
      */
     @PreAuthorize("hasPermission(#applicationId, 'application', 'ADMIN')")
-    @PatchMapping("/{campaignId}/applications/{applicationId}/cancel")
+    @PatchMapping("/campaigns/{campaignId}/applications/{applicationId}/cancel")
     @ResponseStatus(HttpStatus.OK)
     public void cancel(@PathVariable Long campaignId,
                        @PathVariable Long applicationId,
@@ -93,7 +93,7 @@ public class ApplicationController {
      * @param applicationId
      */
     @PreAuthorize("hasRole('ADMIN')")
-    @PatchMapping("/{campaignId}/applications/{applicationId}/approve")
+    @PatchMapping("/campaigns/{campaignId}/applications/{applicationId}/approve")
     @ResponseStatus(HttpStatus.OK)
     public void approve(@PathVariable Long campaignId, @PathVariable Long applicationId) {
         applicationService.approve(campaignId, applicationId);
@@ -105,15 +105,20 @@ public class ApplicationController {
      * @return
      */
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/{campaignId}/applications")
+    @GetMapping("/campaigns/{campaignId}/applications")
     public ResponseEntity<List<ApplicantProjection>> fetchAllApplicants(@PathVariable Long campaignId) {
         return ResponseEntity.ok(applicationService.fetchAllApplicants(campaignId));
     }
 
     @PreAuthorize("hasPermission(#applicationId, 'application', 'ADMIN')")
-    @DeleteMapping("/{campaignId}/applications/{applicationId}")
+    @DeleteMapping("/campaigns/{campaignId}/applications/{applicationId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long campaignId, @PathVariable Long applicationId) {
         applicationService.delete(campaignId, applicationId);
+    }
+
+    @GetMapping("/users/me/applications")
+    public ResponseEntity<List<ApplicationSearchProjection>> fetchAllApplications(@RequestParam String status, @AuthenticationPrincipal CustomOAuth2User principal) {
+        return ResponseEntity.ok(applicationService.fetchAllApplications(status, principal.getUserId()));
     }
 }

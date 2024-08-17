@@ -13,8 +13,6 @@ import java.util.Optional;
 @Repository
 public interface ApplicationRepository extends JpaRepository<Application, Long>, CustomApplicationRepository {
 
-    boolean existsByUserIdAndCampaignId(Long userId, Long campaignId);
-
     Optional<Application> findByIdAndCampaignId(Long id, Long campaignId);
 
     Optional<ApplicationViewProjection> findApplicationByIdAndCampaignId(Long id, Long campaignId);
@@ -31,5 +29,5 @@ public interface ApplicationRepository extends JpaRepository<Application, Long>,
     @Query("select a.user.id from Application a where a.id = :id")
     Long findUserIdByApplicationId(Long id);
 
-    Boolean existsByCampaignIdAndUserIdAndStatus(Long campaignId, Long userId, ApplicationStatus status);
+    boolean existsByCampaignIdAndUserIdAndStatus(Long campaignId, Long userId, ApplicationStatus status);
 }

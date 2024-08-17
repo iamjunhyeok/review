@@ -13,6 +13,7 @@ import com.iamjunhyeok.review.dto.request.CampaignApplyRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.projection.ApplicantProjection;
 import com.iamjunhyeok.review.projection.ApplicationProjection;
+import com.iamjunhyeok.review.projection.ApplicationSearchProjection;
 import com.iamjunhyeok.review.projection.CampaignViewProjection;
 import com.iamjunhyeok.review.projection.UserCampaignApplicationProjection;
 import com.iamjunhyeok.review.repository.ApplicationRepository;
@@ -51,7 +52,7 @@ public class ApplicationService {
         Campaign campaign = campaignRepository.findById(campaignId)
                 .orElseThrow(() -> ErrorCode.CAMPAIGN_NOT_FOUND.build());
 
-        if (applicationRepository.existsByUserIdAndCampaignId(userId, campaign.getId())) {
+        if (applicationRepository.existsByCampaignIdAndUserIdAndStatus(campaignId, userId, ApplicationStatus.APPLIED)) {
             throw ErrorCode.DUPLICATE_APPLICATION.build();
         }
 
@@ -133,8 +134,12 @@ public class ApplicationService {
                 .delete();
     }
 
-    public Boolean checkApplied(Long campaignId, CustomOAuth2User principal) {
+    public boolean checkApplied(Long campaignId, CustomOAuth2User principal) {
         if (principal == null) return false;
         return applicationRepository.existsByCampaignIdAndUserIdAndStatus(campaignId, principal.getUserId(), ApplicationStatus.APPLIED);
+    }
+
+    public List<ApplicationSearchProjection> fetchAllApplications(String status, Long userId) {
+        return applicationRepository.fetchAllApplications(status, userId);
     }
 }

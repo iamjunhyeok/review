@@ -8,6 +8,7 @@ import com.iamjunhyeok.review.constant.CampaignType;
 import com.iamjunhyeok.review.domain.Campaign;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @EntityView(Campaign.class)
 public interface CampaignSummaryProjection {
@@ -27,4 +28,6 @@ public interface CampaignSummaryProjection {
     LocalDate getReviewStartDate();
 
     LocalDate getReviewEndDate();
+
+    List<CampaignImageProjection> getImages();
 }
