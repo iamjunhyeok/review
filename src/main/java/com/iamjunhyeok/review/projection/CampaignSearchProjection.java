@@ -1,11 +1,15 @@
 package com.iamjunhyeok.review.projection;
 
+import com.blazebit.persistence.SubqueryInitiator;
 import com.blazebit.persistence.view.EntityView;
 import com.blazebit.persistence.view.IdMapping;
-import com.blazebit.persistence.view.Mapping;
+import com.blazebit.persistence.view.MappingSubquery;
+import com.blazebit.persistence.view.SubqueryProvider;
+import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.constant.CampaignCategory;
 import com.iamjunhyeok.review.constant.CampaignSocial;
 import com.iamjunhyeok.review.constant.CampaignType;
+import com.iamjunhyeok.review.domain.Application;
 import com.iamjunhyeok.review.domain.Campaign;
 
 import java.time.LocalDate;
@@ -27,7 +31,7 @@ public interface CampaignSearchProjection {
 
     String getOfferingSummary();
 
-    @Mapping("size(applications)")
+    @MappingSubquery(ApplicantsCountSubqueryProvider.class)
     Long getApplicantsCount();
 
     String getLongitude();
@@ -36,4 +40,15 @@ public interface CampaignSearchProjection {
     List<CampaignImageProjection> getImages();
 
     List<CampaignOptionProjection> getOptions();
+
+    class ApplicantsCountSubqueryProvider implements SubqueryProvider {
+        @Override
+        public <T> T createSubquery(SubqueryInitiator<T> subqueryBuilder) {
+            return subqueryBuilder.from(Application.class, "a")
+                    .select("COUNT(*)")
+                    .where("a.campaign.id").eqExpression("EMBEDDING_VIEW(id)")
+                    .where("a.status").notEq(ApplicationStatus.CANCELLED)
+                    .end();
+        }
+    }
 }
