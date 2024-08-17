@@ -1,22 +1,22 @@
 package com.iamjunhyeok.review.controller;
 
+import com.iamjunhyeok.review.domain.CustomOAuth2User;
 import com.iamjunhyeok.review.projection.PenaltyProjection;
 import com.iamjunhyeok.review.service.PenaltyService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
 @RequiredArgsConstructor
 public class PenaltyController {
 
@@ -28,7 +28,7 @@ public class PenaltyController {
      * @return
      */
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/{userId}/penalties")
+    @GetMapping("/users/{userId}/penalties")
     public ResponseEntity<List<PenaltyProjection>> fetchAll(@PathVariable Long userId) {
         return ResponseEntity.ok(penaltyService.fetchAll(userId));
     }
@@ -39,7 +39,7 @@ public class PenaltyController {
      * @return
      */
     @PreAuthorize("hasRole('USER')")
-    @GetMapping("/me/penalties")
+    @GetMapping("/users/me/penalties")
     public ResponseEntity<List<PenaltyProjection>> fetchAllPenaltiesForAuthenticatedUser() {
         return ResponseEntity.ok(penaltyService.fetchAllPenaltiesForAuthenticatedUser());
     }
@@ -50,9 +50,15 @@ public class PenaltyController {
      * @param id
      */
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{userId}/penalties/{id}")
+    @DeleteMapping("/users/{userId}/penalties/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long userId, @PathVariable Long id) {
         penaltyService.delete(userId, id);
+    }
+
+    @PreAuthorize("hasRole('USER')")
+    @GetMapping("/users/me/penalties/total")
+    public int getTotalScore(@AuthenticationPrincipal CustomOAuth2User principal) {
+        return penaltyService.getTotalScore(principal.getUserId());
     }
 }

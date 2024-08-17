@@ -16,5 +16,5 @@ public interface PenaltyProjection {
 
     int getPoint();
 
-
+    ApplicationCampaignProjection getApplication();
 }

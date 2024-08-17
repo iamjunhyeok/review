@@ -61,4 +61,8 @@ public class PenaltyService {
         CustomOAuth2User principal = (CustomOAuth2User) authentication.getPrincipal();
         return penaltyRepository.findAllByUserId(principal.getUserId());
     }
+
+    public int getTotalScore(Long userId) {
+        return penaltyRepository.getTotalScore(userId);
+    }
 }

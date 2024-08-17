@@ -17,4 +17,7 @@ public interface PenaltyRepository extends JpaRepository<Penalty, Long> {
     List<Penalty> findByUserIdWithCampaign(Long userId);
 
     List<PenaltyProjection> findAllByUserId(Long userId);
+
+    @Query("select COALESCE(SUM(p.point), 0) from Penalty p where p.user.id = :userId")
+    int getTotalScore(Long userId);
 }
