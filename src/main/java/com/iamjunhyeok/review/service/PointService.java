@@ -9,6 +9,7 @@ import com.iamjunhyeok.review.dto.request.PointWithdrawalRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.projection.PointProjection;
 import com.iamjunhyeok.review.projection.WithdrawalProjection;
+import com.iamjunhyeok.review.projection.WithdrawalWithUserProjection;
 import com.iamjunhyeok.review.repository.ApplicationRepository;
 import com.iamjunhyeok.review.repository.PointRepository;
 import com.iamjunhyeok.review.repository.UserRepository;
@@ -67,5 +68,9 @@ public class PointService {
 
     public List<WithdrawalProjection> fetchAllWithdrawalHistory(Long userId) {
         return withdrawalRepository.fetchAllWithdrawalHistoryByUserId(userId);
+    }
+
+    public List<WithdrawalWithUserProjection> fetchAllWithdrawalHistory() {
+        return withdrawalRepository.fetchAllWithdrawalHistory();
     }
 }

@@ -4,6 +4,7 @@ import com.iamjunhyeok.review.domain.CustomOAuth2User;
 import com.iamjunhyeok.review.dto.request.PointWithdrawalRequest;
 import com.iamjunhyeok.review.projection.PointProjection;
 import com.iamjunhyeok.review.projection.WithdrawalProjection;
+import com.iamjunhyeok.review.projection.WithdrawalWithUserProjection;
 import com.iamjunhyeok.review.service.PointService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -68,5 +69,11 @@ public class PointController {
     @GetMapping("/users/me/points/withdrawals")
     public ResponseEntity<List<WithdrawalProjection>> fetchAllWithdrawalHistory(@AuthenticationPrincipal CustomOAuth2User user) {
         return ResponseEntity.ok(pointService.fetchAllWithdrawalHistory(user.getUserId()));
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/users/withdrawals")
+    public ResponseEntity<List<WithdrawalWithUserProjection>> fetchAllWithdrawalHistory() {
+        return ResponseEntity.ok(pointService.fetchAllWithdrawalHistory());
     }
 }

@@ -32,6 +32,7 @@ import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
 import com.iamjunhyeok.review.projection.UserProjection;
 import com.iamjunhyeok.review.projection.UserSearchProjection;
 import com.iamjunhyeok.review.projection.UserViewProjection;
+import com.iamjunhyeok.review.projection.WithdrawalWithUserProjection;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -88,6 +89,7 @@ public class BlazePersistenceConfig {
         config.addEntityView(ApplicationProjection.class);
         config.addEntityView(ApplicationSearchProjection.class);
         config.addEntityView(ReviewStatusProjection.class);
+        config.addEntityView(WithdrawalWithUserProjection.class);
         return config.createEntityViewManager(cbf);
     }
 }
