@@ -2,6 +2,7 @@ package com.iamjunhyeok.review.domain;
 
 import com.iamjunhyeok.review.constant.WithdrawalStatus;
 import com.iamjunhyeok.review.dto.request.PointWithdrawalRequest;
+import com.iamjunhyeok.review.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -56,5 +57,13 @@ public class Withdrawal extends Base {
         withdrawal.setStatus(WithdrawalStatus.REQUESTED);
         withdrawal.setUser(user);
         return withdrawal;
+    }
+
+    public void complete() {
+        if (this.status == WithdrawalStatus.REQUESTED) {
+            this.status = WithdrawalStatus.COMPLETED;
+        } else {
+            throw ErrorCode.WITHDRAWAL_ALREADY_COMPLETED.build();
+        }
     }
 }

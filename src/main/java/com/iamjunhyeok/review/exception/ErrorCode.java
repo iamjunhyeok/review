@@ -31,7 +31,9 @@ public enum ErrorCode {
     APPLICATION_CANNOT_BE_DELETED(HttpStatus.BAD_REQUEST, "내역을 삭제할 수 없습니다."),
     EXPIRED_JWT_TOKEN(HttpStatus.UNAUTHORIZED, "로그인 정보가 만료되었습니다."),
     PENALTY_ALREADY_DELETED(HttpStatus.CONFLICT, "이미 삭제된 패널티입니다."),
-    NOT_ENOUGH_POINT(HttpStatus.BAD_REQUEST, "포인트가 부족합니다.");
+    NOT_ENOUGH_POINT(HttpStatus.BAD_REQUEST, "포인트가 부족합니다."),
+    WITHDRAWAL_NOT_FOUND(HttpStatus.NOT_FOUND, "출금 신청건을 찾을 수 없습니다."),
+    WITHDRAWAL_ALREADY_COMPLETED(HttpStatus.CONFLICT, "이미 출금 완료된 상태입니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

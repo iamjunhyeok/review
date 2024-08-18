@@ -73,4 +73,11 @@ public class PointService {
     public List<WithdrawalWithUserProjection> fetchAllWithdrawalHistory() {
         return withdrawalRepository.fetchAllWithdrawalHistory();
     }
+
+    @Transactional
+    public void completeWithdrawal(Long withdrawalId) {
+        withdrawalRepository.findById(withdrawalId)
+                .orElseThrow(() -> ErrorCode.WITHDRAWAL_NOT_FOUND.build())
+                .complete();
+    }
 }
