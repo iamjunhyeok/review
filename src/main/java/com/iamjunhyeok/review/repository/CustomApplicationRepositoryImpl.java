@@ -48,7 +48,8 @@ public class CustomApplicationRepositoryImpl implements CustomApplicationReposit
     @Override
     public List<ApplicantProjection> fetchAllApplicants(Long campaignId) {
         CriteriaBuilder<Application> cb = criteriaBuilderFactory.create(entityManager, Application.class, "a")
-                        .where("a.campaign.id").eq(campaignId);
+                .where("a.campaign.id").eq(campaignId)
+                .where("a.status").notEq(ApplicationStatus.CANCELLED);
         return entityViewManager.applySetting(EntityViewSetting.create(ApplicantProjection.class), cb).getResultList();
     }
 
