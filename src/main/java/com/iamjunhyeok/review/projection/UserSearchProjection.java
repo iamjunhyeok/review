@@ -34,4 +34,6 @@ public interface UserSearchProjection {
     String getAccountHolder();
 
     Role getRole();
+
+    String getProfileImageName();
 }
