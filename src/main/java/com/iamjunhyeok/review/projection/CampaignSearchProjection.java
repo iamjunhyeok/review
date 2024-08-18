@@ -29,6 +29,8 @@ public interface CampaignSearchProjection {
 
     LocalDate getApplicationEndDate();
 
+    LocalDate getAnnouncementDate();
+
     String getOfferingSummary();
 
     @MappingSubquery(ApplicantsCountSubqueryProvider.class)
