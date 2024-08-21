@@ -8,6 +8,7 @@ import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.projection.UserCampaignApplicationProjection;
 import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
 import com.iamjunhyeok.review.projection.UserSearchProjection;
+import com.iamjunhyeok.review.projection.UserSummaryProjection;
 import com.iamjunhyeok.review.projection.UserViewProjection;
 import com.iamjunhyeok.review.repository.ApplicationRepository;
 import com.iamjunhyeok.review.repository.UserRepository;
@@ -99,5 +100,9 @@ public class UserService {
         applicationRepository.findById(id)
                 .orElseThrow(() -> ErrorCode.APPLICATION_NOT_FOUND.build())
                 .delete();
+    }
+
+    public UserSummaryProjection summary(Long userId) {
+        return userRepository.fetchUserSummary(userId);
     }
 }

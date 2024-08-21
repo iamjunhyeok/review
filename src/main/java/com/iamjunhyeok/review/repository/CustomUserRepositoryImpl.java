@@ -12,6 +12,7 @@ import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.projection.UserCampaignApplicationProjection;
 import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
 import com.iamjunhyeok.review.projection.UserSearchProjection;
+import com.iamjunhyeok.review.projection.UserSummaryProjection;
 import com.iamjunhyeok.review.projection.UserViewProjection;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
@@ -72,4 +73,10 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
         }
     }
 
+    @Override
+    public UserSummaryProjection fetchUserSummary(Long userId) {
+        CriteriaBuilder<User> cb = criteriaBuilderFactory.create(entityManager, User.class)
+                .where("id").eq(userId);
+        return entityViewManager.applySetting(EntityViewSetting.create(UserSummaryProjection.class), cb).getSingleResult();
+    }
 }

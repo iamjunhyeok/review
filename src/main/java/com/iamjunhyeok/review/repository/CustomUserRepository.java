@@ -4,6 +4,7 @@ import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.projection.UserCampaignApplicationProjection;
 import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
 import com.iamjunhyeok.review.projection.UserSearchProjection;
+import com.iamjunhyeok.review.projection.UserSummaryProjection;
 import com.iamjunhyeok.review.projection.UserViewProjection;
 
 import java.util.List;
@@ -18,4 +19,6 @@ public interface CustomUserRepository {
     List<UserCampaignSearchProjection> fetchAllByUserIdAndApplicationStatus(Long userId, ApplicationStatus status);
 
     UserCampaignApplicationProjection fetchUserCampaignApplication(Long userId, Long campaignId, Long applicationId);
+
+    UserSummaryProjection fetchUserSummary(Long userId);
 }
