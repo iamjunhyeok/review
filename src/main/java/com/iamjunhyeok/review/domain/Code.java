@@ -33,6 +33,8 @@ public class Code extends Base {
     @JoinColumn(name = "parent_id")
     private Code parent;
 
+    private boolean deleted = false;
+
     public static Code of(String code, String value, Integer order, Code parent) {
         Code codeObj = new Code();
         codeObj.setCode(code);
@@ -45,5 +47,13 @@ public class Code extends Base {
     public void update(String value, Integer order) {
         this.value = value;
         this.order = order;
+    }
+
+    public void delete() {
+        this.deleted = true;
+    }
+
+    public void restore() {
+        this.deleted = false;
     }
 }

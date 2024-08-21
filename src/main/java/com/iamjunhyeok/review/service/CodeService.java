@@ -39,4 +39,18 @@ public class CodeService {
                 .orElseThrow(() -> ErrorCode.CODE_NOT_FOUND.build())
                 .update(request.getValue(), request.getOrder());
     }
+
+    @Transactional
+    public void delete(Long id) {
+        codeRepository.findById(id)
+                .orElseThrow(() -> ErrorCode.CODE_NOT_FOUND.build())
+                .delete();
+    }
+
+    @Transactional
+    public void restore(Long id) {
+        codeRepository.findById(id)
+                .orElseThrow(() -> ErrorCode.CODE_NOT_FOUND.build())
+                .restore();
+    }
 }

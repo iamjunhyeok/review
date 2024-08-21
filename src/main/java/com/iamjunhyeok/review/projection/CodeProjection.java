@@ -12,4 +12,6 @@ public interface CodeProjection {
     String getValue();
 
     Integer getOrder();
+
+    boolean getDeleted();
 }

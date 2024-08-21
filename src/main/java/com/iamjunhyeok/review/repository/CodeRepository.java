@@ -11,7 +11,7 @@ import java.util.List;
 @Repository
 public interface CodeRepository extends JpaRepository<Code, Long> {
 
-    @Query("select c.id as id, c.code as code, c.value as value, c.order as order from Code c where c.parent.id = :parentId")
+    @Query("select c.id as id, c.code as code, c.value as value, c.order as order, c.deleted as deleted from Code c where c.parent.id = :parentId")
     List<CodeProjection> fetchAllByParentId(Long parentId);
 
     List<CodeProjection> findByParentIsNull();
