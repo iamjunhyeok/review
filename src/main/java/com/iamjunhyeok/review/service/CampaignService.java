@@ -1,6 +1,5 @@
 package com.iamjunhyeok.review.service;
 
-import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.constant.CampaignStatus;
 import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.domain.CampaignImage;
@@ -78,6 +77,7 @@ public class CampaignService {
                         .postalCode(request.getPostalCode())
                         .longitude(request.getLongitude())
                         .latitude(request.getLatitude())
+                        .administrativeDistrictCode(request.getAdministrativeDistrictCode())
                         .status(request.getApplicationStartDate().isAfter(LocalDate.now()) ? CampaignStatus.PLANNED : CampaignStatus.ONGOING)
                         .storeInformation(request.getStoreInformation())
                         .point(request.getPoint())
