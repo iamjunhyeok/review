@@ -32,4 +32,8 @@ public class CampaignAddress {
     @NotBlank
     @Column(nullable = false)
     String latitude;
+
+    @NotBlank
+    @Column(nullable = false)
+    String administrativeDistrictCode;
 }

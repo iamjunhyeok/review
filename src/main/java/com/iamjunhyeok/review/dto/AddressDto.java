@@ -26,4 +26,7 @@ public class AddressDto {
 
     @NotBlank
     private String latitude;
+
+    @NotBlank
+    private String administrativeDistrictCode;
 }
