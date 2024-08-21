@@ -1,5 +1,9 @@
 package com.iamjunhyeok.review.service;
 
+import com.iamjunhyeok.review.domain.Code;
+import com.iamjunhyeok.review.dto.request.CodeCreateRequest;
+import com.iamjunhyeok.review.dto.request.CodeUpdateRequest;
+import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.projection.CodeProjection;
 import com.iamjunhyeok.review.repository.CodeRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,4 +26,17 @@ public class CodeService {
         return codeRepository.fetchAllByParentId(parentId);
     }
 
+    @Transactional
+    public Long create(CodeCreateRequest request) {
+        Code parent = codeRepository.getReferenceById(request.getParentId());
+        Code saved = codeRepository.save(Code.of(request.getCode(), request.getValue(), request.getOrder(), parent));
+        return saved.getId();
+    }
+
+    @Transactional
+    public void update(Long id, CodeUpdateRequest request) {
+        codeRepository.findById(id)
+                .orElseThrow(() -> ErrorCode.CODE_NOT_FOUND.build())
+                .update(request.getValue(), request.getOrder());
+    }
 }

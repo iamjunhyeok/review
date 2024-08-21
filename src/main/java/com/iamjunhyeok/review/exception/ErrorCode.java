@@ -33,7 +33,8 @@ public enum ErrorCode {
     PENALTY_ALREADY_DELETED(HttpStatus.CONFLICT, "이미 삭제된 패널티입니다."),
     NOT_ENOUGH_POINT(HttpStatus.BAD_REQUEST, "포인트가 부족합니다."),
     WITHDRAWAL_NOT_FOUND(HttpStatus.NOT_FOUND, "출금 신청건을 찾을 수 없습니다."),
-    WITHDRAWAL_ALREADY_COMPLETED(HttpStatus.CONFLICT, "이미 출금 완료된 상태입니다.");
+    WITHDRAWAL_ALREADY_COMPLETED(HttpStatus.CONFLICT, "이미 출금 완료된 상태입니다."),
+    CODE_NOT_FOUND(HttpStatus.NOT_FOUND, "코드를 찾을 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String message;

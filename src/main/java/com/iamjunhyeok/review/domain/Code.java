@@ -32,4 +32,18 @@ public class Code extends Base {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Code parent;
+
+    public static Code of(String code, String value, Integer order, Code parent) {
+        Code codeObj = new Code();
+        codeObj.setCode(code);
+        codeObj.setValue(value);
+        codeObj.setOrder(order);
+        codeObj.setParent(parent);
+        return codeObj;
+    }
+
+    public void update(String value, Integer order) {
+        this.value = value;
+        this.order = order;
+    }
 }
