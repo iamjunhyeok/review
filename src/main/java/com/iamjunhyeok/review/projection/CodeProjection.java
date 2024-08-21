@@ -10,4 +10,6 @@ public interface CodeProjection {
     String getCode();
 
     String getValue();
+
+    Integer getOrder();
 }

@@ -16,6 +16,9 @@ public class CodeService {
     private final CodeRepository codeRepository;
 
     public List<CodeProjection> fetchAllByParentId(Long parentId) {
+        if (parentId == null) {
+            return codeRepository.findByParentIsNull();
+        }
         return codeRepository.fetchAllByParentId(parentId);
     }
 

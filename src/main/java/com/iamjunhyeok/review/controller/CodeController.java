@@ -18,7 +18,7 @@ public class CodeController {
     private final CodeService codeService;
 
     @GetMapping
-    public ResponseEntity<List<CodeProjection>> fetchAllByParentId(@RequestParam("parent_id") Long parentId) {
+    public ResponseEntity<List<CodeProjection>> fetchAllByParentId(@RequestParam(value = "parent_id", required = false) Long parentId) {
         return ResponseEntity.ok(codeService.fetchAllByParentId(parentId));
     }
 }
