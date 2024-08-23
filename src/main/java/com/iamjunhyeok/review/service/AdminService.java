@@ -3,6 +3,7 @@ package com.iamjunhyeok.review.service;
 import com.iamjunhyeok.review.domain.Banner;
 import com.iamjunhyeok.review.domain.Code;
 import com.iamjunhyeok.review.dto.request.BannerRegisterRequest;
+import com.iamjunhyeok.review.projection.BannerProjection;
 import com.iamjunhyeok.review.repository.BannerRepository;
 import com.iamjunhyeok.review.repository.CodeRepository;
 import com.iamjunhyeok.review.util.S3Util;
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -38,5 +40,9 @@ public class AdminService {
         bannerRepository.save(banner);
 
         s3Util.putObject(file);
+    }
+
+    public List<BannerProjection> fetchAll() {
+        return bannerRepository.fetchAll();
     }
 }
