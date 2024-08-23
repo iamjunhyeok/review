@@ -5,6 +5,7 @@ import com.iamjunhyeok.review.dto.request.CodeUpdateRequest;
 import com.iamjunhyeok.review.projection.CodeProjection;
 import com.iamjunhyeok.review.service.CodeService;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -28,8 +29,15 @@ public class CodeController {
     private final CodeService codeService;
 
     @GetMapping
-    public ResponseEntity<List<CodeProjection>> fetchAllByParentId(@RequestParam(value = "parent_id", required = false) Long parentId) {
-        return ResponseEntity.ok(codeService.fetchAllByParentId(parentId));
+    public ResponseEntity<List<CodeProjection>> fetchAllByParentId(@RequestParam(value = "parent_id", required = false) Long parentId,
+                                                                   @RequestParam(value = "parent_code", required = false) String parentCode) {
+        if (parentId == null && Strings.isBlank(parentCode)) {
+            return ResponseEntity.ok(codeService.findByParentIsNull());
+        } else if (parentId != null) {
+            return ResponseEntity.ok(codeService.fetchAllByParentId(parentId));
+        } else {
+            return ResponseEntity.ok(codeService.fetchAllByParentCode(parentCode));
+        }
     }
 
     @PreAuthorize("hasRole('ADMIN')")
