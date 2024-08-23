@@ -2,39 +2,11 @@ package com.iamjunhyeok.review.config;
 
 import com.blazebit.persistence.Criteria;
 import com.blazebit.persistence.CriteriaBuilderFactory;
+import com.blazebit.persistence.integration.view.spring.EnableEntityViews;
 import com.blazebit.persistence.spi.CriteriaBuilderConfiguration;
+import com.blazebit.persistence.spring.data.impl.repository.BlazePersistenceRepositoryFactoryBean;
 import com.blazebit.persistence.view.EntityViewManager;
-import com.blazebit.persistence.view.EntityViews;
 import com.blazebit.persistence.view.spi.EntityViewConfiguration;
-import com.iamjunhyeok.review.projection.ApplicantProjection;
-import com.iamjunhyeok.review.projection.ApplicationCampaignProjection;
-import com.iamjunhyeok.review.projection.ApplicationIdStatusProjection;
-import com.iamjunhyeok.review.projection.ApplicationProjection;
-import com.iamjunhyeok.review.projection.ApplicationSearchProjection;
-import com.iamjunhyeok.review.projection.BannerProjection;
-import com.iamjunhyeok.review.projection.CampaignImageProjection;
-import com.iamjunhyeok.review.projection.CampaignLinkProjection;
-import com.iamjunhyeok.review.projection.CampaignMissionProjection;
-import com.iamjunhyeok.review.projection.CampaignOptionProjection;
-import com.iamjunhyeok.review.projection.CampaignProjection;
-import com.iamjunhyeok.review.projection.CampaignSearchProjection;
-import com.iamjunhyeok.review.projection.CampaignSummaryProjection;
-import com.iamjunhyeok.review.projection.CampaignViewProjection;
-import com.iamjunhyeok.review.projection.CodeProjection;
-import com.iamjunhyeok.review.projection.FaqProjection;
-import com.iamjunhyeok.review.projection.InquiryAnswerProjection;
-import com.iamjunhyeok.review.projection.InquiryProjection;
-import com.iamjunhyeok.review.projection.PenaltyProjection;
-import com.iamjunhyeok.review.projection.PointSearchProjection;
-import com.iamjunhyeok.review.projection.ReviewProjection;
-import com.iamjunhyeok.review.projection.ReviewStatusProjection;
-import com.iamjunhyeok.review.projection.UserCampaignApplicationProjection;
-import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
-import com.iamjunhyeok.review.projection.UserProjection;
-import com.iamjunhyeok.review.projection.UserSearchProjection;
-import com.iamjunhyeok.review.projection.UserSummaryProjection;
-import com.iamjunhyeok.review.projection.UserViewProjection;
-import com.iamjunhyeok.review.projection.WithdrawalWithUserProjection;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceUnit;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -42,10 +14,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-//@EnableEntityViews(basePackages = "com.iamjunhyeok.review.dto")
-//@EnableJpaRepositories(basePackages = "com.iamjunhyeok.review.repository",
-//        repositoryFactoryBeanClass = BlazePersistenceRepositoryFactoryBean.class)
+@EnableEntityViews(basePackages = "com.iamjunhyeok.review.projection")
+@EnableJpaRepositories(basePackages = "com.iamjunhyeok.review.repository",
+        repositoryFactoryBeanClass = BlazePersistenceRepositoryFactoryBean.class)
 @Configuration
 public class BlazePersistenceConfig {
 
@@ -63,37 +36,9 @@ public class BlazePersistenceConfig {
     @Bean
     @Scope(ConfigurableBeanFactory.SCOPE_SINGLETON)
     @Lazy(false)
-    public EntityViewManager createEntityViewManager(CriteriaBuilderFactory cbf) {
-        EntityViewConfiguration config = EntityViews.createDefaultConfiguration();
-        config.addEntityView(CampaignViewProjection.class);
-        config.addEntityView(CampaignLinkProjection.class);
-        config.addEntityView(CampaignImageProjection.class);
-        config.addEntityView(CampaignSummaryProjection.class);
-        config.addEntityView(UserSearchProjection.class);
-        config.addEntityView(UserViewProjection.class);
-        config.addEntityView(UserCampaignSearchProjection.class);
-        config.addEntityView(UserCampaignApplicationProjection.class);
-        config.addEntityView(PointSearchProjection.class);
-        config.addEntityView(CampaignSearchProjection.class);
-        config.addEntityView(CampaignMissionProjection.class);
-        config.addEntityView(CampaignOptionProjection.class);
-        config.addEntityView(CodeProjection.class);
-        config.addEntityView(InquiryProjection.class);
-        config.addEntityView(ApplicantProjection.class);
-        config.addEntityView(UserProjection.class);
-        config.addEntityView(FaqProjection.class);
-        config.addEntityView(PenaltyProjection.class);
-        config.addEntityView(ReviewProjection.class);
-        config.addEntityView(CampaignProjection.class);
-        config.addEntityView(ApplicationIdStatusProjection.class);
-        config.addEntityView(ApplicationCampaignProjection.class);
-        config.addEntityView(InquiryAnswerProjection.class);
-        config.addEntityView(ApplicationProjection.class);
-        config.addEntityView(ApplicationSearchProjection.class);
-        config.addEntityView(ReviewStatusProjection.class);
-        config.addEntityView(WithdrawalWithUserProjection.class);
-        config.addEntityView(UserSummaryProjection.class);
-        config.addEntityView(BannerProjection.class);
-        return config.createEntityViewManager(cbf);
+    public EntityViewManager createEntityViewManager(CriteriaBuilderFactory cbf, EntityViewConfiguration entityViewConfiguration) {
+        // here you can configure entity views
+        // for example: entityViewConfiguration.setProperty(ConfigurationProperties.MANAGED_TYPE_VALIDATION_DISABLED, "true");
+        return entityViewConfiguration.createEntityViewManager(cbf);
     }
 }
