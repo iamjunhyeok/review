@@ -82,7 +82,7 @@ public class CampaignService {
                         .longitude(request.getLongitude())
                         .latitude(request.getLatitude())
                         .administrativeDistrictCode(request.getAdministrativeDistrictCode())
-                        .status(CampaignStatus.REQUESTED)
+                        .status(CampaignStatus.INSPECTING)
                         .storeInformation(request.getStoreInformation())
                         .point(request.getPoint())
                         .user(user)
