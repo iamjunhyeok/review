@@ -2,10 +2,14 @@ package com.iamjunhyeok.review.service;
 
 import com.iamjunhyeok.review.domain.Banner;
 import com.iamjunhyeok.review.domain.Code;
+import com.iamjunhyeok.review.domain.Plan;
 import com.iamjunhyeok.review.dto.request.BannerRegisterRequest;
+import com.iamjunhyeok.review.dto.request.PlanRegisterRequest;
 import com.iamjunhyeok.review.projection.BannerProjection;
+import com.iamjunhyeok.review.projection.PlanProjection;
 import com.iamjunhyeok.review.repository.BannerRepository;
 import com.iamjunhyeok.review.repository.CodeRepository;
+import com.iamjunhyeok.review.repository.PlanRepository;
 import com.iamjunhyeok.review.util.S3Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,6 +26,7 @@ public class AdminService {
 
     private final CodeRepository codeRepository;
     private final BannerRepository bannerRepository;
+    private final PlanRepository planRepository;
 
     private final S3Util s3Util;
 
@@ -44,5 +49,25 @@ public class AdminService {
 
     public List<BannerProjection> fetchAll() {
         return bannerRepository.fetchAll();
+    }
+
+    @Transactional
+    public void registerPlan(PlanRegisterRequest request) {
+        Plan plan = Plan.builder()
+                .name(request.getName())
+                .campaignCount(request.getCampaignCount())
+                .peopleCount(request.getPeopleCount())
+                .price(request.getPrice())
+                .discountPrice(request.getDiscountPrice())
+                .reportDownloadDays(request.getReportDownloadDays())
+                .campaignRegistrationType(request.getCampaignRegistrationType())
+                .reviewerSelectionType(request.getReviewerSelectionType())
+                .pointPaymentType(request.getPointPaymentType())
+                .build();
+        planRepository.save(plan);
+    }
+
+    public List<PlanProjection> fetchAllPlans() {
+        return planRepository.fetchAll();
     }
 }
