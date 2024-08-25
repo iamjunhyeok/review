@@ -3,9 +3,11 @@ package com.iamjunhyeok.review.controller;
 import com.iamjunhyeok.review.dto.request.BannerRegisterRequest;
 import com.iamjunhyeok.review.dto.request.PlanRegisterRequest;
 import com.iamjunhyeok.review.projection.BannerProjection;
+import com.iamjunhyeok.review.projection.CampaignSearchProjection;
 import com.iamjunhyeok.review.projection.PlanProjection;
 import com.iamjunhyeok.review.service.AdminService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +16,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -55,5 +58,17 @@ public class AdminController {
     @GetMapping("/plans")
     public ResponseEntity<List<PlanProjection>> fetchAllPlans() {
         return ResponseEntity.ok(adminService.fetchAllPlans());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/campaigns")
+    public ResponseEntity<List<CampaignSearchProjection>> fetchAllCampaigns(@RequestParam(required = false) String type,
+                                                                 @RequestParam(required = false) String categories,
+                                                                 @RequestParam(required = false) String socials,
+                                                                 @RequestParam(required = false) String options,
+                                                                 @RequestParam(required = false) String status,
+                                                                 Pageable pageable
+    ) {
+        return ResponseEntity.ok(adminService.fetchAllCampaigns(type, categories, socials, options, status, pageable));
     }
 }

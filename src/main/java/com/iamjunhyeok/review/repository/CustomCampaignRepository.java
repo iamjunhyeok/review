@@ -14,4 +14,6 @@ public interface CustomCampaignRepository {
     <T> Optional<T> fetchById(Long id, Class<T> type);
 
     List<UserCampaignSearchProjection> fetchAuthenticatedUserCampaigns(String status);
+
+    List<CampaignSearchProjection> fetchAll(String type, String categories, String socials, String options, String status, Pageable pageable);
 }

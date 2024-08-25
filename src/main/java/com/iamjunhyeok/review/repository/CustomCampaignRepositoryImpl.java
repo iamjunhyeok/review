@@ -8,6 +8,7 @@ import com.blazebit.persistence.view.EntityViewSetting;
 import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.constant.CampaignCategory;
 import com.iamjunhyeok.review.constant.CampaignSocial;
+import com.iamjunhyeok.review.constant.CampaignStatus;
 import com.iamjunhyeok.review.constant.CampaignType;
 import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.domain.CustomOAuth2User;
@@ -102,5 +103,50 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
                 .where("a.status").in(statuses)
                 .where("a.deleted").eqLiteral(false);
         return entityViewManager.applySetting(EntityViewSetting.create(UserCampaignSearchProjection.class), campaignCriteriaBuilder).getResultList();
+    }
+
+    @Override
+    public List<CampaignSearchProjection> fetchAll(String type, String categories, String socials, String options, String status, Pageable pageable) {
+        CriteriaBuilder<Campaign> cb = criteriaBuilderFactory.create(entityManager, Campaign.class, "c")
+                .innerJoinDefault("c.images", "i")
+                .leftJoinDefault("c.options", "o")
+                .leftJoinDefault("o.code", "co");
+        if (Strings.isNotBlank(type)) {
+            cb.where("c.type").eq(CampaignType.valueOf(type.toUpperCase()));
+        }
+        if (Strings.isNotBlank(categories)) {
+            cb.where("c.category").in(
+                    Arrays.stream(categories.toUpperCase().split(","))
+                            .map(CampaignCategory::valueOf)
+                            .toList()
+            );
+        }
+        if (Strings.isNotBlank(socials)) {
+            cb.where("c.social").in(
+                    Arrays.stream(socials.toUpperCase().split(","))
+                            .map(CampaignSocial::valueOf)
+                            .toList()
+            );
+        }
+        if (Strings.isNotBlank(options)) {
+            cb.where("co.code").in(
+                    Arrays.stream(options.toUpperCase().split(","))
+                            .toList()
+            );
+        }
+        if (Strings.isNotBlank(status)) {
+            cb.where("c.status").in(
+                    Arrays.stream(status.toUpperCase().split(","))
+                            .map(CampaignStatus::valueOf)
+                            .toList()
+            );
+        }
+        for (Sort.Order order : pageable.getSort()) {
+            if (order.getProperty().equals("newest")) {
+                cb.orderByAsc("c.createdAt");
+            }
+        }
+        cb.page(pageable.getOffset(), pageable.getPageSize());
+        return entityViewManager.applySetting(EntityViewSetting.create(CampaignSearchProjection.class), cb).getResultList();
     }
 }

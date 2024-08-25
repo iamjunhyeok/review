@@ -6,12 +6,15 @@ import com.iamjunhyeok.review.domain.Plan;
 import com.iamjunhyeok.review.dto.request.BannerRegisterRequest;
 import com.iamjunhyeok.review.dto.request.PlanRegisterRequest;
 import com.iamjunhyeok.review.projection.BannerProjection;
+import com.iamjunhyeok.review.projection.CampaignSearchProjection;
 import com.iamjunhyeok.review.projection.PlanProjection;
 import com.iamjunhyeok.review.repository.BannerRepository;
+import com.iamjunhyeok.review.repository.CampaignRepository;
 import com.iamjunhyeok.review.repository.CodeRepository;
 import com.iamjunhyeok.review.repository.PlanRepository;
 import com.iamjunhyeok.review.util.S3Util;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,6 +30,7 @@ public class AdminService {
     private final CodeRepository codeRepository;
     private final BannerRepository bannerRepository;
     private final PlanRepository planRepository;
+    private final CampaignRepository campaignRepository;
 
     private final S3Util s3Util;
 
@@ -69,5 +73,10 @@ public class AdminService {
 
     public List<PlanProjection> fetchAllPlans() {
         return planRepository.fetchAll();
+    }
+
+    public List<CampaignSearchProjection> fetchAllCampaigns(String type, String categories, String socials, String options, String status, Pageable pageable) {
+        return campaignRepository.fetchAll(type, categories, socials, options, status, pageable);
+
     }
 }
