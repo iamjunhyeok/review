@@ -71,7 +71,7 @@ public class Campaign extends CampaignBase {
     private List<CampaignOption> options = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     public Campaign apply(Application application) {
