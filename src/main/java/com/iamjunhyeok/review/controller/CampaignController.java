@@ -1,6 +1,7 @@
 package com.iamjunhyeok.review.controller;
 
 import com.iamjunhyeok.review.constant.ApplicationStatus;
+import com.iamjunhyeok.review.domain.CustomOAuth2User;
 import com.iamjunhyeok.review.dto.request.CampaignCreateRequest;
 import com.iamjunhyeok.review.dto.request.CampaignUpdateRequest;
 import com.iamjunhyeok.review.dto.response.CampaignCreateResponse;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -36,11 +38,12 @@ public class CampaignController {
 
     private final CampaignService campaignService;
 
-    @PreAuthorize("hasRole('ADMIN')")
+//    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/campaigns")
     public ResponseEntity<CampaignCreateResponse> create(@RequestPart @Valid CampaignCreateRequest request,
-                                                         @RequestPart List<MultipartFile> files) throws IOException {
-        return ResponseEntity.status(HttpStatus.CREATED).body(CampaignCreateResponse.from(campaignService.create(request, files)));
+                                                         @RequestPart List<MultipartFile> files,
+                                                         @AuthenticationPrincipal CustomOAuth2User principal) throws IOException {
+        return ResponseEntity.status(HttpStatus.CREATED).body(CampaignCreateResponse.from(campaignService.create(request, files, principal)));
     }
 
     @PreAuthorize("hasRole('ADMIN')")

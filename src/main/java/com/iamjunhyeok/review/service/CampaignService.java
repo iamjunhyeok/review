@@ -5,6 +5,8 @@ import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.domain.CampaignImage;
 import com.iamjunhyeok.review.domain.CampaignLink;
 import com.iamjunhyeok.review.domain.Code;
+import com.iamjunhyeok.review.domain.CustomOAuth2User;
+import com.iamjunhyeok.review.domain.User;
 import com.iamjunhyeok.review.dto.CampaignLinkDto;
 import com.iamjunhyeok.review.dto.CampaignMissionDto;
 import com.iamjunhyeok.review.dto.CampaignOptionDto;
@@ -22,6 +24,7 @@ import com.iamjunhyeok.review.repository.CampaignMissionRepository;
 import com.iamjunhyeok.review.repository.CampaignOptionRepository;
 import com.iamjunhyeok.review.repository.CampaignRepository;
 import com.iamjunhyeok.review.repository.CodeRepository;
+import com.iamjunhyeok.review.repository.UserRepository;
 import com.iamjunhyeok.review.util.S3Util;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
@@ -32,7 +35,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -51,9 +53,11 @@ public class CampaignService {
     private final S3Util s3Util;
     private final CampaignMissionRepository campaignMissionRepository;
     private final CampaignOptionRepository campaignOptionRepository;
+    private final UserRepository userRepository;
 
     @Transactional
-    public Campaign create(CampaignCreateRequest request, List<MultipartFile> files) throws IOException {
+    public Campaign create(CampaignCreateRequest request, List<MultipartFile> files, CustomOAuth2User principal) throws IOException {
+        User user = userRepository.getReferenceById(principal.getUserId());
         Campaign campaign = campaignRepository.save(
                 Campaign.builder()
                         .type(request.getType())
@@ -78,9 +82,10 @@ public class CampaignService {
                         .longitude(request.getLongitude())
                         .latitude(request.getLatitude())
                         .administrativeDistrictCode(request.getAdministrativeDistrictCode())
-                        .status(request.getApplicationStartDate().isAfter(LocalDate.now()) ? CampaignStatus.PLANNED : CampaignStatus.ONGOING)
+                        .status(CampaignStatus.REQUESTED)
                         .storeInformation(request.getStoreInformation())
                         .point(request.getPoint())
+                        .user(user)
                         .build()
         );
 
