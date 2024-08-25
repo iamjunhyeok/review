@@ -1,9 +1,9 @@
 package com.iamjunhyeok.review.constant;
 
 public enum CampaignStatus {
-    REQUESTED,
     INSPECTING,
+    REJECTED,
     ONGOING,
     COMPLETED,
-    CANCELLED
+    CANCELED
 }
