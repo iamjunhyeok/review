@@ -5,6 +5,7 @@ import com.iamjunhyeok.review.domain.Code;
 import com.iamjunhyeok.review.domain.Plan;
 import com.iamjunhyeok.review.dto.request.BannerRegisterRequest;
 import com.iamjunhyeok.review.dto.request.PlanRegisterRequest;
+import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.projection.BannerProjection;
 import com.iamjunhyeok.review.projection.CampaignSearchProjection;
 import com.iamjunhyeok.review.projection.PlanProjection;
@@ -12,6 +13,7 @@ import com.iamjunhyeok.review.repository.BannerRepository;
 import com.iamjunhyeok.review.repository.CampaignRepository;
 import com.iamjunhyeok.review.repository.CodeRepository;
 import com.iamjunhyeok.review.repository.PlanRepository;
+import com.iamjunhyeok.review.repository.UserRepository;
 import com.iamjunhyeok.review.util.S3Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +33,7 @@ public class AdminService {
     private final BannerRepository bannerRepository;
     private final PlanRepository planRepository;
     private final CampaignRepository campaignRepository;
+    private final UserRepository userRepository;
 
     private final S3Util s3Util;
 
@@ -78,5 +81,15 @@ public class AdminService {
     public List<CampaignSearchProjection> fetchAllCampaigns(String type, String categories, String socials, String options, String status, Pageable pageable) {
         return campaignRepository.fetchAll(type, categories, socials, options, status, pageable);
 
+    }
+
+    @Transactional
+    public void subscribe(Long userId, Long planId) {
+        Plan plan = planRepository.findById(planId)
+                .orElseThrow(() -> ErrorCode.PLAN_NOT_FOUND.build());
+
+        userRepository.findById(userId)
+                .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build())
+                .subscribe(plan);
     }
 }

@@ -71,4 +71,11 @@ public class AdminController {
     ) {
         return ResponseEntity.ok(adminService.fetchAllCampaigns(type, categories, socials, options, status, pageable));
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/users/{userId}/plans/{planId}/subscribe")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void subscribe(@PathVariable Long userId, @PathVariable Long planId) {
+        adminService.subscribe(userId, planId);
+    }
 }

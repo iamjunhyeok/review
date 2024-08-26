@@ -65,6 +65,9 @@ public class User extends Address {
     @OneToMany(mappedBy = "user")
     private List<Sns> sns = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<UserPlan> plans;
+
     public static User createUser(String email, String nickname, String password) {
         User user = new User();
         user.setEmail(email);
@@ -94,5 +97,9 @@ public class User extends Address {
     public User updateProfileImageName(String newProfileImageName) {
         this.profileImageName = newProfileImageName;
         return this;
+    }
+
+    public void subscribe(Plan plan) {
+        this.plans.add(UserPlan.of(this, plan));
     }
 }
