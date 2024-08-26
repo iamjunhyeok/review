@@ -118,19 +118,6 @@ public class CampaignService {
         return campaign;
     }
 
-    /**
-     * 새로운 파일명으로 파일을 S3 에 putObject
-     * @param files
-     * @param newFilenameMap
-     * @throws IOException
-     */
-    private void putObjectAllFiles(List<MultipartFile> files, Map<String, String> newFilenameMap) throws IOException {
-        if (CollectionUtils.isEmpty(files)) return;
-        for (MultipartFile file : files) {
-            s3Util.putObject(newFilenameMap.get(file.getOriginalFilename()), file);
-        }
-    }
-
     private void putObjectAllFiles(List<MultipartFile> files) throws IOException {
         if (CollectionUtils.isEmpty(files)) return;
         for (MultipartFile file : files) {

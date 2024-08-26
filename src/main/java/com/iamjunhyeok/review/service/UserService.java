@@ -22,7 +22,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -55,10 +54,9 @@ public class UserService {
             try {
                 s3Util.deleteObject(originProfileImageName);
 
-                String newFilename = String.valueOf(UUID.randomUUID()).concat(file.getOriginalFilename().substring(file.getOriginalFilename().lastIndexOf(".")));
-                s3Util.putObject(newFilename, file);
+                s3Util.putObject(file);
 
-                user.updateProfileImageName(newFilename);
+                user.updateProfileImageName(file.getOriginalFilename());
 
             } catch (IOException e) {
                 throw new RuntimeException(e);
