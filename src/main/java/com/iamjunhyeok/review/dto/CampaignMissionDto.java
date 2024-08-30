@@ -8,13 +8,13 @@ import lombok.Setter;
 @Setter
 public class CampaignMissionDto {
     private Long id;
-    private String arguments;
+    private String value;
     private CodeDto code;
 
     public static CampaignMissionDto from(CampaignMission campaignMission) {
         CampaignMissionDto campaignMissionDto = new CampaignMissionDto();
         campaignMissionDto.setId(campaignMission.getId());
-        campaignMissionDto.setArguments(campaignMission.getArguments());
+        campaignMissionDto.setValue(campaignMission.getValue());
         return campaignMissionDto;
     }
 }

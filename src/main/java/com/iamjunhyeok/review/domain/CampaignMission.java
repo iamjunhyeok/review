@@ -24,7 +24,7 @@ public class CampaignMission {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    private String arguments;
+    private String value;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "campaign_id")
@@ -34,15 +34,15 @@ public class CampaignMission {
     @JoinColumn(name = "code_id")
     private Code code;
 
-    public static CampaignMission of(String arguments, Campaign campaign, Code code) {
+    public static CampaignMission of(String value, Campaign campaign, Code code) {
         CampaignMission campaignMission = new CampaignMission();
-        campaignMission.setArguments(arguments);
+        campaignMission.setValue(value);
         campaignMission.setCampaign(campaign);
         campaignMission.setCode(code);
         return campaignMission;
     }
 
-    public void update(String newArguments) {
-        this.arguments = newArguments;
+    public void update(String newValue) {
+        this.value = newValue;
     }
 }

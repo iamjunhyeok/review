@@ -94,8 +94,8 @@ public class CampaignService {
                 .map(CodeDto::getId)
                 .toList());
         Map<Long, String> argumentsMap = request.getMissions().stream()
-                .filter(dto -> Strings.isNotBlank(dto.getArguments()))
-                .collect(Collectors.toMap(dto -> dto.getCode().getId(), CampaignMissionDto::getArguments));
+                .filter(dto -> Strings.isNotBlank(dto.getValue()))
+                .collect(Collectors.toMap(dto -> dto.getCode().getId(), CampaignMissionDto::getValue));
         campaign.addMission(missions, argumentsMap);
 
         List<Code> options = codeRepository.findAllById(request.getOptions().stream()
@@ -186,8 +186,8 @@ public class CampaignService {
                 .map(CodeDto::getId)
                 .toList());
         Map<Long, String> argumentsMap = request.getMissions().stream()
-                .filter(dto -> Strings.isNotBlank(dto.getArguments()))
-                .collect(Collectors.toMap(dto -> dto.getCode().getId(), CampaignMissionDto::getArguments));
+                .filter(dto -> Strings.isNotBlank(dto.getValue()))
+                .collect(Collectors.toMap(dto -> dto.getCode().getId(), CampaignMissionDto::getValue));
         campaign.addMission(missions, argumentsMap);
 
 

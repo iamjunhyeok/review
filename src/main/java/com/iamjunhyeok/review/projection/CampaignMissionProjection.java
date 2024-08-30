@@ -9,7 +9,7 @@ public interface CampaignMissionProjection {
     @IdMapping
     Long getId();
 
-    String getArguments();
+    String getValue();
 
     CodeProjection getCode();
 }
