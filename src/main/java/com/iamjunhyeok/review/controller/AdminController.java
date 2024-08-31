@@ -2,6 +2,7 @@ package com.iamjunhyeok.review.controller;
 
 import com.iamjunhyeok.review.dto.request.BannerRegisterRequest;
 import com.iamjunhyeok.review.dto.request.PlanRegisterRequest;
+import com.iamjunhyeok.review.projection.AdvertiserProjection;
 import com.iamjunhyeok.review.projection.BannerProjection;
 import com.iamjunhyeok.review.projection.CampaignSearchProjection;
 import com.iamjunhyeok.review.projection.PlanProjection;
@@ -77,5 +78,11 @@ public class AdminController {
     @ResponseStatus(HttpStatus.CREATED)
     public void subscribe(@PathVariable Long userId, @PathVariable Long planId) {
         adminService.subscribe(userId, planId);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/advertisers")
+    public List<AdvertiserProjection> fetchAllAdvertisers(@RequestParam(required = false) String status) {
+        return adminService.fetchAllAdvertisers(status);
     }
 }

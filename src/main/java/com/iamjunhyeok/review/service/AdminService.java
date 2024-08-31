@@ -6,9 +6,11 @@ import com.iamjunhyeok.review.domain.Plan;
 import com.iamjunhyeok.review.dto.request.BannerRegisterRequest;
 import com.iamjunhyeok.review.dto.request.PlanRegisterRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
+import com.iamjunhyeok.review.projection.AdvertiserProjection;
 import com.iamjunhyeok.review.projection.BannerProjection;
 import com.iamjunhyeok.review.projection.CampaignSearchProjection;
 import com.iamjunhyeok.review.projection.PlanProjection;
+import com.iamjunhyeok.review.repository.AdvertiserRepository;
 import com.iamjunhyeok.review.repository.BannerRepository;
 import com.iamjunhyeok.review.repository.CampaignRepository;
 import com.iamjunhyeok.review.repository.CodeRepository;
@@ -34,6 +36,7 @@ public class AdminService {
     private final PlanRepository planRepository;
     private final CampaignRepository campaignRepository;
     private final UserRepository userRepository;
+    private final AdvertiserRepository advertiserRepository;
 
     private final S3Util s3Util;
 
@@ -91,5 +94,9 @@ public class AdminService {
         userRepository.findById(userId)
                 .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build())
                 .subscribe(plan);
+    }
+
+    public List<AdvertiserProjection> fetchAllAdvertisers(String status) {
+        return advertiserRepository.fetchAll(status);
     }
 }
