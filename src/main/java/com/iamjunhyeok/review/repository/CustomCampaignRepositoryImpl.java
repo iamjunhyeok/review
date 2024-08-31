@@ -5,9 +5,11 @@ import com.blazebit.persistence.CriteriaBuilder;
 import com.blazebit.persistence.CriteriaBuilderFactory;
 import com.blazebit.persistence.view.EntityViewManager;
 import com.blazebit.persistence.view.EntityViewSetting;
+import com.blazebit.persistence.view.Sorters;
 import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.constant.CampaignCategory;
 import com.iamjunhyeok.review.constant.CampaignSocial;
+import com.iamjunhyeok.review.constant.CampaignSort;
 import com.iamjunhyeok.review.constant.CampaignStatus;
 import com.iamjunhyeok.review.constant.CampaignType;
 import com.iamjunhyeok.review.domain.Campaign;
@@ -23,6 +25,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -65,13 +68,26 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
                             .toList()
             );
         }
+
+        cb.page(pageable.getOffset(), pageable.getPageSize());
+
+        EntityViewSetting<CampaignSearchProjection, CriteriaBuilder<CampaignSearchProjection>> setting = EntityViewSetting.create(CampaignSearchProjection.class);
+
         for (Sort.Order order : pageable.getSort()) {
-            if (order.getProperty().equals("newest")) {
-                cb.orderByAsc("c.createdAt");
+            if (order.getProperty().equalsIgnoreCase(CampaignSort.NEW.name())) {
+                cb.orderByDesc("c.createdAt");
+            }
+            if (order.getProperty().equalsIgnoreCase(CampaignSort.POPULAR.name())) {
+                setting.addAttributeSorter("applicantsCount", Sorters.descending());
+            }
+            if (order.getProperty().equalsIgnoreCase(CampaignSort.DEADLINE.name())) {
+                setting.addAttributeSorter("dday", Sorters.ascending());
             }
         }
-        cb.page(pageable.getOffset(), pageable.getPageSize());
-        CriteriaBuilder<CampaignSearchProjection> criteriaBuilder = entityViewManager.applySetting(EntityViewSetting.create(CampaignSearchProjection.class), cb);
+        cb.where("c.applicationEndDate").gtLiteral(LocalDate.now());
+
+
+        CriteriaBuilder<CampaignSearchProjection> criteriaBuilder = entityViewManager.applySetting(setting, cb);
         return criteriaBuilder.getResultList();
     }
 
