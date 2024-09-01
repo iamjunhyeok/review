@@ -51,7 +51,7 @@ public class CampaignBaseDto extends AddressDto {
     private LocalDate applicationStartDate;
 
     @NotNull
-    @Future
+    @FutureOrPresent
     private LocalDate applicationEndDate;
 
     @NotNull
@@ -81,7 +81,6 @@ public class CampaignBaseDto extends AddressDto {
     @NotBlank
     private String guide;
 
-    @NotBlank
     private String information;
 
     @Enumerated(EnumType.STRING)

@@ -28,83 +28,68 @@ import java.time.LocalDate;
 @MappedSuperclass
 public class CampaignBase extends CampaignAddress {
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     CampaignType type;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     CampaignCategory category;
 
-    @NotNull
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     CampaignSocial social;
 
     @Column(nullable = false)
-    @NotBlank
     String title;
 
-    @NotNull
     @Column(nullable = false)
     @Positive
     Integer capacity;
 
-    @NotNull
     @Column(nullable = false)
     @FutureOrPresent
     LocalDate applicationStartDate;
 
-    @NotNull
     @Column(nullable = false)
-    @Future
+    @FutureOrPresent
     LocalDate applicationEndDate;
 
-    @NotNull
     @Column(nullable = false)
     @Future
     LocalDate announcementDate;
 
-    @NotNull
     @Column(nullable = false)
     @Future
     LocalDate reviewStartDate;
 
-    @NotNull
     @Column(nullable = false)
     @Future
     LocalDate reviewEndDate;
 
-    @Column(nullable = false)
-    @NotBlank
+    @Column(length = 2000, nullable = false)
     String offering;
 
     @Column(nullable = false)
-    @NotBlank
     String offeringSummary;
 
     @Column(nullable = false)
-    @NotBlank
     String keyword;
 
     @Column(nullable = false)
-    @NotBlank
     String hashtag;
 
-    @Column(nullable = false)
-    @NotBlank
+    @Column(length = 2000, nullable = false)
     String guide;
 
-    @Column(nullable = false)
-    @NotBlank
+    @Column(length = 2000)
     String information;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     CampaignStatus status;
 
+    @Column(length = 2000, nullable = false)
     String storeInformation;
 
     @PositiveOrZero
