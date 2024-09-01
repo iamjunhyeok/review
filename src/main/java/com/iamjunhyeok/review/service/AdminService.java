@@ -54,7 +54,7 @@ public class AdminService {
                 .build();
         bannerRepository.save(banner);
 
-        s3Util.putObject(file);
+        s3Util.putObject("olim-banner", file);
     }
 
     public List<BannerProjection> fetchAll() {
