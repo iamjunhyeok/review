@@ -25,7 +25,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
-import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -69,8 +68,6 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
             );
         }
 
-        cb.page(pageable.getOffset(), pageable.getPageSize());
-
         EntityViewSetting<CampaignSearchProjection, CriteriaBuilder<CampaignSearchProjection>> setting = EntityViewSetting.create(CampaignSearchProjection.class);
 
         for (Sort.Order order : pageable.getSort()) {
@@ -84,10 +81,13 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
                 setting.addAttributeSorter("dday", Sorters.ascending());
             }
         }
-        cb.where("c.applicationEndDate").gtLiteral(LocalDate.now());
+        cb.where("CURDATE()").betweenExpression("c.applicationStartDate").andExpression("c.applicationEndDate");
 
 
         CriteriaBuilder<CampaignSearchProjection> criteriaBuilder = entityViewManager.applySetting(setting, cb);
+
+        cb.setMaxResults(pageable.getPageSize());
+
         return criteriaBuilder.getResultList();
     }
 
