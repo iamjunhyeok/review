@@ -24,6 +24,7 @@ import com.iamjunhyeok.review.repository.CampaignMissionRepository;
 import com.iamjunhyeok.review.repository.CampaignOptionRepository;
 import com.iamjunhyeok.review.repository.CampaignRepository;
 import com.iamjunhyeok.review.repository.CodeRepository;
+import com.iamjunhyeok.review.repository.FavouriteRepository;
 import com.iamjunhyeok.review.repository.UserRepository;
 import com.iamjunhyeok.review.util.S3Util;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,7 @@ public class CampaignService {
     private final CampaignMissionRepository campaignMissionRepository;
     private final CampaignOptionRepository campaignOptionRepository;
     private final UserRepository userRepository;
+    private final FavouriteRepository favouriteRepository;
 
     @Transactional
     public Campaign create(CampaignCreateRequest request, List<MultipartFile> files, CustomOAuth2User principal) throws IOException {
@@ -251,5 +253,21 @@ public class CampaignService {
 
     public List<UserCampaignSearchProjection> fetchAuthenticatedUserCampaigns(String status) {
         return campaignRepository.fetchAuthenticatedUserCampaigns(status);
+    }
+
+    @Transactional
+    public void addToFavourites(Long id, CustomOAuth2User principal) {
+        User user = userRepository.findById(principal.getUserId())
+                .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build());
+        Campaign campaign = campaignRepository.getReferenceById(id);
+        user.favourite(campaign);
+    }
+
+    @Transactional
+    public void removeFromFavourites(Long id, CustomOAuth2User principal) {
+        User user = userRepository.findById(principal.getUserId())
+                .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build());
+        Campaign campaign = campaignRepository.getReferenceById(id);
+        user.removeFromFavourites(campaign);
     }
 }

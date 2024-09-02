@@ -74,6 +74,9 @@ public class Campaign extends CampaignBase {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @OneToMany(mappedBy = "campaign")
+    private List<Favourite> favourites = new ArrayList<>();
+
     public Campaign apply(Application application) {
         this.applications.add(application);
         application.setCampaign(this);

@@ -1,6 +1,5 @@
 package com.iamjunhyeok.review.controller;
 
-import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.domain.CustomOAuth2User;
 import com.iamjunhyeok.review.dto.request.CampaignCreateRequest;
 import com.iamjunhyeok.review.dto.request.CampaignUpdateRequest;
@@ -88,5 +87,17 @@ public class CampaignController {
     @GetMapping("/users/me/campaigns")
     public ResponseEntity<List<UserCampaignSearchProjection>> fetchAuthenticatedUserCampaigns(@RequestParam String status) {
         return ResponseEntity.ok(campaignService.fetchAuthenticatedUserCampaigns(status));
+    }
+
+    @PostMapping("/campaigns/{id}/favourite")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void addToFavourites(@PathVariable Long id, @AuthenticationPrincipal CustomOAuth2User principal) {
+        campaignService.addToFavourites(id, principal);
+    }
+
+    @DeleteMapping("/campaigns/{id}/favourite")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removeFromFavourites(@PathVariable Long id, @AuthenticationPrincipal CustomOAuth2User principal) {
+        campaignService.removeFromFavourites(id, principal);
     }
 }

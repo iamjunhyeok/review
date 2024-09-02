@@ -3,6 +3,7 @@ package com.iamjunhyeok.review.domain;
 import com.iamjunhyeok.review.constant.Gender;
 import com.iamjunhyeok.review.constant.Role;
 import com.iamjunhyeok.review.dto.request.UserUpdateInfoRequest;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -68,6 +69,9 @@ public class User extends Address {
     @OneToMany(mappedBy = "user")
     private List<UserPlan> plans;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Favourite> favourites = new ArrayList<>();
+
     public static User createUser(String email, String nickname, String password) {
         User user = new User();
         user.setEmail(email);
@@ -101,5 +105,13 @@ public class User extends Address {
 
     public void subscribe(Plan plan) {
         this.plans.add(UserPlan.of(this, plan));
+    }
+
+    public void favourite(Campaign campaign) {
+        this.favourites.add(Favourite.of(this, campaign));
+    }
+
+    public void removeFromFavourites(Campaign campaign) {
+        this.favourites.removeIf(favourite -> favourite.getCampaign().equals(campaign));
     }
 }
