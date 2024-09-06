@@ -3,6 +3,7 @@ package com.iamjunhyeok.review.repository;
 
 import com.blazebit.persistence.CriteriaBuilder;
 import com.blazebit.persistence.CriteriaBuilderFactory;
+import com.blazebit.persistence.WhereOrBuilder;
 import com.blazebit.persistence.view.EntityViewManager;
 import com.blazebit.persistence.view.EntityViewSetting;
 import com.blazebit.persistence.view.Sorters;
@@ -38,12 +39,22 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
 
     private final EntityViewManager entityViewManager;
 
+    private final RegionMappingRepository regionMappingRepository;
+
     @Override
-    public List<CampaignSearchProjection> fetchAll(String type, String categories, String socials, String options, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
+    public List<CampaignSearchProjection> fetchAll(String type, String categories, String socials, String options, Long region, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
         CriteriaBuilder<Campaign> cb = criteriaBuilderFactory.create(entityManager, Campaign.class, "c")
                 .innerJoinDefault("c.images", "i")
                 .leftJoinDefault("c.options", "o")
                 .leftJoinDefault("o.code", "co");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof CustomOAuth2User) {
+            CustomOAuth2User principal = (CustomOAuth2User) authentication.getPrincipal();
+            Long userId = principal.getUserId();
+            cb.leftJoinDefaultOn("c.favourites", "f").on("f.user.id").eq(userId).end();
+        }
+
         if (Strings.isNotBlank(type)) {
             cb.where("c.type").eq(CampaignType.valueOf(type.toUpperCase()));
         }
@@ -66,6 +77,15 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
                     Arrays.stream(options.toUpperCase().split(","))
                             .toList()
             );
+        }
+
+        if (region != null) {
+            List<Long> trimmedCodesByRegionGroupId = regionMappingRepository.findTrimmedCodesByRegionGroupId(region);
+            WhereOrBuilder<CriteriaBuilder<Campaign>> criteriaBuilderWhereOrBuilder = cb.whereOr();
+            for (Long l : trimmedCodesByRegionGroupId) {
+                criteriaBuilderWhereOrBuilder.where("c.administrativeDistrictCode").like().value(l).noEscape();
+            }
+            criteriaBuilderWhereOrBuilder.endOr();
         }
 
         EntityViewSetting<CampaignSearchProjection, CriteriaBuilder<CampaignSearchProjection>> setting = EntityViewSetting.create(CampaignSearchProjection.class);

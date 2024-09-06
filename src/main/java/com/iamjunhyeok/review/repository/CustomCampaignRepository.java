@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface CustomCampaignRepository {
 
-    List<CampaignSearchProjection> fetchAll(String type, String categories, String socials, String options, Pageable pageable, String swlat, String swlng, String nelat, String nelng);
+    List<CampaignSearchProjection> fetchAll(String type, String categories, String socials, String options, Long region, Pageable pageable, String swlat, String swlng, String nelat, String nelng);
 
     <T> Optional<T> fetchById(Long id, Class<T> type);
 

@@ -65,13 +65,14 @@ public class CampaignController {
                                                                  @RequestParam(required = false) String categories,
                                                                  @RequestParam(required = false) String socials,
                                                                  @RequestParam(required = false) String options,
+                                                                 @RequestParam(required = false) Long region,
                                                                  Pageable pageable,
                                                                  @RequestParam(required = false) String swlat,
                                                                  @RequestParam(required = false) String swlng,
                                                                  @RequestParam(required = false) String nelat,
                                                                  @RequestParam(required = false) String nelng
     ) {
-        return ResponseEntity.ok(campaignService.search(type, categories, socials, options, pageable, swlat, swlng, nelat, nelng));
+        return ResponseEntity.ok(campaignService.search(type, categories, socials, options, region, pageable, swlat, swlng, nelat, nelng));
     }
 
     @GetMapping("/campaigns/{id}")

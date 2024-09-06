@@ -236,8 +236,8 @@ public class CampaignService {
                 .delete();
     }
 
-    public List<CampaignSearchProjection> search(String type, String categories, String socials, String options, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
-        return campaignRepository.fetchAll(type, categories, socials, options, pageable, swlat, swlng, nelat, nelng);
+    public List<CampaignSearchProjection> search(String type, String categories, String socials, String options, Long region, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
+        return campaignRepository.fetchAll(type, categories, socials, options, region, pageable, swlat, swlng, nelat, nelng);
     }
 
 
