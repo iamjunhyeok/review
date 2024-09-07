@@ -8,6 +8,7 @@ import com.iamjunhyeok.review.projection.FaqProjection;
 import com.iamjunhyeok.review.service.FaqService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -48,8 +49,8 @@ public class FaqController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<List<FaqProjection>> fetchAll(@RequestParam(required = false) String category) {
-        return ResponseEntity.ok(faqService.fetchAll(category));
+    public ResponseEntity<List<FaqProjection>> fetchAll(@RequestParam(required = false) String category, Pageable pageable) {
+        return ResponseEntity.ok(faqService.fetchAll(category, pageable));
     }
 
     /**

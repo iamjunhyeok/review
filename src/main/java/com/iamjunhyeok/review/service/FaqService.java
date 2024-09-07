@@ -7,6 +7,7 @@ import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.projection.FaqProjection;
 import com.iamjunhyeok.review.repository.FaqRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,8 +25,8 @@ public class FaqService {
         return faqRepository.save(Faq.of(request.getCategory(), request.getQuestion(), request.getAnswer()));
     }
 
-    public List<FaqProjection> fetchAll(String category) {
-        return faqRepository.fetchAll(category);
+    public List<FaqProjection> fetchAll(String category, Pageable pageable) {
+        return faqRepository.fetchAll(category, pageable);
     }
 
     public FaqProjection fetchOne(Long id) {

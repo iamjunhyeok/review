@@ -10,6 +10,7 @@ import com.iamjunhyeok.review.projection.FaqProjection;
 import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -23,11 +24,14 @@ public class CustomFaqRepositoryImpl implements CustomFaqRepository {
     private final EntityViewManager entityViewManager;
 
     @Override
-    public List<FaqProjection> fetchAll(String category) {
+    public List<FaqProjection> fetchAll(String category, Pageable pageable) {
         CriteriaBuilder<Faq> cb = criteriaBuilderFactory.create(entityManager, Faq.class, "f");
         if (Strings.isNotBlank(category)) {
             cb.where("f.category").eq(FaqCategory.valueOf(category.toUpperCase()));
         }
-        return entityViewManager.applySetting(EntityViewSetting.create(FaqProjection.class), cb).getResultList();
+        cb.setMaxResults(pageable.getPageSize());
+
+        EntityViewSetting<FaqProjection, CriteriaBuilder<FaqProjection>> setting = EntityViewSetting.create(FaqProjection.class);
+        return entityViewManager.applySetting(setting, cb).getResultList();
     }
 }
