@@ -8,4 +8,6 @@ import java.util.List;
 public interface CustomFaqRepository {
 
     List<FaqProjection> fetchAll(String category, Pageable pageable);
+
+    Long fetchAll(String category);
 }

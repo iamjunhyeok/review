@@ -53,6 +53,11 @@ public class FaqController {
         return ResponseEntity.ok(faqService.fetchAll(category, pageable));
     }
 
+    @GetMapping("/count")
+    public Long fetchAll(@RequestParam(required = false) String category) {
+        return faqService.fetchAll(category);
+    }
+
     /**
      * 개별 FAQ 조회
      * @param id

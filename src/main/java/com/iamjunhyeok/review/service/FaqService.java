@@ -29,6 +29,10 @@ public class FaqService {
         return faqRepository.fetchAll(category, pageable);
     }
 
+    public Long fetchAll(String category) {
+        return faqRepository.fetchAll(category);
+    }
+
     public FaqProjection fetchOne(Long id) {
         return faqRepository.fetchOne(id)
                 .orElseThrow(() -> ErrorCode.FAQ_NOT_FOUND.build());
