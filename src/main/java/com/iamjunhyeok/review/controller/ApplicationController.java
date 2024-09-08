@@ -50,6 +50,7 @@ public class ApplicationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(CampaignApplyResponse.from(applicationService.apply(campaignId, request, principal.getUserId())));
     }
 
+    @PreAuthorize("hasRole('USER')")
     @GetMapping("/campaigns/{campaignId}/applied")
     public boolean checkApplied(@PathVariable Long campaignId, @AuthenticationPrincipal CustomOAuth2User principal) {
         return applicationService.checkApplied(campaignId, principal);
