@@ -3,6 +3,7 @@ package com.iamjunhyeok.review.projection;
 import com.blazebit.persistence.SubqueryInitiator;
 import com.blazebit.persistence.view.EntityView;
 import com.blazebit.persistence.view.IdMapping;
+import com.blazebit.persistence.view.Mapping;
 import com.blazebit.persistence.view.MappingSubquery;
 import com.blazebit.persistence.view.SubqueryProvider;
 import com.iamjunhyeok.review.constant.ApplicationStatus;
@@ -76,6 +77,9 @@ public interface CampaignViewProjection {
     List<CampaignMissionProjection> getMissions();
 
     List<CampaignOptionProjection> getOptions();
+
+    @Mapping("CASE WHEN favourites IS NOT NULL THEN TRUE ELSE FALSE END")
+    boolean getIsFavourite();
 
     @MappingSubquery(ApplicantsCountSubqueryProvider.class)
     Long getApplicantsCount();

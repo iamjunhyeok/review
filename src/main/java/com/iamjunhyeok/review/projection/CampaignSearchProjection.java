@@ -47,9 +47,6 @@ public interface CampaignSearchProjection {
     @Mapping("DATEDIFF(applicationEndDate, CURDATE())")
     Integer getDday();
 
-    @Mapping("CASE WHEN favourites IS NOT NULL THEN TRUE ELSE FALSE END")
-    boolean getIsFavourite();
-
     class ApplicantsCountSubqueryProvider implements SubqueryProvider {
         @Override
         public <T> T createSubquery(SubqueryInitiator<T> subqueryBuilder) {
