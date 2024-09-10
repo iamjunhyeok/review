@@ -27,6 +27,8 @@ public class CustomFaqRepositoryImpl implements CustomFaqRepository {
     @Override
     public List<FaqProjection> fetchAll(String category, Pageable pageable) {
         CriteriaBuilder<Faq> cb = getFaqCriteriaBuilder(category);
+        cb.orderByDesc("createdAt");
+        cb.setFirstResult((int) pageable.getOffset());
         cb.setMaxResults(pageable.getPageSize());
 
         EntityViewSetting<FaqProjection, CriteriaBuilder<FaqProjection>> setting = EntityViewSetting.create(FaqProjection.class);
