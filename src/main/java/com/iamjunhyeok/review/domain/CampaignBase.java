@@ -1,17 +1,12 @@
 package com.iamjunhyeok.review.domain;
 
-import com.iamjunhyeok.review.constant.CampaignCategory;
-import com.iamjunhyeok.review.constant.CampaignSocial;
 import com.iamjunhyeok.review.constant.CampaignStatus;
-import com.iamjunhyeok.review.constant.CampaignType;
 import jakarta.persistence.Column;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.MappedSuperclass;
 import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.PositiveOrZero;
 import lombok.Getter;
@@ -27,18 +22,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @MappedSuperclass
 public class CampaignBase extends CampaignAddress {
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    CampaignType type;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    CampaignCategory category;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    CampaignSocial social;
 
     @Column(nullable = false)
     String title;

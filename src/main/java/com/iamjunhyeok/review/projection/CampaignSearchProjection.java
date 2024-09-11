@@ -7,9 +7,6 @@ import com.blazebit.persistence.view.Mapping;
 import com.blazebit.persistence.view.MappingSubquery;
 import com.blazebit.persistence.view.SubqueryProvider;
 import com.iamjunhyeok.review.constant.ApplicationStatus;
-import com.iamjunhyeok.review.constant.CampaignCategory;
-import com.iamjunhyeok.review.constant.CampaignSocial;
-import com.iamjunhyeok.review.constant.CampaignType;
 import com.iamjunhyeok.review.domain.Application;
 import com.iamjunhyeok.review.domain.Campaign;
 
@@ -21,9 +18,11 @@ public interface CampaignSearchProjection {
     @IdMapping
     Long getId();
 
-    CampaignType getType();
-    CampaignCategory getCategory();
-    CampaignSocial getSocial();
+    CodeProjection getTypeCode();
+
+    CodeProjection getCategoryCode();
+
+    CodeProjection getSocialCode();
 
     String getTitle();
     Integer getCapacity();

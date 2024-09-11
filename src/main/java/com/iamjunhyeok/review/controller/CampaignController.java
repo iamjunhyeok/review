@@ -3,8 +3,6 @@ package com.iamjunhyeok.review.controller;
 import com.iamjunhyeok.review.domain.CustomOAuth2User;
 import com.iamjunhyeok.review.dto.request.CampaignCreateRequest;
 import com.iamjunhyeok.review.dto.request.CampaignUpdateRequest;
-import com.iamjunhyeok.review.dto.response.CampaignCreateResponse;
-import com.iamjunhyeok.review.dto.response.CampaignUpdateResponse;
 import com.iamjunhyeok.review.projection.CampaignSearchProjection;
 import com.iamjunhyeok.review.projection.CampaignSummaryProjection;
 import com.iamjunhyeok.review.projection.CampaignViewProjection;
@@ -37,20 +35,22 @@ public class CampaignController {
 
     private final CampaignService campaignService;
 
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ADVERTISER')")
     @PostMapping("/campaigns")
-    public ResponseEntity<CampaignCreateResponse> create(@RequestPart @Valid CampaignCreateRequest request,
+    @ResponseStatus(HttpStatus.CREATED)
+    public void create(@RequestPart @Valid CampaignCreateRequest request,
                                                          @RequestPart List<MultipartFile> files,
                                                          @AuthenticationPrincipal CustomOAuth2User principal) throws IOException {
-        return ResponseEntity.status(HttpStatus.CREATED).body(CampaignCreateResponse.from(campaignService.create(request, files, principal)));
+        campaignService.create(request, files, principal);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'ADVERTISER')")
     @PatchMapping("/campaigns/{id}")
-    public ResponseEntity<CampaignUpdateResponse> update(@PathVariable Long id,
+    @ResponseStatus(HttpStatus.OK)
+    public void update(@PathVariable Long id,
                                                          @RequestPart @Valid CampaignUpdateRequest request,
                                                          @RequestPart(required = false) List<MultipartFile> files) throws IOException {
-        return ResponseEntity.ok(CampaignUpdateResponse.from(campaignService.update(id, request, files)));
+        campaignService.update(id, request, files);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -61,18 +61,18 @@ public class CampaignController {
     }
 
     @GetMapping("/campaigns")
-    public ResponseEntity<List<CampaignSearchProjection>> search(@RequestParam(required = false) String type,
-                                                                 @RequestParam(required = false) String categories,
-                                                                 @RequestParam(required = false) String socials,
-                                                                 @RequestParam(required = false) String options,
-                                                                 @RequestParam(required = false) Long region,
+    public ResponseEntity<List<CampaignSearchProjection>> search(@RequestParam(value = "type", required = false) Long typeCodeId,
+                                                                 @RequestParam(value = "categories", required = false) Long[] categoryCodeIds,
+                                                                 @RequestParam(value = "socials", required = false) Long[] socialCodeIds,
+                                                                 @RequestParam(value = "options", required = false) Long[] optionCodeIds,
+                                                                 @RequestParam(value = "region", required = false) Long regionCodeId,
                                                                  Pageable pageable,
                                                                  @RequestParam(required = false) String swlat,
                                                                  @RequestParam(required = false) String swlng,
                                                                  @RequestParam(required = false) String nelat,
                                                                  @RequestParam(required = false) String nelng
     ) {
-        return ResponseEntity.ok(campaignService.search(type, categories, socials, options, region, pageable, swlat, swlng, nelat, nelng));
+        return ResponseEntity.ok(campaignService.search(typeCodeId, categoryCodeIds, socialCodeIds, optionCodeIds, regionCodeId, pageable, swlat, swlng, nelat, nelng));
     }
 
     @GetMapping("/campaigns/{id}")

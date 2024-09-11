@@ -14,6 +14,10 @@ import java.util.List;
 @SuperBuilder
 @NoArgsConstructor
 public class CampaignUpdateRequest extends CampaignBaseDto {
+    Long typeCodeId;
+    Long categoryCodeId;
+    Long socialCodeId;
+
     List<CampaignLinkDto> links;
 
     List<String> deleteImageNames;

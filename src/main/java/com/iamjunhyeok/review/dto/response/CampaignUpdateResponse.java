@@ -21,9 +21,6 @@ public class CampaignUpdateResponse extends CampaignBaseDto {
     public static CampaignUpdateResponse from(Campaign campaign) {
         return CampaignUpdateResponse.builder()
                 .id(campaign.getId())
-                .type(campaign.getType())
-                .category(campaign.getCategory())
-                .social(campaign.getSocial())
                 .title(campaign.getTitle())
                 .capacity(campaign.getCapacity())
                 .applicationStartDate(campaign.getApplicationStartDate())

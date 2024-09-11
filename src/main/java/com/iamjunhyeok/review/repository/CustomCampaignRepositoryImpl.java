@@ -112,6 +112,64 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
     }
 
     @Override
+    public List<CampaignSearchProjection> fetchAll(Long typeCodeId, Long[] categoryCodeIds, Long[] socialCodeIds, Long[] optionCodeIds, Long regionCodeId, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
+        CriteriaBuilder<Campaign> cb = criteriaBuilderFactory.create(entityManager, Campaign.class, "c")
+                .innerJoinDefault("c.images", "i")
+                .leftJoinDefault("c.options", "o")
+                .leftJoinDefault("o.code", "co");
+
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof CustomOAuth2User) {
+            CustomOAuth2User principal = (CustomOAuth2User) authentication.getPrincipal();
+            Long userId = principal.getUserId();
+            cb.leftJoinDefaultOn("c.favourites", "f").on("f.user.id").eq(userId).end();
+        }
+
+        if (typeCodeId != null) {
+            cb.where("c.typeCode.id").eq(typeCodeId);
+        }
+        if (categoryCodeIds != null) {
+            cb.where("c.categoryCode.id").in(categoryCodeIds);
+        }
+        if (socialCodeIds != null) {
+            cb.where("c.socialCode.id").in(socialCodeIds);
+        }
+        if (optionCodeIds != null) {
+            cb.where("o.code.id").in(optionCodeIds);
+        }
+        if (regionCodeId != null) {
+            List<Long> trimmedCodesByRegionGroupId = regionMappingRepository.findTrimmedCodesByRegionGroupId(regionCodeId);
+            WhereOrBuilder<CriteriaBuilder<Campaign>> criteriaBuilderWhereOrBuilder = cb.whereOr();
+            for (Long l : trimmedCodesByRegionGroupId) {
+                criteriaBuilderWhereOrBuilder.where("c.administrativeDistrictCode").like().value(l).noEscape();
+            }
+            criteriaBuilderWhereOrBuilder.endOr();
+        }
+
+        EntityViewSetting<CampaignSearchProjection, CriteriaBuilder<CampaignSearchProjection>> setting = EntityViewSetting.create(CampaignSearchProjection.class);
+
+        for (Sort.Order order : pageable.getSort()) {
+            if (order.getProperty().equalsIgnoreCase(CampaignSort.NEW.name())) {
+                cb.orderByDesc("c.createdAt");
+            }
+            if (order.getProperty().equalsIgnoreCase(CampaignSort.POPULAR.name())) {
+                setting.addAttributeSorter("applicantsCount", Sorters.descending());
+            }
+            if (order.getProperty().equalsIgnoreCase(CampaignSort.DEADLINE.name())) {
+                setting.addAttributeSorter("dday", Sorters.ascending());
+            }
+        }
+        cb.where("CURDATE()").betweenExpression("c.applicationStartDate").andExpression("c.applicationEndDate");
+
+
+        CriteriaBuilder<CampaignSearchProjection> criteriaBuilder = entityViewManager.applySetting(setting, cb);
+
+        cb.setMaxResults(pageable.getPageSize());
+
+        return criteriaBuilder.getResultList();
+    }
+
+    @Override
     public <T> Optional<T> fetchById(Long id, Class<T> type) {
         try {
             CriteriaBuilder<Campaign> cb = criteriaBuilderFactory.create(entityManager, Campaign.class)

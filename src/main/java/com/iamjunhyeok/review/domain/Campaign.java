@@ -42,6 +42,18 @@ public class Campaign extends CampaignBase {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "type_code_id")
+    private Code typeCode;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_code_id")
+    private Code categoryCode;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "social_code_id")
+    private Code socialCode;
+
     @Column(updatable = false)
     @CreatedDate
     private LocalDateTime createdAt;
@@ -84,9 +96,9 @@ public class Campaign extends CampaignBase {
     }
 
     public Campaign update(CampaignUpdateRequest request) {
-        this.type = request.getType();
-        this.category = request.getCategory();
-        this.social = request.getSocial();
+//        this.type = request.getType();
+//        this.category = request.getCategory();
+//        this.social = request.getSocial();
         this.title = request.getTitle();
         this.capacity = request.getCapacity();
         this.applicationStartDate = request.getApplicationStartDate();
@@ -107,6 +119,31 @@ public class Campaign extends CampaignBase {
         this.latitude = request.getLatitude();
         this.storeInformation = request.getStoreInformation();
         return this;
+    }
+
+    public void update(Code typeCode, Code categoryCode, Code socialCode, CampaignUpdateRequest request) {
+        this.typeCode = typeCode;
+        this.categoryCode = categoryCode;
+        this.socialCode = socialCode;
+        this.title = request.getTitle();
+        this.capacity = request.getCapacity();
+        this.applicationStartDate = request.getApplicationStartDate();
+        this.applicationEndDate = request.getApplicationEndDate();
+        this.announcementDate = request.getAnnouncementDate();
+        this.reviewStartDate = request.getReviewStartDate();
+        this.reviewEndDate = request.getReviewEndDate();
+        this.offering = request.getOffering();
+        this.offeringSummary = request.getOfferingSummary();
+        this.keyword = request.getKeyword();
+        this.hashtag = request.getHashtag();
+        this.guide = request.getGuide();
+        this.information = request.getInformation();
+        this.address = request.getAddress();
+        this.rest = request.getRest();
+        this.postalCode = request.getPostalCode();
+        this.longitude = request.getLongitude();
+        this.latitude = request.getLatitude();
+        this.storeInformation = request.getStoreInformation();
     }
 
     public void delete() {

@@ -2,10 +2,7 @@ package com.iamjunhyeok.review.projection;
 
 import com.blazebit.persistence.view.EntityView;
 import com.blazebit.persistence.view.IdMapping;
-import com.iamjunhyeok.review.constant.CampaignCategory;
-import com.iamjunhyeok.review.constant.CampaignSocial;
 import com.iamjunhyeok.review.constant.CampaignStatus;
-import com.iamjunhyeok.review.constant.CampaignType;
 import com.iamjunhyeok.review.domain.Campaign;
 
 import java.time.LocalDate;
@@ -16,9 +13,11 @@ public interface UserCampaignSearchProjection {
     @IdMapping
     Long getId();
 
-    CampaignType getType();
+    CodeProjection getTypeCode();
 
-    CampaignSocial getSocial();
+    CodeProjection getCategoryCode();
+
+    CodeProjection getSocialCode();
 
     String getTitle();
 
@@ -33,6 +32,4 @@ public interface UserCampaignSearchProjection {
     CampaignStatus getStatus();
 
     List<CampaignImageProjection> getImages();
-
-    CampaignCategory getCategory();
 }

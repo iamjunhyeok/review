@@ -60,11 +60,16 @@ public class CampaignService {
     @Transactional
     public Campaign create(CampaignCreateRequest request, List<MultipartFile> files, CustomOAuth2User principal) throws IOException {
         User user = userRepository.getReferenceById(principal.getUserId());
+
+        Code typeCode = codeRepository.getReferenceById(request.getTypeCodeId());
+        Code categoryCode = codeRepository.getReferenceById(request.getCategoryCodeId());
+        Code socialCode = codeRepository.getReferenceById(request.getSocialCodeId());
+
         Campaign campaign = campaignRepository.save(
                 Campaign.builder()
-                        .type(request.getType())
-                        .category(request.getCategory())
-                        .social(request.getSocial())
+                        .typeCode(typeCode)
+                        .categoryCode(categoryCode)
+                        .socialCode(socialCode)
                         .title(request.getTitle())
                         .capacity(request.getCapacity())
                         .applicationStartDate(request.getApplicationStartDate())
@@ -177,8 +182,13 @@ public class CampaignService {
     public Campaign update(Long id, CampaignUpdateRequest request, List<MultipartFile> files) throws IOException {
         Campaign campaign = campaignRepository.findByIdWithLink(id)
                 .orElseThrow(() -> ErrorCode.CAMPAIGN_NOT_FOUND.build());
-        // 캠페인 기본정보 업데이트
-        campaign.update(request);
+
+        Code typeCode = codeRepository.getReferenceById(request.getTypeCodeId());
+        Code categoryCode = codeRepository.getReferenceById(request.getCategoryCodeId());
+        Code socialCode = codeRepository.getReferenceById(request.getSocialCodeId());
+
+        // Code 엔티티를 제외한 캠페인 기본정보 업데이트
+        campaign.update(typeCode, categoryCode, socialCode, request);
 
         // 캠페인에 대한 미션정보 모두 삭제
         campaignMissionRepository.deleteAllByCampaignId(id);
@@ -240,6 +250,9 @@ public class CampaignService {
         return campaignRepository.fetchAll(type, categories, socials, options, region, pageable, swlat, swlng, nelat, nelng);
     }
 
+    public List<CampaignSearchProjection> search(Long typeCodeId, Long[] categoryCodeIds, Long[] socialCodeIds, Long[] optionCodeIds, Long regionCodeId, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
+        return campaignRepository.fetchAll(typeCodeId, categoryCodeIds, socialCodeIds, optionCodeIds, regionCodeId, pageable, swlat, swlng, nelat, nelng);
+    }
 
     public CampaignViewProjection fetchById(Long id) {
         return campaignRepository.fetchById(id, CampaignViewProjection.class)
