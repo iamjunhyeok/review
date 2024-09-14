@@ -19,6 +19,14 @@ public class S3Util {
     @Value("${aws.s3.bucket-name}")
     private String BUCKET_NAME;
 
+    public void putObject(String bucketName, MultipartFile file, String keyName) throws IOException {
+        PutObjectRequest objectRequest = PutObjectRequest.builder()
+                .bucket(bucketName)
+                .key(keyName)
+                .build();
+        s3Client.putObject(objectRequest, RequestBody.fromInputStream(file.getInputStream(), file.getSize()));
+    }
+
     public void putObject(String bucketName, MultipartFile file) throws IOException {
         PutObjectRequest objectRequest = PutObjectRequest.builder()
                 .bucket(bucketName)
