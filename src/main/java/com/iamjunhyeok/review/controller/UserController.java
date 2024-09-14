@@ -64,7 +64,7 @@ public class UserController {
      * @param id
      * @return
      */
-//    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<UserViewProjection> view(@PathVariable Long id) {
         return ResponseEntity.ok(userService.view(id));

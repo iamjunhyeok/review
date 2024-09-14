@@ -10,6 +10,7 @@ import java.time.LocalDate;
 
 @EntityView(User.class)
 public interface UserSearchProjection {
+
     @IdMapping
     Long getId();
 

@@ -24,25 +24,24 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CustomUserRepositoryImpl implements CustomUserRepository {
 
-    private final CriteriaBuilderFactory criteriaBuilderFactory;
+    private final CriteriaBuilderFactory cbf;
 
-    private final EntityManager entityManager;
+    private final EntityManager em;
 
-    private final EntityViewManager entityViewManager;
+    private final EntityViewManager evm;
 
     @Override
     public List<UserSearchProjection> search() {
-        CriteriaBuilder<User> userCriteriaBuilder = criteriaBuilderFactory.create(entityManager, User.class);
-        CriteriaBuilder<UserSearchProjection> userSearchProjectionCriteriaBuilder = entityViewManager.applySetting(EntityViewSetting.create(UserSearchProjection.class), userCriteriaBuilder);
-        return userSearchProjectionCriteriaBuilder.getResultList();
+        CriteriaBuilder<User> userCriteriaBuilder = cbf.create(em, User.class);
+        return evm.applySetting(EntityViewSetting.create(UserSearchProjection.class), userCriteriaBuilder).getResultList();
     }
 
     @Override
     public Optional<UserViewProjection> fetchById(Long id) {
         try {
-            CriteriaBuilder<User> userCriteriaBuilder = criteriaBuilderFactory.create(entityManager, User.class)
+            CriteriaBuilder<User> userCriteriaBuilder = cbf.create(em, User.class)
                     .where("id").eq(id);
-            CriteriaBuilder<UserViewProjection> userViewProjectionCriteriaBuilder = entityViewManager.applySetting(EntityViewSetting.create(UserViewProjection.class), userCriteriaBuilder);
+            CriteriaBuilder<UserViewProjection> userViewProjectionCriteriaBuilder = evm.applySetting(EntityViewSetting.create(UserViewProjection.class), userCriteriaBuilder);
             return Optional.of(userViewProjectionCriteriaBuilder.getSingleResult());
         } catch (NoResultException e) {
             return Optional.empty();
@@ -51,22 +50,22 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
 
     @Override
     public List<UserCampaignSearchProjection> fetchAllByUserIdAndApplicationStatus(Long userId, ApplicationStatus status) {
-        CriteriaBuilder<Campaign> campaignCriteriaBuilder = criteriaBuilderFactory.create(entityManager, Campaign.class)
+        CriteriaBuilder<Campaign> campaignCriteriaBuilder = cbf.create(em, Campaign.class)
                 .innerJoinDefault("applications", "a")
                 .where("a.user.id").eq(userId)
                 .where("a.status").eq(status);
-        CriteriaBuilder<UserCampaignSearchProjection> myCampaignSearchProjectionCriteriaBuilder = entityViewManager.applySetting(EntityViewSetting.create(UserCampaignSearchProjection.class), campaignCriteriaBuilder);
+        CriteriaBuilder<UserCampaignSearchProjection> myCampaignSearchProjectionCriteriaBuilder = evm.applySetting(EntityViewSetting.create(UserCampaignSearchProjection.class), campaignCriteriaBuilder);
         return myCampaignSearchProjectionCriteriaBuilder.getResultList();
     }
 
     @Override
     public UserCampaignApplicationProjection fetchUserCampaignApplication(Long userId, Long campaignId, Long applicationId) {
         try {
-            CriteriaBuilder<Application> applicationCriteriaBuilder = criteriaBuilderFactory.create(entityManager, Application.class, "a")
+            CriteriaBuilder<Application> applicationCriteriaBuilder = cbf.create(em, Application.class, "a")
                     .where("a.user.id").eq(userId)
                     .where("a.campaign.id").eq(campaignId)
                     .where("a.id").eq(applicationId);
-            CriteriaBuilder<UserCampaignApplicationProjection> userCampaignApplicationProjectionCriteriaBuilder = entityViewManager.applySetting(EntityViewSetting.create(UserCampaignApplicationProjection.class), applicationCriteriaBuilder);
+            CriteriaBuilder<UserCampaignApplicationProjection> userCampaignApplicationProjectionCriteriaBuilder = evm.applySetting(EntityViewSetting.create(UserCampaignApplicationProjection.class), applicationCriteriaBuilder);
             return userCampaignApplicationProjectionCriteriaBuilder.getSingleResult();
         } catch (NoResultException e) {
             throw ErrorCode.APPLICATION_NOT_FOUND.build();
@@ -75,8 +74,8 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
 
     @Override
     public UserSummaryProjection fetchUserSummary(Long userId) {
-        CriteriaBuilder<User> cb = criteriaBuilderFactory.create(entityManager, User.class)
+        CriteriaBuilder<User> cb = cbf.create(em, User.class)
                 .where("id").eq(userId);
-        return entityViewManager.applySetting(EntityViewSetting.create(UserSummaryProjection.class), cb).getSingleResult();
+        return evm.applySetting(EntityViewSetting.create(UserSummaryProjection.class), cb).getSingleResult();
     }
 }
