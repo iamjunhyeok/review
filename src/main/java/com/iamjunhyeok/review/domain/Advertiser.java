@@ -25,8 +25,9 @@ public class Advertiser extends Base {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    @Column(nullable = false)
-    private String businessTypeCode;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "business_type_code_id")
+    private Code businessTypeCode;
 
     @Column(nullable = false)
     private String businessNumber;
@@ -39,9 +40,6 @@ public class Advertiser extends Base {
     private String homepageUrl;
 
     private String taxInvoiceEmail;
-
-    @Column(nullable = false)
-    private String accessSourceCode;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)

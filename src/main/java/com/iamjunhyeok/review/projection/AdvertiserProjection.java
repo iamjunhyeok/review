@@ -10,9 +10,7 @@ public interface AdvertiserProjection {
     @IdMapping
     Long getId();
 
-    String getBusinessTypeCode();
-
-//    String getBusinessTypeName();
+    CodeProjection getBusinessTypeCode();
 
     String getBusinessNumber();
 
@@ -21,10 +19,6 @@ public interface AdvertiserProjection {
     String getHomepageUrl();
 
     String getTaxInvoiceEmail();
-
-    String getAccessSourceCode();
-
-//    String getAccessSourceName();
 
     AdvertiserStatus getStatus();
 
