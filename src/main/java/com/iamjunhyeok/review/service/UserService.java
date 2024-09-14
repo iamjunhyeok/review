@@ -13,15 +13,14 @@ import com.iamjunhyeok.review.projection.UserViewProjection;
 import com.iamjunhyeok.review.repository.ApplicationRepository;
 import com.iamjunhyeok.review.repository.UserRepository;
 import com.iamjunhyeok.review.util.S3Util;
-import io.jsonwebtoken.lang.Objects;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -30,50 +29,30 @@ public class UserService {
 
     private final UserRepository userRepository;
 
-    private final S3Util s3Util;
     private final ApplicationRepository applicationRepository;
 
-    /**
-     * 사용자의 기본정보를 업데이트하고, 프로필 이미지 변경이 존재하면 S3 에서 기존 오브젝트 삭제 후 새 오브젝트 추가
-     * @param id
-     * @param request
-     * @param file
-     * @return
-     */
+    private final S3Util s3Util;
+
+    private static final String PROFILE_BUCKET_NAME = "olim-profile";
+
     @Transactional
-    public User updateUserInfo(Long id, UserUpdateInfoRequest request, MultipartFile file) {
-        User user = userRepository.findById(id)
+    public User updateUserInfo(UserUpdateInfoRequest request, MultipartFile file, Long userId) throws IOException {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build())
                 .update(request);
 
-        // 새로운 프로필 이미지가 업로드되었고, 이미지가 기존의 이미지와 다르면 기존의 이미지 S3 에서 삭제 처리
-        String newProfileImageName = request.getProfileImageName();
-        String originProfileImageName = user.getProfileImageName();
-        if (!Objects.isEmpty(file) && Strings.isNotBlank(newProfileImageName)
-                && !newProfileImageName.equals(originProfileImageName)) {
-            try {
-                s3Util.deleteObject(originProfileImageName);
-
-                s3Util.putObject(file);
-
-                user.updateProfileImageName(file.getOriginalFilename());
-
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+        if (Objects.nonNull(file) && !file.isEmpty()) {
+            String originalFilename = file.getOriginalFilename();
+            String extension = originalFilename.substring(originalFilename.lastIndexOf("."));
+            String fileName = String.valueOf(user.getId()).concat(extension);
+            s3Util.putObject(PROFILE_BUCKET_NAME, file, fileName);
         }
         return user;
     }
 
-    /**
-     * 사용자의 프로필 이미지를 제외한 기본정보만 변경
-     * @param id
-     * @param request
-     * @return
-     */
     @Transactional
-    public User updateUserInfo(Long id, UserUpdateInfoRequest request) {
-        return updateUserInfo(id, request, null);
+    public User updateUserInfo(UserUpdateInfoRequest request, Long userId) throws IOException {
+        return updateUserInfo(request, null, userId);
     }
 
     public List<UserSearchProjection> search() {
