@@ -25,6 +25,4 @@ public class UserUpdateInfoRequest extends Address {
     private Gender gender;
 
     private LocalDate birthDate;
-
-    private String profileImageName;
 }
