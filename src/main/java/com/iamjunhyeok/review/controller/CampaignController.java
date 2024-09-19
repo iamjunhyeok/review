@@ -39,8 +39,8 @@ public class CampaignController {
     @PostMapping("/campaigns")
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestPart @Valid CampaignCreateRequest request,
-                                                         @RequestPart List<MultipartFile> files,
-                                                         @AuthenticationPrincipal CustomOAuth2User principal) throws IOException {
+                       @RequestPart List<MultipartFile> files,
+                       @AuthenticationPrincipal CustomOAuth2User principal) throws IOException {
         campaignService.create(request, files, principal);
     }
 
@@ -83,11 +83,6 @@ public class CampaignController {
     @GetMapping("/campaigns/{id}/summary")
     public ResponseEntity<CampaignSummaryProjection> summary(@PathVariable Long id) {
         return ResponseEntity.ok(campaignService.summary(id));
-    }
-
-    @GetMapping("/users/me/campaigns")
-    public ResponseEntity<List<UserCampaignSearchProjection>> fetchAuthenticatedUserCampaigns(@RequestParam String status) {
-        return ResponseEntity.ok(campaignService.fetchAuthenticatedUserCampaigns(status));
     }
 
     @PostMapping("/campaigns/{id}/favourite")

@@ -6,7 +6,6 @@ import com.iamjunhyeok.review.dto.request.CampaignApplyRequest;
 import com.iamjunhyeok.review.dto.response.CampaignApplyResponse;
 import com.iamjunhyeok.review.projection.ApplicantProjection;
 import com.iamjunhyeok.review.projection.ApplicationProjection;
-import com.iamjunhyeok.review.projection.ApplicationSearchProjection;
 import com.iamjunhyeok.review.service.ApplicationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -116,10 +114,5 @@ public class ApplicationController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long campaignId, @PathVariable Long applicationId) {
         applicationService.delete(campaignId, applicationId);
-    }
-
-    @GetMapping("/users/me/applications")
-    public ResponseEntity<List<ApplicationSearchProjection>> fetchAllApplications(@RequestParam String status, @AuthenticationPrincipal CustomOAuth2User principal) {
-        return ResponseEntity.ok(applicationService.fetchAllApplications(status, principal.getUserId()));
     }
 }

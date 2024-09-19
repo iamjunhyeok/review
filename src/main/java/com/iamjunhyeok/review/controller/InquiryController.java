@@ -73,18 +73,6 @@ public class InquiryController {
     }
 
     /**
-     * 인증된 사용자의 문의 목록 조회
-     * 마이페이지에서 접근
-     * @param category
-     * @return
-     */
-    @PreAuthorize("hasRole('USER')")
-    @GetMapping("/users/me/inquiries")
-    public ResponseEntity<List<InquiryProjection>> fetchAllInquiriesForAuthenticatedUser(@RequestParam(required = false) String category) {
-        return ResponseEntity.ok(inquiryService.fetchAllInquiriesForAuthenticatedUser(category));
-    }
-
-    /**
      * 사용자가 등록한 모든 1:1 문의 목록 조회
      * 관리자 권한만이 모든 문의 목록 조회 가능
      * @param category
