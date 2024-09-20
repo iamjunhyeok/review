@@ -6,9 +6,11 @@ import com.iamjunhyeok.review.dto.request.InquiryUpdateRequest;
 import com.iamjunhyeok.review.dto.response.InquiryCreateResponse;
 import com.iamjunhyeok.review.dto.response.InquiryUpdateResponse;
 import com.iamjunhyeok.review.projection.InquiryProjection;
+import com.iamjunhyeok.review.projection.InquiryWithAnswerAndUserProjection;
 import com.iamjunhyeok.review.service.InquiryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,7 +21,6 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -80,8 +81,8 @@ public class InquiryController {
      */
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/support/inquiries")
-    public ResponseEntity<List<InquiryProjection>> fetchAllInquiries(@RequestParam(required = false) String category) {
-        return ResponseEntity.ok(inquiryService.fetchAllInquiries(category));
+    public ResponseEntity<List<InquiryProjection>> fetchAllInquiries(Pageable pageable) {
+        return ResponseEntity.ok(inquiryService.fetchAllInquiries(pageable));
     }
 
     /**
@@ -91,7 +92,7 @@ public class InquiryController {
      */
     @PreAuthorize("hasPermission(#id, 'inquiry', 'ADMIN')")
     @GetMapping("/support/inquiries/{id}")
-    public ResponseEntity<InquiryProjection> fetchOne(@PathVariable Long id) {
+    public ResponseEntity<InquiryWithAnswerAndUserProjection> fetchOne(@PathVariable Long id) {
         return ResponseEntity.ok(inquiryService.fetchOne(id));
     }
 }

@@ -9,7 +9,7 @@ import com.iamjunhyeok.review.projection.PenaltyProjection;
 import com.iamjunhyeok.review.projection.PointProjection;
 import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
 import com.iamjunhyeok.review.projection.UserSummaryProjection;
-import com.iamjunhyeok.review.projection.UserViewProjection;
+import com.iamjunhyeok.review.projection.UserView;
 import com.iamjunhyeok.review.projection.WithdrawalProjection;
 import com.iamjunhyeok.review.service.ApplicationService;
 import com.iamjunhyeok.review.service.CampaignService;
@@ -19,6 +19,7 @@ import com.iamjunhyeok.review.service.PointService;
 import com.iamjunhyeok.review.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -56,7 +57,7 @@ public class AuthenticatedUserController {
     private final InquiryService inquiryService;
 
     @GetMapping
-    public ResponseEntity<UserViewProjection> summary(@AuthenticationPrincipal CustomOAuth2User principal) {
+    public ResponseEntity<UserView> summary(@AuthenticationPrincipal CustomOAuth2User principal) {
         return ResponseEntity.ok(userService.view(principal.getUserId()));
     }
 
@@ -105,7 +106,7 @@ public class AuthenticatedUserController {
 
     @PostMapping("/points/withdrawals")
     @ResponseStatus(HttpStatus.CREATED)
-    public void requestWithdrawal(@RequestBody PointWithdrawalRequest request, @AuthenticationPrincipal CustomOAuth2User user) {
+    public void requestWithdrawal(@RequestBody @Valid PointWithdrawalRequest request, @AuthenticationPrincipal CustomOAuth2User user) {
         pointService.withdrawPoint(request, user.getUserId());
     }
 
@@ -114,14 +115,9 @@ public class AuthenticatedUserController {
         return ResponseEntity.ok(pointService.fetchAllWithdrawalHistory(user.getUserId()));
     }
 
-    /**
-     * 인증된 사용자의 문의 목록 조회
-     * 마이페이지에서 접근
-     * @param category
-     * @return
-     */
     @GetMapping("/inquiries")
-    public ResponseEntity<List<InquiryProjection>> fetchAllInquiriesForAuthenticatedUser(@RequestParam(required = false) String category) {
-        return ResponseEntity.ok(inquiryService.fetchAllInquiriesForAuthenticatedUser(category));
+    public ResponseEntity<List<InquiryProjection>> fetchAllInquiries(@AuthenticationPrincipal CustomOAuth2User principal,
+                                                                     Pageable pageable) {
+        return ResponseEntity.ok(inquiryService.fetchAllInquiriesByUserId(principal.getUserId(), pageable));
     }
 }

@@ -31,7 +31,7 @@ public interface ApplicantProjection {
     @MappingSubquery(PenaltyPointsSubqueryProvider.class)
     Long getPenaltyPoints();
 
-    UserProjection getUser();
+    UserSimpleView getUser();
 
     CampaignProjection getCampaign();
 

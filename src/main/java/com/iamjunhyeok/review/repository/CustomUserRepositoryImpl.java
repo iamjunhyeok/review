@@ -13,7 +13,7 @@ import com.iamjunhyeok.review.projection.UserCampaignApplicationProjection;
 import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
 import com.iamjunhyeok.review.projection.UserSearchProjection;
 import com.iamjunhyeok.review.projection.UserSummaryProjection;
-import com.iamjunhyeok.review.projection.UserViewProjection;
+import com.iamjunhyeok.review.projection.UserView;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
@@ -37,11 +37,11 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
     }
 
     @Override
-    public Optional<UserViewProjection> fetchById(Long id) {
+    public Optional<UserView> fetchById(Long id) {
         try {
             CriteriaBuilder<User> userCriteriaBuilder = cbf.create(em, User.class)
                     .where("id").eq(id);
-            CriteriaBuilder<UserViewProjection> userViewProjectionCriteriaBuilder = evm.applySetting(EntityViewSetting.create(UserViewProjection.class), userCriteriaBuilder);
+            CriteriaBuilder<UserView> userViewProjectionCriteriaBuilder = evm.applySetting(EntityViewSetting.create(UserView.class), userCriteriaBuilder);
             return Optional.of(userViewProjectionCriteriaBuilder.getSingleResult());
         } catch (NoResultException e) {
             return Optional.empty();

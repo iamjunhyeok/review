@@ -22,5 +22,5 @@ public interface AdvertiserProjection {
 
     AdvertiserStatus getStatus();
 
-    UserProjection getUser();
+    UserSimpleView getUser();
 }

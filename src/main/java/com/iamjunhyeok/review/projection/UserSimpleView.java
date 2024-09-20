@@ -5,7 +5,8 @@ import com.blazebit.persistence.view.IdMapping;
 import com.iamjunhyeok.review.domain.User;
 
 @EntityView(User.class)
-public interface UserProjection {
+public interface UserSimpleView {
+
     @IdMapping
     Long getId();
 

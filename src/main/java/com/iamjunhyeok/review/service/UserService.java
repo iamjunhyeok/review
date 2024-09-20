@@ -9,7 +9,7 @@ import com.iamjunhyeok.review.projection.UserCampaignApplicationProjection;
 import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
 import com.iamjunhyeok.review.projection.UserSearchProjection;
 import com.iamjunhyeok.review.projection.UserSummaryProjection;
-import com.iamjunhyeok.review.projection.UserViewProjection;
+import com.iamjunhyeok.review.projection.UserView;
 import com.iamjunhyeok.review.repository.ApplicationRepository;
 import com.iamjunhyeok.review.repository.UserRepository;
 import com.iamjunhyeok.review.util.S3Util;
@@ -59,7 +59,7 @@ public class UserService {
         return userRepository.search();
     }
 
-    public UserViewProjection view(Long id) {
+    public UserView view(Long id) {
         return userRepository.fetchById(id)
                 .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build());
     }

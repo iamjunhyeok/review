@@ -8,16 +8,20 @@ import com.iamjunhyeok.review.domain.Inquiry;
 import java.time.LocalDateTime;
 
 @EntityView(Inquiry.class)
-public interface InquiryProjection {
+public class InquiryWithAnswerProjection {
+
     @IdMapping
-    Long getId();
-    InquiryCategory getCategory();
-    String getTitle();
-    String getContent();
-    LocalDateTime getCreatedAt();
-    LocalDateTime getUpdatedAt();
+    private Long id;
 
-    UserProjection getUser();
+    private InquiryCategory category;
 
-    InquiryAnswerProjection getInquiryAnswer();
+    private String title;
+
+    private String content;
+
+    private LocalDateTime createdAt;
+
+    private LocalDateTime updatedAt;
+
+    private InquiryAnswerProjection inquiryAnswer;
 }

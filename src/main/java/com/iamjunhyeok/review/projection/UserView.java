@@ -9,7 +9,8 @@ import com.iamjunhyeok.review.domain.User;
 import java.time.LocalDate;
 
 @EntityView(User.class)
-public interface UserViewProjection {
+public interface UserView {
+
     @IdMapping
     Long getId();
 

@@ -2,7 +2,7 @@ package com.iamjunhyeok.review.controller;
 
 import com.iamjunhyeok.review.dto.request.UserUpdateInfoRequest;
 import com.iamjunhyeok.review.projection.UserSearchProjection;
-import com.iamjunhyeok.review.projection.UserViewProjection;
+import com.iamjunhyeok.review.projection.UserView;
 import com.iamjunhyeok.review.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -52,7 +52,7 @@ public class UserController {
      */
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
-    public ResponseEntity<UserViewProjection> view(@PathVariable Long id) {
+    public ResponseEntity<UserView> view(@PathVariable Long id) {
         return ResponseEntity.ok(userService.view(id));
     }
 }
