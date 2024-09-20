@@ -8,7 +8,7 @@ import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.domain.Application;
 import com.iamjunhyeok.review.domain.CustomOAuth2User;
 import com.iamjunhyeok.review.projection.ApplicantProjection;
-import com.iamjunhyeok.review.projection.ApplicationProjection;
+import com.iamjunhyeok.review.projection.ApplicationView;
 import com.iamjunhyeok.review.projection.ApplicationSearchProjection;
 import com.iamjunhyeok.review.projection.UserCampaignApplicationProjection;
 import jakarta.persistence.EntityManager;
@@ -38,11 +38,11 @@ public class CustomApplicationRepositoryImpl implements CustomApplicationReposit
     }
 
     @Override
-    public ApplicationProjection fetchOne(Long campaignId, Long applicationId) {
+    public ApplicationView fetchOne(Long campaignId, Long applicationId) {
         CriteriaBuilder<Application> cb = criteriaBuilderFactory.create(entityManager, Application.class, "a")
                 .where("a.campaign.id").eq(campaignId)
                 .where("a.id").eq(applicationId);
-        return entityViewManager.applySetting(EntityViewSetting.create(ApplicationProjection.class), cb).getSingleResult();
+        return entityViewManager.applySetting(EntityViewSetting.create(ApplicationView.class), cb).getSingleResult();
     }
 
     @Override

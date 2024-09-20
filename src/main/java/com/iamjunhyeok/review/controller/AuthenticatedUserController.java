@@ -95,8 +95,9 @@ public class AuthenticatedUserController {
     }
 
     @GetMapping("/points")
-    public ResponseEntity<List<PointProjection>> fetchAllPointsForAuthenticatedUser(@AuthenticationPrincipal CustomOAuth2User user) {
-        return ResponseEntity.ok(pointService.getPoints(user.getUserId()));
+    public ResponseEntity<List<PointProjection>> fetchAllPointsHistory(@AuthenticationPrincipal CustomOAuth2User user,
+                                                                       Pageable pageable) {
+        return ResponseEntity.ok(pointService.fetchAllPointsHistoryByUserId(user.getUserId(), pageable));
     }
 
     @GetMapping("/points/total")
@@ -111,8 +112,9 @@ public class AuthenticatedUserController {
     }
 
     @GetMapping("/points/withdrawals")
-    public ResponseEntity<List<WithdrawalProjection>> fetchAllWithdrawalHistory(@AuthenticationPrincipal CustomOAuth2User user) {
-        return ResponseEntity.ok(pointService.fetchAllWithdrawalHistory(user.getUserId()));
+    public ResponseEntity<List<WithdrawalProjection>> fetchAllWithdrawalHistory(@AuthenticationPrincipal CustomOAuth2User user,
+                                                                                Pageable pageable) {
+        return ResponseEntity.ok(pointService.fetchAllWithdrawalHistory(user.getUserId(), pageable));
     }
 
     @GetMapping("/inquiries")

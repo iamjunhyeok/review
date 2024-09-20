@@ -22,7 +22,7 @@ public class Point extends Base {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    private Integer amount;
+    private int amount;
 
     private PointReason reason;
 
@@ -34,7 +34,7 @@ public class Point extends Base {
     @JoinColumn(name = "application_id")
     private Application application;
 
-    public static Point of(User user, Application application, Integer amount) {
+    public static Point of(User user, Application application, int amount) {
         Point point = new Point();
         point.setUser(user);
         point.setApplication(application);

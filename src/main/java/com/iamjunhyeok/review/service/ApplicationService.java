@@ -12,7 +12,7 @@ import com.iamjunhyeok.review.dto.request.ApplicationCancelRequest;
 import com.iamjunhyeok.review.dto.request.CampaignApplyRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.projection.ApplicantProjection;
-import com.iamjunhyeok.review.projection.ApplicationProjection;
+import com.iamjunhyeok.review.projection.ApplicationView;
 import com.iamjunhyeok.review.projection.ApplicationSearchProjection;
 import com.iamjunhyeok.review.projection.CampaignViewProjection;
 import com.iamjunhyeok.review.projection.UserCampaignApplicationProjection;
@@ -69,7 +69,7 @@ public class ApplicationService {
                 .orElseThrow(() -> ErrorCode.APPLICATION_NOT_FOUND.build());
     }
 
-    public ApplicationProjection fetchOne(Long campaignId, Long applicationId) {
+    public ApplicationView fetchOne(Long campaignId, Long applicationId) {
         return applicationRepository.fetchOne(campaignId, applicationId);
     }
 

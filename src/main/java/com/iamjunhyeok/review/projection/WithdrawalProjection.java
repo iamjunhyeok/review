@@ -1,28 +1,19 @@
 package com.iamjunhyeok.review.projection;
 
-import com.blazebit.persistence.view.EntityView;
 import com.iamjunhyeok.review.constant.WithdrawalStatus;
-import com.iamjunhyeok.review.domain.Withdrawal;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@EntityView(Withdrawal.class)
-public interface WithdrawalProjection {
-    Long getId();
-
-    String getBank();
-
-    String getAccountNumber();
-
-    String getAccountHolder();
-
-    String getIdNumber();
-
-    int getAmount();
-
-    WithdrawalStatus getStatus();
-
-    LocalDateTime getCreatedAt();
-
-    LocalDateTime getUpdatedAt();
+@Getter
+public class WithdrawalProjection {
+    private Long id;
+    private String bank;
+    private String accountNumber;
+    private String accountHolder;
+    private String idNumber;
+    private int amount;
+    private WithdrawalStatus status;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

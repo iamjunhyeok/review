@@ -1,22 +1,15 @@
 package com.iamjunhyeok.review.projection;
 
-import com.blazebit.persistence.view.EntityView;
 import com.iamjunhyeok.review.constant.ApplicationStatus;
-import com.iamjunhyeok.review.domain.Application;
+import lombok.Getter;
 
-@EntityView(Application.class)
-public interface ApplicationProjection {
-    Long getId();
-
-    String getName();
-
-    String getPhoneNumber();
-
-    String getAddress();
-
-    String getRest();
-
-    String getPostalCode();
-
-    ApplicationStatus getStatus();
+@Getter
+public class ApplicationProjection {
+    private Long id;
+    private String name;
+    private String phoneNumber;
+    private String address;
+    private String rest;
+    private String postalCode;
+    private ApplicationStatus status;
 }

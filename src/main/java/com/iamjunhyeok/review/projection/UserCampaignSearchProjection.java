@@ -27,7 +27,7 @@ public interface UserCampaignSearchProjection {
 
     LocalDate getReviewEndDate();
 
-    ApplicationProjection getApplications();
+    ApplicationView getApplications();
 
     CampaignStatus getStatus();
 

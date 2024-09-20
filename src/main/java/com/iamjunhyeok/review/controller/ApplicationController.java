@@ -5,7 +5,7 @@ import com.iamjunhyeok.review.dto.request.ApplicationCancelRequest;
 import com.iamjunhyeok.review.dto.request.CampaignApplyRequest;
 import com.iamjunhyeok.review.dto.response.CampaignApplyResponse;
 import com.iamjunhyeok.review.projection.ApplicantProjection;
-import com.iamjunhyeok.review.projection.ApplicationProjection;
+import com.iamjunhyeok.review.projection.ApplicationView;
 import com.iamjunhyeok.review.service.ApplicationService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -62,7 +62,7 @@ public class ApplicationController {
      */
     @PreAuthorize("hasPermission(#applicationId, 'application', 'ADMIN')")
     @GetMapping("/campaigns/{campaignId}/applications/{applicationId}")
-    public ResponseEntity<ApplicationProjection> fetchOne(@PathVariable Long campaignId, @PathVariable Long applicationId) {
+    public ResponseEntity<ApplicationView> fetchOne(@PathVariable Long campaignId, @PathVariable Long applicationId) {
         return ResponseEntity.ok(applicationService.fetchOne(campaignId, applicationId));
     }
 

@@ -15,6 +15,7 @@ import com.iamjunhyeok.review.repository.PointRepository;
 import com.iamjunhyeok.review.repository.UserRepository;
 import com.iamjunhyeok.review.repository.WithdrawalRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PointService {
+
     private final PointRepository pointRepository;
 
     private final UserRepository userRepository;
@@ -32,8 +34,8 @@ public class PointService {
 
     private final WithdrawalRepository withdrawalRepository;
 
-    public List<PointProjection> getPoints(Long id) {
-        return pointRepository.findByUserId(id);
+    public List<PointProjection> fetchAllPointsHistoryByUserId(Long userId, Pageable pageable) {
+        return pointRepository.fetchAllPointsHistoryByUserId(userId, pageable);
     }
 
     public void givePoints(Long userId, Long applicationId, Integer amount, PointReason reason) {
@@ -66,8 +68,8 @@ public class PointService {
         }
     }
 
-    public List<WithdrawalProjection> fetchAllWithdrawalHistory(Long userId) {
-        return withdrawalRepository.fetchAllWithdrawalHistoryByUserId(userId);
+    public List<WithdrawalProjection> fetchAllWithdrawalHistory(Long userId, Pageable pageable) {
+        return withdrawalRepository.fetchAllWithdrawalHistoryByUserId(userId, pageable);
     }
 
     public List<WithdrawalWithUserProjection> fetchAllWithdrawalHistory() {

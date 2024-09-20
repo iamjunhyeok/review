@@ -1,24 +1,15 @@
 package com.iamjunhyeok.review.projection;
 
-import com.blazebit.persistence.view.EntityView;
-import com.blazebit.persistence.view.IdMapping;
 import com.iamjunhyeok.review.constant.PointReason;
-import com.iamjunhyeok.review.domain.Point;
+import lombok.Getter;
 
 import java.time.LocalDateTime;
 
-@EntityView(Point.class)
-public interface PointProjection {
-    @IdMapping
-    Long getId();
-
-    Integer getAmount();
-
-    PointReason getReason();
-
-    LocalDateTime getCreatedAt();
-
-    LocalDateTime getUpdatedAt();
-
-    ApplicationCampaignProjection getApplication();
+@Getter
+public class PointProjection {
+    private Long id;
+    private int amount;
+    private PointReason reason;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }
