@@ -78,7 +78,7 @@ public class AuthenticatedUserController {
         return ResponseEntity.ok(campaignService.fetchAuthenticatedUserCampaigns(status));
     }
 
-    @GetMapping("/applications")
+    @GetMapping("/campaigns/applications")
     public ResponseEntity<List<ApplicationSearchProjection>> fetchAllApplications(@RequestParam String status, @AuthenticationPrincipal CustomOAuth2User principal) {
         return ResponseEntity.ok(applicationService.fetchAllApplications(status, principal.getUserId()));
     }
@@ -98,7 +98,7 @@ public class AuthenticatedUserController {
         return ResponseEntity.ok(pointService.getPoints(user.getUserId()));
     }
 
-    @GetMapping("/point")
+    @GetMapping("/points/total")
     public int fetchCurrentPointForAuthenticatedUser(@AuthenticationPrincipal CustomOAuth2User user) {
         return pointService.getCurrentPoints(user.getUserId());
     }
@@ -120,8 +120,7 @@ public class AuthenticatedUserController {
      * @param category
      * @return
      */
-    @PreAuthorize("hasRole('USER')")
-    @GetMapping("/users/me/inquiries")
+    @GetMapping("/inquiries")
     public ResponseEntity<List<InquiryProjection>> fetchAllInquiriesForAuthenticatedUser(@RequestParam(required = false) String category) {
         return ResponseEntity.ok(inquiryService.fetchAllInquiriesForAuthenticatedUser(category));
     }
