@@ -28,5 +28,5 @@ public interface WithdrawalWithUserProjection {
 
     LocalDateTime getUpdatedAt();
 
-    UserProjection getUser();
+    UserSimpleView getUser();
 }
