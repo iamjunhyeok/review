@@ -85,8 +85,9 @@ public class AuthenticatedUserController {
     }
 
     @GetMapping("/penalties")
-    public ResponseEntity<List<PenaltyProjection>> fetchAllPenaltiesForAuthenticatedUser() {
-        return ResponseEntity.ok(penaltyService.fetchAllPenaltiesForAuthenticatedUser());
+    public ResponseEntity<List<PenaltyProjection>> fetchAllPenaltyHistory(@AuthenticationPrincipal CustomOAuth2User principal,
+                                                                          Pageable pageable) {
+        return ResponseEntity.ok(penaltyService.fetchAllPenaltyHistoryByUserId(principal.getUserId(), pageable));
     }
 
     @GetMapping("/penalties/total")

@@ -2,7 +2,6 @@ package com.iamjunhyeok.review.service;
 
 import com.iamjunhyeok.review.constant.PenaltyReason;
 import com.iamjunhyeok.review.domain.Application;
-import com.iamjunhyeok.review.domain.CustomOAuth2User;
 import com.iamjunhyeok.review.domain.Penalty;
 import com.iamjunhyeok.review.domain.User;
 import com.iamjunhyeok.review.exception.ErrorCode;
@@ -11,8 +10,7 @@ import com.iamjunhyeok.review.repository.ApplicationRepository;
 import com.iamjunhyeok.review.repository.PenaltyRepository;
 import com.iamjunhyeok.review.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -45,10 +43,6 @@ public class PenaltyService {
         penaltyRepository.save(Penalty.of(user, application, reason));
     }
 
-    public List<PenaltyProjection> fetchAll(Long userId) {
-        return penaltyRepository.findAllByUserId(userId);
-    }
-
     @Transactional
     public void delete(Long userId, Long id) {
         penaltyRepository.findById(id)
@@ -56,10 +50,8 @@ public class PenaltyService {
                 .delete();
     }
 
-    public List<PenaltyProjection> fetchAllPenaltiesForAuthenticatedUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomOAuth2User principal = (CustomOAuth2User) authentication.getPrincipal();
-        return penaltyRepository.findAllByUserId(principal.getUserId());
+    public List<PenaltyProjection> fetchAllPenaltyHistoryByUserId(Long userId, Pageable pageable) {
+        return penaltyRepository.fetchAllPenaltyHistoryByUserId(userId, pageable);
     }
 
     public int getTotalScore(Long userId) {

@@ -3,6 +3,7 @@ package com.iamjunhyeok.review.controller;
 import com.iamjunhyeok.review.projection.PenaltyProjection;
 import com.iamjunhyeok.review.service.PenaltyService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -27,8 +28,8 @@ public class PenaltyController {
      */
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users/{userId}/penalties")
-    public ResponseEntity<List<PenaltyProjection>> fetchAll(@PathVariable Long userId) {
-        return ResponseEntity.ok(penaltyService.fetchAll(userId));
+    public ResponseEntity<List<PenaltyProjection>> fetchAll(@PathVariable Long userId, Pageable pageable) {
+        return ResponseEntity.ok(penaltyService.fetchAllPenaltyHistoryByUserId(userId, pageable));
     }
 
     /**
