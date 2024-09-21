@@ -22,5 +22,5 @@ public interface ApplicationViewProjection {
 
     String getDetails();
 
-    CampaignSummaryProjection getCampaign();
+    CampaignSummaryView getCampaign();
 }

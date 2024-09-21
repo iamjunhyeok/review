@@ -13,7 +13,6 @@ import com.iamjunhyeok.review.projection.CampaignImageProjection;
 import com.iamjunhyeok.review.projection.CampaignProjection;
 import com.iamjunhyeok.review.projection.CodeProjection;
 import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
-import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.ExpressionUtils;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -40,6 +39,8 @@ import static com.iamjunhyeok.review.domain.QApplication.application;
 import static com.iamjunhyeok.review.domain.QCampaign.campaign;
 import static com.iamjunhyeok.review.domain.QCampaignImage.campaignImage;
 import static com.iamjunhyeok.review.domain.QCampaignOption.campaignOption;
+import static com.querydsl.core.group.GroupBy.groupBy;
+import static com.querydsl.core.group.GroupBy.list;
 
 @RequiredArgsConstructor
 public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
@@ -72,7 +73,7 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .transform(
-                        GroupBy.groupBy(campaign.id).list(
+                        groupBy(campaign.id).list(
                                 Projections.fields(
                                         CampaignProjection.class,
                                         campaign.id,
@@ -115,7 +116,7 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
                                         ).as("dDay"),
                                         campaign.longitude,
                                         campaign.latitude,
-                                        GroupBy.list(
+                                        list(
                                                 Projections.fields(
                                                         CampaignImageProjection.class,
                                                         campaignImage.id,
@@ -126,6 +127,50 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
                         )
                 );
         return fetch;
+    }
+
+    @Override
+    public CampaignProjection fetchOne(Long id) {
+        return qf.from(campaign)
+                .innerJoin(campaign.images, campaignImage)
+                .where(campaign.id.eq(id))
+                .transform(
+                        groupBy(campaign.id).list(
+                                Projections.fields(
+                                        CampaignProjection.class,
+                                        campaign.id,
+                                        Projections.fields(
+                                                CodeProjection.class,
+                                                campaign.typeCode.id,
+                                                campaign.typeCode.code,
+                                                campaign.typeCode.value
+                                        ).as("typeCode"),
+                                        Projections.fields(
+                                                CodeProjection.class,
+                                                campaign.categoryCode.id,
+                                                campaign.categoryCode.code,
+                                                campaign.categoryCode.value
+                                        ).as("categoryCode"),
+                                        Projections.fields(
+                                                CodeProjection.class,
+                                                campaign.socialCode.id,
+                                                campaign.socialCode.code,
+                                                campaign.socialCode.value
+                                        ).as("socialCode"),
+                                        campaign.title,
+                                        campaign.announcementDate,
+                                        campaign.reviewStartDate,
+                                        campaign.reviewEndDate,
+                                        list(
+                                                Projections.fields(
+                                                        CampaignImageProjection.class,
+                                                        campaignImage.id,
+                                                        campaignImage.name
+                                                )
+                                        ).as("images")
+                                )
+                        )
+                ).get(0);
     }
 
     private OrderSpecifier<?> order(CampaignSort campaignSort) {

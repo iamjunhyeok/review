@@ -4,7 +4,6 @@ import com.iamjunhyeok.review.domain.CustomOAuth2User;
 import com.iamjunhyeok.review.dto.request.CampaignCreateRequest;
 import com.iamjunhyeok.review.dto.request.CampaignUpdateRequest;
 import com.iamjunhyeok.review.projection.CampaignProjection;
-import com.iamjunhyeok.review.projection.CampaignSummaryProjection;
 import com.iamjunhyeok.review.projection.CampaignViewProjection;
 import com.iamjunhyeok.review.service.CampaignService;
 import jakarta.validation.Valid;
@@ -82,7 +81,7 @@ public class CampaignController {
     }
 
     @GetMapping("/{id}/summary")
-    public ResponseEntity<CampaignSummaryProjection> summary(@PathVariable Long id) {
+    public ResponseEntity<CampaignProjection> summary(@PathVariable Long id) {
         return ResponseEntity.ok(campaignService.summary(id));
     }
 

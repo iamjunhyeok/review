@@ -15,7 +15,6 @@ import com.iamjunhyeok.review.dto.request.CampaignCreateRequest;
 import com.iamjunhyeok.review.dto.request.CampaignUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.projection.CampaignProjection;
-import com.iamjunhyeok.review.projection.CampaignSummaryProjection;
 import com.iamjunhyeok.review.projection.CampaignViewProjection;
 import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
 import com.iamjunhyeok.review.repository.CampaignImageRepository;
@@ -255,9 +254,8 @@ public class CampaignService {
                 .orElseThrow(() -> ErrorCode.CAMPAIGN_NOT_FOUND.build());
     }
 
-    public CampaignSummaryProjection summary(Long id) {
-        return campaignRepository.fetchById(id, CampaignSummaryProjection.class)
-                .orElseThrow(() -> ErrorCode.CAMPAIGN_NOT_FOUND.build());
+    public CampaignProjection summary(Long id) {
+        return campaignRepository.fetchOne(id);
     }
 
     public List<UserCampaignSearchProjection> fetchAuthenticatedUserCampaigns(String status) {

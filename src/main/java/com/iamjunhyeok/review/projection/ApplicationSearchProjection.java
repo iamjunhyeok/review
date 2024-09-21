@@ -27,7 +27,7 @@ public interface ApplicationSearchProjection {
 
     ApplicationStatus getStatus();
 
-    CampaignSummaryProjection getCampaign();
+    CampaignSummaryView getCampaign();
 
     @MappingSubquery(ModifyRequestReviewCountSubqueryProvider.class)
     Long getModifyRequestReviewCount();

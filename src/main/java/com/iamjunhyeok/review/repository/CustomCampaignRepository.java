@@ -14,4 +14,6 @@ public interface CustomCampaignRepository {
     List<UserCampaignSearchProjection> fetchAuthenticatedUserCampaigns(String status);
 
     List<CampaignProjection> fetchAll(Long typeCodeId, Long[] categoryCodeIds, Long[] socialCodeIds, Long[] optionCodeIds, Long regionCodeId, Pageable pageable, String swlat, String swlng, String nelat, String nelng);
+
+    CampaignProjection fetchOne(Long id);
 }

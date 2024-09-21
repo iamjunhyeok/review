@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @EntityView(Campaign.class)
-public interface CampaignSummaryProjection {
+public interface CampaignSummaryView {
     @IdMapping
     Long getId();
 
