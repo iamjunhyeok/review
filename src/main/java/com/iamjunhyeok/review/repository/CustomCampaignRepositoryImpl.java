@@ -15,7 +15,7 @@ import com.iamjunhyeok.review.constant.CampaignStatus;
 import com.iamjunhyeok.review.constant.CampaignType;
 import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.domain.CustomOAuth2User;
-import com.iamjunhyeok.review.projection.CampaignSearchProjection;
+import com.iamjunhyeok.review.projection.CampaignSearchView;
 import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
@@ -42,7 +42,7 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
     private final RegionMappingRepository regionMappingRepository;
 
     @Override
-    public List<CampaignSearchProjection> fetchAll(String type, String categories, String socials, String options, Long region, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
+    public List<CampaignSearchView> fetchAll(String type, String categories, String socials, String options, Long region, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
         CriteriaBuilder<Campaign> cb = criteriaBuilderFactory.create(entityManager, Campaign.class, "c")
                 .innerJoinDefault("c.images", "i")
                 .leftJoinDefault("c.options", "o")
@@ -88,7 +88,7 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
             criteriaBuilderWhereOrBuilder.endOr();
         }
 
-        EntityViewSetting<CampaignSearchProjection, CriteriaBuilder<CampaignSearchProjection>> setting = EntityViewSetting.create(CampaignSearchProjection.class);
+        EntityViewSetting<CampaignSearchView, CriteriaBuilder<CampaignSearchView>> setting = EntityViewSetting.create(CampaignSearchView.class);
 
         for (Sort.Order order : pageable.getSort()) {
             if (order.getProperty().equalsIgnoreCase(CampaignSort.NEW.name())) {
@@ -104,7 +104,7 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
         cb.where("CURDATE()").betweenExpression("c.applicationStartDate").andExpression("c.applicationEndDate");
 
 
-        CriteriaBuilder<CampaignSearchProjection> criteriaBuilder = entityViewManager.applySetting(setting, cb);
+        CriteriaBuilder<CampaignSearchView> criteriaBuilder = entityViewManager.applySetting(setting, cb);
 
         cb.setMaxResults(pageable.getPageSize());
 
@@ -112,7 +112,7 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
     }
 
     @Override
-    public List<CampaignSearchProjection> fetchAll(Long typeCodeId, Long[] categoryCodeIds, Long[] socialCodeIds, Long[] optionCodeIds, Long regionCodeId, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
+    public List<CampaignSearchView> fetchAll(Long typeCodeId, Long[] categoryCodeIds, Long[] socialCodeIds, Long[] optionCodeIds, Long regionCodeId, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
         CriteriaBuilder<Campaign> cb = criteriaBuilderFactory.create(entityManager, Campaign.class, "c")
                 .innerJoinDefault("c.images", "i")
                 .leftJoinDefault("c.options", "o")
@@ -146,7 +146,7 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
             criteriaBuilderWhereOrBuilder.endOr();
         }
 
-        EntityViewSetting<CampaignSearchProjection, CriteriaBuilder<CampaignSearchProjection>> setting = EntityViewSetting.create(CampaignSearchProjection.class);
+        EntityViewSetting<CampaignSearchView, CriteriaBuilder<CampaignSearchView>> setting = EntityViewSetting.create(CampaignSearchView.class);
 
         for (Sort.Order order : pageable.getSort()) {
             if (order.getProperty().equalsIgnoreCase(CampaignSort.NEW.name())) {
@@ -162,7 +162,7 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
         cb.where("CURDATE()").betweenExpression("c.applicationStartDate").andExpression("c.applicationEndDate");
 
 
-        CriteriaBuilder<CampaignSearchProjection> criteriaBuilder = entityViewManager.applySetting(setting, cb);
+        CriteriaBuilder<CampaignSearchView> criteriaBuilder = entityViewManager.applySetting(setting, cb);
 
         cb.setMaxResults(pageable.getPageSize());
 
@@ -200,7 +200,7 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
     }
 
     @Override
-    public List<CampaignSearchProjection> fetchAll(String type, String categories, String socials, String options, String status, Pageable pageable) {
+    public List<CampaignSearchView> fetchAll(String type, String categories, String socials, String options, String status, Pageable pageable) {
         CriteriaBuilder<Campaign> cb = criteriaBuilderFactory.create(entityManager, Campaign.class, "c")
                 .innerJoinDefault("c.images", "i")
                 .leftJoinDefault("c.options", "o")
@@ -241,6 +241,6 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
             }
         }
         cb.page(pageable.getOffset(), pageable.getPageSize());
-        return entityViewManager.applySetting(EntityViewSetting.create(CampaignSearchProjection.class), cb).getResultList();
+        return entityViewManager.applySetting(EntityViewSetting.create(CampaignSearchView.class), cb).getResultList();
     }
 }

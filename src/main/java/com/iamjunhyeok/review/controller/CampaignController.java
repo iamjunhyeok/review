@@ -3,10 +3,9 @@ package com.iamjunhyeok.review.controller;
 import com.iamjunhyeok.review.domain.CustomOAuth2User;
 import com.iamjunhyeok.review.dto.request.CampaignCreateRequest;
 import com.iamjunhyeok.review.dto.request.CampaignUpdateRequest;
-import com.iamjunhyeok.review.projection.CampaignSearchProjection;
+import com.iamjunhyeok.review.projection.CampaignSearchView;
 import com.iamjunhyeok.review.projection.CampaignSummaryProjection;
 import com.iamjunhyeok.review.projection.CampaignViewProjection;
-import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
 import com.iamjunhyeok.review.service.CampaignService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -48,8 +47,8 @@ public class CampaignController {
     @PatchMapping("/campaigns/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void update(@PathVariable Long id,
-                                                         @RequestPart @Valid CampaignUpdateRequest request,
-                                                         @RequestPart(required = false) List<MultipartFile> files) throws IOException {
+                       @RequestPart @Valid CampaignUpdateRequest request,
+                       @RequestPart(required = false) List<MultipartFile> files) throws IOException {
         campaignService.update(id, request, files);
     }
 
@@ -61,16 +60,16 @@ public class CampaignController {
     }
 
     @GetMapping("/campaigns")
-    public ResponseEntity<List<CampaignSearchProjection>> search(@RequestParam(value = "type", required = false) Long typeCodeId,
-                                                                 @RequestParam(value = "categories", required = false) Long[] categoryCodeIds,
-                                                                 @RequestParam(value = "socials", required = false) Long[] socialCodeIds,
-                                                                 @RequestParam(value = "options", required = false) Long[] optionCodeIds,
-                                                                 @RequestParam(value = "region", required = false) Long regionCodeId,
-                                                                 Pageable pageable,
-                                                                 @RequestParam(required = false) String swlat,
-                                                                 @RequestParam(required = false) String swlng,
-                                                                 @RequestParam(required = false) String nelat,
-                                                                 @RequestParam(required = false) String nelng
+    public ResponseEntity<List<CampaignSearchView>> search(@RequestParam(value = "type", required = false) Long typeCodeId,
+                                                           @RequestParam(value = "categories", required = false) Long[] categoryCodeIds,
+                                                           @RequestParam(value = "socials", required = false) Long[] socialCodeIds,
+                                                           @RequestParam(value = "options", required = false) Long[] optionCodeIds,
+                                                           @RequestParam(value = "region", required = false) Long regionCodeId,
+                                                           Pageable pageable,
+                                                           @RequestParam(required = false) String swlat,
+                                                           @RequestParam(required = false) String swlng,
+                                                           @RequestParam(required = false) String nelat,
+                                                           @RequestParam(required = false) String nelng
     ) {
         return ResponseEntity.ok(campaignService.search(typeCodeId, categoryCodeIds, socialCodeIds, optionCodeIds, regionCodeId, pageable, swlat, swlng, nelat, nelng));
     }

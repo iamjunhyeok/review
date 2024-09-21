@@ -14,7 +14,7 @@ import com.iamjunhyeok.review.dto.CodeDto;
 import com.iamjunhyeok.review.dto.request.CampaignCreateRequest;
 import com.iamjunhyeok.review.dto.request.CampaignUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
-import com.iamjunhyeok.review.projection.CampaignSearchProjection;
+import com.iamjunhyeok.review.projection.CampaignSearchView;
 import com.iamjunhyeok.review.projection.CampaignSummaryProjection;
 import com.iamjunhyeok.review.projection.CampaignViewProjection;
 import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
@@ -246,11 +246,11 @@ public class CampaignService {
                 .delete();
     }
 
-    public List<CampaignSearchProjection> search(String type, String categories, String socials, String options, Long region, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
+    public List<CampaignSearchView> search(String type, String categories, String socials, String options, Long region, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
         return campaignRepository.fetchAll(type, categories, socials, options, region, pageable, swlat, swlng, nelat, nelng);
     }
 
-    public List<CampaignSearchProjection> search(Long typeCodeId, Long[] categoryCodeIds, Long[] socialCodeIds, Long[] optionCodeIds, Long regionCodeId, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
+    public List<CampaignSearchView> search(Long typeCodeId, Long[] categoryCodeIds, Long[] socialCodeIds, Long[] optionCodeIds, Long regionCodeId, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
         return campaignRepository.fetchAll(typeCodeId, categoryCodeIds, socialCodeIds, optionCodeIds, regionCodeId, pageable, swlat, swlng, nelat, nelng);
     }
 

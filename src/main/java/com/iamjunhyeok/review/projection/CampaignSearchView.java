@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @EntityView(Campaign.class)
-public interface CampaignSearchProjection {
+public interface CampaignSearchView {
     @IdMapping
     Long getId();
 

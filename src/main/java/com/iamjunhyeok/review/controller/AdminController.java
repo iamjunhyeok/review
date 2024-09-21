@@ -4,7 +4,7 @@ import com.iamjunhyeok.review.dto.request.BannerRegisterRequest;
 import com.iamjunhyeok.review.dto.request.PlanRegisterRequest;
 import com.iamjunhyeok.review.projection.AdvertiserProjection;
 import com.iamjunhyeok.review.projection.BannerProjection;
-import com.iamjunhyeok.review.projection.CampaignSearchProjection;
+import com.iamjunhyeok.review.projection.CampaignSearchView;
 import com.iamjunhyeok.review.projection.PlanProjection;
 import com.iamjunhyeok.review.service.AdminService;
 import lombok.RequiredArgsConstructor;
@@ -59,12 +59,12 @@ public class AdminController {
     }
 
     @GetMapping("/campaigns")
-    public ResponseEntity<List<CampaignSearchProjection>> fetchAllCampaigns(@RequestParam(required = false) String type,
-                                                                 @RequestParam(required = false) String categories,
-                                                                 @RequestParam(required = false) String socials,
-                                                                 @RequestParam(required = false) String options,
-                                                                 @RequestParam(required = false) String status,
-                                                                 Pageable pageable
+    public ResponseEntity<List<CampaignSearchView>> fetchAllCampaigns(@RequestParam(required = false) String type,
+                                                                      @RequestParam(required = false) String categories,
+                                                                      @RequestParam(required = false) String socials,
+                                                                      @RequestParam(required = false) String options,
+                                                                      @RequestParam(required = false) String status,
+                                                                      Pageable pageable
     ) {
         return ResponseEntity.ok(adminService.fetchAllCampaigns(type, categories, socials, options, status, pageable));
     }

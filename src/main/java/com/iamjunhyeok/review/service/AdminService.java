@@ -8,7 +8,7 @@ import com.iamjunhyeok.review.dto.request.PlanRegisterRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.projection.AdvertiserProjection;
 import com.iamjunhyeok.review.projection.BannerProjection;
-import com.iamjunhyeok.review.projection.CampaignSearchProjection;
+import com.iamjunhyeok.review.projection.CampaignSearchView;
 import com.iamjunhyeok.review.projection.PlanProjection;
 import com.iamjunhyeok.review.repository.AdvertiserRepository;
 import com.iamjunhyeok.review.repository.BannerRepository;
@@ -81,7 +81,7 @@ public class AdminService {
         return planRepository.fetchAll();
     }
 
-    public List<CampaignSearchProjection> fetchAllCampaigns(String type, String categories, String socials, String options, String status, Pageable pageable) {
+    public List<CampaignSearchView> fetchAllCampaigns(String type, String categories, String socials, String options, String status, Pageable pageable) {
         return campaignRepository.fetchAll(type, categories, socials, options, status, pageable);
 
     }
