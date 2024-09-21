@@ -7,13 +7,17 @@ import com.blazebit.persistence.view.EntityViewSetting;
 import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.domain.Application;
 import com.iamjunhyeok.review.domain.Campaign;
+import com.iamjunhyeok.review.domain.QUser;
 import com.iamjunhyeok.review.domain.User;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.projection.UserCampaignApplicationProjection;
 import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
+import com.iamjunhyeok.review.projection.UserProjection;
 import com.iamjunhyeok.review.projection.UserSearchProjection;
 import com.iamjunhyeok.review.projection.UserSummaryProjection;
 import com.iamjunhyeok.review.projection.UserView;
+import com.querydsl.core.types.Projections;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +33,8 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
     private final EntityManager em;
 
     private final EntityViewManager evm;
+
+    private final JPAQueryFactory qf;
 
     @Override
     public List<UserSearchProjection> search() {
@@ -77,5 +83,40 @@ public class CustomUserRepositoryImpl implements CustomUserRepository {
         CriteriaBuilder<User> cb = cbf.create(em, User.class)
                 .where("id").eq(userId);
         return evm.applySetting(EntityViewSetting.create(UserSummaryProjection.class), cb).getSingleResult();
+    }
+
+    @Override
+    public List<UserProjection> fetchAll(Long id, String email, String nickname) {
+        QUser user = QUser.user;
+        List<UserProjection> fetch = qf.select(
+                        Projections.fields(
+                                UserProjection.class,
+                                user.id,
+                                user.email,
+                                user.nickname,
+                                user.profileImageName
+                        )
+                )
+                .from(user)
+                .fetch();
+        return fetch;
+    }
+
+    @Override
+    public UserProjection fetchOne(Long id) {
+        QUser user = QUser.user;
+        UserProjection fetched = qf.select(
+                        Projections.fields(
+                                UserProjection.class,
+                                user.id,
+                                user.email,
+                                user.nickname,
+                                user.profileImageName
+                        )
+                )
+                .from(user)
+                .where(user.id.eq(id))
+                .fetchOne();
+        return fetched;
     }
 }

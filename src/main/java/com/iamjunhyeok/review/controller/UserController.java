@@ -1,8 +1,7 @@
 package com.iamjunhyeok.review.controller;
 
 import com.iamjunhyeok.review.dto.request.UserUpdateInfoRequest;
-import com.iamjunhyeok.review.projection.UserSearchProjection;
-import com.iamjunhyeok.review.projection.UserView;
+import com.iamjunhyeok.review.projection.UserProjection;
 import com.iamjunhyeok.review.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +13,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -41,8 +41,10 @@ public class UserController {
      */
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
-    public ResponseEntity<List<UserSearchProjection>> search() {
-        return ResponseEntity.ok(userService.search());
+    public ResponseEntity<List<UserProjection>> fetchAll(@RequestParam(required = false) Long id,
+                                                       @RequestParam(required = false) String email,
+                                                       @RequestParam(required = false) String nickname) {
+        return ResponseEntity.ok(userService.fetchAll(id, email, nickname));
     }
 
     /**
@@ -52,7 +54,7 @@ public class UserController {
      */
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
-    public ResponseEntity<UserView> view(@PathVariable Long id) {
-        return ResponseEntity.ok(userService.view(id));
+    public ResponseEntity<UserProjection> fetchOne(@PathVariable Long id) {
+        return ResponseEntity.ok(userService.fetchOne(id));
     }
 }
