@@ -33,7 +33,7 @@ public interface ApplicantProjection {
 
     UserSimpleView getUser();
 
-    CampaignProjection getCampaign();
+    CampaignView getCampaign();
 
     class PenaltyPointsSubqueryProvider implements SubqueryProvider {
         @Override

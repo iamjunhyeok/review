@@ -5,5 +5,5 @@ import com.iamjunhyeok.review.domain.Application;
 
 @EntityView(Application.class)
 public interface ApplicationCampaignProjection {
-    CampaignProjection getCampaign();
+    CampaignView getCampaign();
 }
