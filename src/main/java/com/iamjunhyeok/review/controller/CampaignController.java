@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -29,13 +30,14 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
+@RequestMapping("/campaigns")
 @RequiredArgsConstructor
 public class CampaignController {
 
     private final CampaignService campaignService;
 
     @PreAuthorize("hasAnyRole('ADMIN', 'ADVERTISER')")
-    @PostMapping("/campaigns")
+    @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void create(@RequestPart @Valid CampaignCreateRequest request,
                        @RequestPart List<MultipartFile> files,
@@ -44,7 +46,7 @@ public class CampaignController {
     }
 
     @PreAuthorize("hasPermission(#id, 'campaign', 'ADMIN')")
-    @PatchMapping("/campaigns/{id}")
+    @PatchMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void update(@PathVariable Long id,
                        @RequestPart @Valid CampaignUpdateRequest request,
@@ -53,13 +55,13 @@ public class CampaignController {
     }
 
     @PreAuthorize("hasPermission(#id, 'campaign', 'ADMIN')")
-    @DeleteMapping("/campaigns/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         campaignService.delete(id);
     }
 
-    @GetMapping("/campaigns")
+    @GetMapping
     public ResponseEntity<List<CampaignProjection>> fetchAll(@RequestParam(value = "type", required = false) Long typeCodeId,
                                                            @RequestParam(value = "categories", required = false) Long[] categoryCodeIds,
                                                            @RequestParam(value = "socials", required = false) Long[] socialCodeIds,
@@ -74,23 +76,23 @@ public class CampaignController {
         return ResponseEntity.ok(campaignService.fetchAll(typeCodeId, categoryCodeIds, socialCodeIds, optionCodeIds, regionCodeId, pageable, swlat, swlng, nelat, nelng));
     }
 
-    @GetMapping("/campaigns/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<CampaignViewProjection> fetchById(@PathVariable Long id) {
         return ResponseEntity.ok(campaignService.fetchById(id));
     }
 
-    @GetMapping("/campaigns/{id}/summary")
+    @GetMapping("/{id}/summary")
     public ResponseEntity<CampaignSummaryProjection> summary(@PathVariable Long id) {
         return ResponseEntity.ok(campaignService.summary(id));
     }
 
-    @PostMapping("/campaigns/{id}/favourite")
+    @PostMapping("/{id}/favourite")
     @ResponseStatus(HttpStatus.CREATED)
     public void addToFavourites(@PathVariable Long id, @AuthenticationPrincipal CustomOAuth2User principal) {
         campaignService.addToFavourites(id, principal);
     }
 
-    @DeleteMapping("/campaigns/{id}/favourite")
+    @DeleteMapping("/{id}/favourite")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void removeFromFavourites(@PathVariable Long id, @AuthenticationPrincipal CustomOAuth2User principal) {
         campaignService.removeFromFavourites(id, principal);
