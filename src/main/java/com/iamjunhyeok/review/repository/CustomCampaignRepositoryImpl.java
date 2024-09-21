@@ -3,32 +3,43 @@ package com.iamjunhyeok.review.repository;
 
 import com.blazebit.persistence.CriteriaBuilder;
 import com.blazebit.persistence.CriteriaBuilderFactory;
-import com.blazebit.persistence.WhereOrBuilder;
 import com.blazebit.persistence.view.EntityViewManager;
 import com.blazebit.persistence.view.EntityViewSetting;
-import com.blazebit.persistence.view.Sorters;
 import com.iamjunhyeok.review.constant.ApplicationStatus;
-import com.iamjunhyeok.review.constant.CampaignCategory;
-import com.iamjunhyeok.review.constant.CampaignSocial;
 import com.iamjunhyeok.review.constant.CampaignSort;
-import com.iamjunhyeok.review.constant.CampaignStatus;
-import com.iamjunhyeok.review.constant.CampaignType;
 import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.domain.CustomOAuth2User;
-import com.iamjunhyeok.review.projection.CampaignSearchView;
+import com.iamjunhyeok.review.projection.CampaignImageProjection;
+import com.iamjunhyeok.review.projection.CampaignProjection;
+import com.iamjunhyeok.review.projection.CodeProjection;
 import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
+import com.querydsl.core.group.GroupBy;
+import com.querydsl.core.types.ExpressionUtils;
+import com.querydsl.core.types.Order;
+import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.core.types.dsl.Expressions;
+import com.querydsl.core.types.dsl.SimpleExpression;
+import com.querydsl.jpa.JPAExpressions;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.NoResultException;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+
+import static com.blazebit.persistence.querydsl.JPQLNextExpressions.count;
+import static com.iamjunhyeok.review.domain.QApplication.application;
+import static com.iamjunhyeok.review.domain.QCampaign.campaign;
+import static com.iamjunhyeok.review.domain.QCampaignImage.campaignImage;
+import static com.iamjunhyeok.review.domain.QCampaignOption.campaignOption;
 
 @RequiredArgsConstructor
 public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
@@ -39,134 +50,126 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
 
     private final EntityViewManager entityViewManager;
 
+    private final JPAQueryFactory qf;
+
     private final RegionMappingRepository regionMappingRepository;
 
     @Override
-    public List<CampaignSearchView> fetchAll(String type, String categories, String socials, String options, Long region, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
-        CriteriaBuilder<Campaign> cb = criteriaBuilderFactory.create(entityManager, Campaign.class, "c")
-                .innerJoinDefault("c.images", "i")
-                .leftJoinDefault("c.options", "o")
-                .leftJoinDefault("o.code", "co");
+    public List<CampaignProjection> fetchAll(Long typeCodeId, Long[] categoryCodeIds, Long[] socialCodeIds, Long[] optionCodeIds, Long regionCodeId, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
+        String[] array = regionMappingRepository.findTrimmedCodesByRegionGroupId(regionCodeId)
+                .stream().map(aLong -> String.valueOf(aLong)).toList().toArray(new String[0]);
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof CustomOAuth2User) {
-            CustomOAuth2User principal = (CustomOAuth2User) authentication.getPrincipal();
-            Long userId = principal.getUserId();
-            cb.leftJoinDefaultOn("c.favourites", "f").on("f.user.id").eq(userId).end();
-        }
-
-        if (Strings.isNotBlank(type)) {
-            cb.where("c.type").eq(CampaignType.valueOf(type.toUpperCase()));
-        }
-        if (Strings.isNotBlank(categories)) {
-            cb.where("c.category").in(
-                    Arrays.stream(categories.toUpperCase().split(","))
-                            .map(CampaignCategory::valueOf)
-                            .toList()
-            );
-        }
-        if (Strings.isNotBlank(socials)) {
-            cb.where("c.social").in(
-                    Arrays.stream(socials.toUpperCase().split(","))
-                            .map(CampaignSocial::valueOf)
-                            .toList()
-            );
-        }
-        if (Strings.isNotBlank(options)) {
-            cb.where("co.code").in(
-                    Arrays.stream(options.toUpperCase().split(","))
-                            .toList()
-            );
-        }
-
-        if (region != null) {
-            List<Long> trimmedCodesByRegionGroupId = regionMappingRepository.findTrimmedCodesByRegionGroupId(region);
-            WhereOrBuilder<CriteriaBuilder<Campaign>> criteriaBuilderWhereOrBuilder = cb.whereOr();
-            for (Long l : trimmedCodesByRegionGroupId) {
-                criteriaBuilderWhereOrBuilder.where("c.administrativeDistrictCode").like().value(l).noEscape();
-            }
-            criteriaBuilderWhereOrBuilder.endOr();
-        }
-
-        EntityViewSetting<CampaignSearchView, CriteriaBuilder<CampaignSearchView>> setting = EntityViewSetting.create(CampaignSearchView.class);
-
-        for (Sort.Order order : pageable.getSort()) {
-            if (order.getProperty().equalsIgnoreCase(CampaignSort.NEW.name())) {
-                cb.orderByDesc("c.createdAt");
-            }
-            if (order.getProperty().equalsIgnoreCase(CampaignSort.POPULAR.name())) {
-                setting.addAttributeSorter("applicantsCount", Sorters.descending());
-            }
-            if (order.getProperty().equalsIgnoreCase(CampaignSort.DEADLINE.name())) {
-                setting.addAttributeSorter("dday", Sorters.ascending());
-            }
-        }
-        cb.where("CURDATE()").betweenExpression("c.applicationStartDate").andExpression("c.applicationEndDate");
-
-
-        CriteriaBuilder<CampaignSearchView> criteriaBuilder = entityViewManager.applySetting(setting, cb);
-
-        cb.setMaxResults(pageable.getPageSize());
-
-        return criteriaBuilder.getResultList();
+        List<CampaignProjection> fetch = qf.from(campaign)
+                .innerJoin(campaign.images, campaignImage)
+                .where(
+                        eq(campaign.typeCode.id, typeCodeId),
+                        in(campaign.categoryCode.id, categoryCodeIds),
+                        in(campaign.socialCode.id, socialCodeIds),
+                        in(campaign.administrativeDistrictCode, array),
+                        existsOption(optionCodeIds)
+                )
+                .orderBy(order(CampaignSort.DEADLINE))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .transform(
+                        GroupBy.groupBy(campaign.id).list(
+                                Projections.fields(
+                                        CampaignProjection.class,
+                                        campaign.id,
+                                        Projections.fields(
+                                                CodeProjection.class,
+                                                campaign.typeCode.id,
+                                                campaign.typeCode.code,
+                                                campaign.typeCode.value
+                                        ).as("typeCode"),
+                                        Projections.fields(
+                                                CodeProjection.class,
+                                                campaign.categoryCode.id,
+                                                campaign.categoryCode.code,
+                                                campaign.categoryCode.value
+                                        ).as("categoryCode"),
+                                        Projections.fields(
+                                                CodeProjection.class,
+                                                campaign.socialCode.id,
+                                                campaign.socialCode.code,
+                                                campaign.socialCode.value
+                                        ).as("socialCode"),
+                                        campaign.title,
+                                        campaign.capacity,
+                                        campaign.applicationEndDate,
+                                        campaign.announcementDate,
+                                        campaign.offeringSummary,
+                                        ExpressionUtils.as(
+                                                JPAExpressions.select(count())
+                                                        .from(application)
+                                                        .where(
+                                                                application.campaign.id.eq(campaign.id)
+                                                                .and(application.status.ne(ApplicationStatus.CANCELLED))
+                                                        )
+                                                , "applicantsCount"
+                                        ),
+                                        Expressions.numberTemplate(
+                                                Integer.class,
+                                                "DATEDIFF({0}, CURDATE())",
+                                                campaign.applicationEndDate
+                                        ).as("dDay"),
+                                        campaign.longitude,
+                                        campaign.latitude,
+                                        GroupBy.list(
+                                                Projections.fields(
+                                                        CampaignImageProjection.class,
+                                                        campaignImage.id,
+                                                        campaignImage.name
+                                                )
+                                        ).as("images")
+                                )
+                        )
+                );
+        return fetch;
     }
 
-    @Override
-    public List<CampaignSearchView> fetchAll(Long typeCodeId, Long[] categoryCodeIds, Long[] socialCodeIds, Long[] optionCodeIds, Long regionCodeId, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
-        CriteriaBuilder<Campaign> cb = criteriaBuilderFactory.create(entityManager, Campaign.class, "c")
-                .innerJoinDefault("c.images", "i")
-                .leftJoinDefault("c.options", "o")
-                .leftJoinDefault("o.code", "co");
+    private OrderSpecifier<?> order(CampaignSort campaignSort) {
+        return switch (campaignSort) {
+            case NEW -> new OrderSpecifier<>(Order.DESC, campaign.createdAt);
+            case POPULAR -> new OrderSpecifier<>(Order.DESC, JPAExpressions.select(count())
+                    .from(application)
+                    .where(
+                            application.campaign.id.eq(campaign.id)
+                                    .and(application.status.ne(ApplicationStatus.CANCELLED))
+                    ));
+            case DEADLINE -> new OrderSpecifier<>(Order.ASC, Expressions.numberTemplate(
+                    Integer.class,
+                    "DATEDIFF({0}, CURDATE())",
+                    campaign.applicationEndDate
+            ));
+        };
+    }
 
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof CustomOAuth2User) {
-            CustomOAuth2User principal = (CustomOAuth2User) authentication.getPrincipal();
-            Long userId = principal.getUserId();
-            cb.leftJoinDefaultOn("c.favourites", "f").on("f.user.id").eq(userId).end();
+    private <T> Predicate eq(SimpleExpression<T> path, T value) {
+        if (value == null) {
+            return null;
         }
+        return path.eq(value);
+    }
 
-        if (typeCodeId != null) {
-            cb.where("c.typeCode.id").eq(typeCodeId);
+    public <T> Predicate in(SimpleExpression<T> path, T[] values) {
+        if (values == null || values.length == 0) {
+            return null;
         }
-        if (categoryCodeIds != null) {
-            cb.where("c.categoryCode.id").in(categoryCodeIds);
+        return path.in(values);
+    }
+
+    private static BooleanExpression existsOption(Long[] optionCodeIds) {
+        if (optionCodeIds == null || optionCodeIds.length == 0) {
+            return null;
         }
-        if (socialCodeIds != null) {
-            cb.where("c.socialCode.id").in(socialCodeIds);
-        }
-        if (optionCodeIds != null) {
-            cb.where("o.code.id").in(optionCodeIds);
-        }
-        if (regionCodeId != null) {
-            List<Long> trimmedCodesByRegionGroupId = regionMappingRepository.findTrimmedCodesByRegionGroupId(regionCodeId);
-            WhereOrBuilder<CriteriaBuilder<Campaign>> criteriaBuilderWhereOrBuilder = cb.whereOr();
-            for (Long l : trimmedCodesByRegionGroupId) {
-                criteriaBuilderWhereOrBuilder.where("c.administrativeDistrictCode").like().value(l).noEscape();
-            }
-            criteriaBuilderWhereOrBuilder.endOr();
-        }
-
-        EntityViewSetting<CampaignSearchView, CriteriaBuilder<CampaignSearchView>> setting = EntityViewSetting.create(CampaignSearchView.class);
-
-        for (Sort.Order order : pageable.getSort()) {
-            if (order.getProperty().equalsIgnoreCase(CampaignSort.NEW.name())) {
-                cb.orderByDesc("c.createdAt");
-            }
-            if (order.getProperty().equalsIgnoreCase(CampaignSort.POPULAR.name())) {
-                setting.addAttributeSorter("applicantsCount", Sorters.descending());
-            }
-            if (order.getProperty().equalsIgnoreCase(CampaignSort.DEADLINE.name())) {
-                setting.addAttributeSorter("dday", Sorters.ascending());
-            }
-        }
-        cb.where("CURDATE()").betweenExpression("c.applicationStartDate").andExpression("c.applicationEndDate");
-
-
-        CriteriaBuilder<CampaignSearchView> criteriaBuilder = entityViewManager.applySetting(setting, cb);
-
-        cb.setMaxResults(pageable.getPageSize());
-
-        return criteriaBuilder.getResultList();
+        return JPAExpressions.selectOne()
+                .from(campaignOption)
+                .where(
+                        campaignOption.id.eq(campaign.id)
+                        .and(campaignOption.code.id.in(optionCodeIds))
+                )
+                .exists();
     }
 
     @Override
@@ -197,50 +200,5 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
                 .where("a.status").in(statuses)
                 .where("a.deleted").eqLiteral(false);
         return entityViewManager.applySetting(EntityViewSetting.create(UserCampaignSearchProjection.class), campaignCriteriaBuilder).getResultList();
-    }
-
-    @Override
-    public List<CampaignSearchView> fetchAll(String type, String categories, String socials, String options, String status, Pageable pageable) {
-        CriteriaBuilder<Campaign> cb = criteriaBuilderFactory.create(entityManager, Campaign.class, "c")
-                .innerJoinDefault("c.images", "i")
-                .leftJoinDefault("c.options", "o")
-                .leftJoinDefault("o.code", "co");
-        if (Strings.isNotBlank(type)) {
-            cb.where("c.type").eq(CampaignType.valueOf(type.toUpperCase()));
-        }
-        if (Strings.isNotBlank(categories)) {
-            cb.where("c.category").in(
-                    Arrays.stream(categories.toUpperCase().split(","))
-                            .map(CampaignCategory::valueOf)
-                            .toList()
-            );
-        }
-        if (Strings.isNotBlank(socials)) {
-            cb.where("c.social").in(
-                    Arrays.stream(socials.toUpperCase().split(","))
-                            .map(CampaignSocial::valueOf)
-                            .toList()
-            );
-        }
-        if (Strings.isNotBlank(options)) {
-            cb.where("co.code").in(
-                    Arrays.stream(options.toUpperCase().split(","))
-                            .toList()
-            );
-        }
-        if (Strings.isNotBlank(status)) {
-            cb.where("c.status").in(
-                    Arrays.stream(status.toUpperCase().split(","))
-                            .map(CampaignStatus::valueOf)
-                            .toList()
-            );
-        }
-        for (Sort.Order order : pageable.getSort()) {
-            if (order.getProperty().equals("newest")) {
-                cb.orderByAsc("c.createdAt");
-            }
-        }
-        cb.page(pageable.getOffset(), pageable.getPageSize());
-        return entityViewManager.applySetting(EntityViewSetting.create(CampaignSearchView.class), cb).getResultList();
     }
 }

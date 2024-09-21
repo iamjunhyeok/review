@@ -3,7 +3,7 @@ package com.iamjunhyeok.review.controller;
 import com.iamjunhyeok.review.domain.CustomOAuth2User;
 import com.iamjunhyeok.review.dto.request.CampaignCreateRequest;
 import com.iamjunhyeok.review.dto.request.CampaignUpdateRequest;
-import com.iamjunhyeok.review.projection.CampaignSearchView;
+import com.iamjunhyeok.review.projection.CampaignProjection;
 import com.iamjunhyeok.review.projection.CampaignSummaryProjection;
 import com.iamjunhyeok.review.projection.CampaignViewProjection;
 import com.iamjunhyeok.review.service.CampaignService;
@@ -60,7 +60,7 @@ public class CampaignController {
     }
 
     @GetMapping("/campaigns")
-    public ResponseEntity<List<CampaignSearchView>> search(@RequestParam(value = "type", required = false) Long typeCodeId,
+    public ResponseEntity<List<CampaignProjection>> fetchAll(@RequestParam(value = "type", required = false) Long typeCodeId,
                                                            @RequestParam(value = "categories", required = false) Long[] categoryCodeIds,
                                                            @RequestParam(value = "socials", required = false) Long[] socialCodeIds,
                                                            @RequestParam(value = "options", required = false) Long[] optionCodeIds,
@@ -71,7 +71,7 @@ public class CampaignController {
                                                            @RequestParam(required = false) String nelat,
                                                            @RequestParam(required = false) String nelng
     ) {
-        return ResponseEntity.ok(campaignService.search(typeCodeId, categoryCodeIds, socialCodeIds, optionCodeIds, regionCodeId, pageable, swlat, swlng, nelat, nelng));
+        return ResponseEntity.ok(campaignService.fetchAll(typeCodeId, categoryCodeIds, socialCodeIds, optionCodeIds, regionCodeId, pageable, swlat, swlng, nelat, nelng));
     }
 
     @GetMapping("/campaigns/{id}")

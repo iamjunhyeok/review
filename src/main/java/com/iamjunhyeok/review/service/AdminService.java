@@ -8,7 +8,6 @@ import com.iamjunhyeok.review.dto.request.PlanRegisterRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.projection.AdvertiserProjection;
 import com.iamjunhyeok.review.projection.BannerProjection;
-import com.iamjunhyeok.review.projection.CampaignSearchView;
 import com.iamjunhyeok.review.projection.PlanProjection;
 import com.iamjunhyeok.review.repository.AdvertiserRepository;
 import com.iamjunhyeok.review.repository.BannerRepository;
@@ -18,7 +17,6 @@ import com.iamjunhyeok.review.repository.PlanRepository;
 import com.iamjunhyeok.review.repository.UserRepository;
 import com.iamjunhyeok.review.util.S3Util;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -79,11 +77,6 @@ public class AdminService {
 
     public List<PlanProjection> fetchAllPlans() {
         return planRepository.fetchAll();
-    }
-
-    public List<CampaignSearchView> fetchAllCampaigns(String type, String categories, String socials, String options, String status, Pageable pageable) {
-        return campaignRepository.fetchAll(type, categories, socials, options, status, pageable);
-
     }
 
     @Transactional
