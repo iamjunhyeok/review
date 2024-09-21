@@ -23,5 +23,5 @@ public interface BannerProjection {
 
     boolean getDeleted();
 
-    CodeProjection getCode();
+    CodeView getCode();
 }

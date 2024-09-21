@@ -5,7 +5,7 @@ import com.blazebit.persistence.view.IdMapping;
 import com.iamjunhyeok.review.domain.Code;
 
 @EntityView(Code.class)
-public interface CodeProjection {
+public interface CodeView {
     @IdMapping
     Long getId();
 

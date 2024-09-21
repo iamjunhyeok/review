@@ -11,5 +11,5 @@ public interface CampaignMissionProjection {
 
     String getValue();
 
-    CodeProjection getCode();
+    CodeView getCode();
 }

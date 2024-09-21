@@ -18,11 +18,11 @@ public interface CampaignSearchView {
     @IdMapping
     Long getId();
 
-    CodeProjection getTypeCode();
+    CodeView getTypeCode();
 
-    CodeProjection getCategoryCode();
+    CodeView getCategoryCode();
 
-    CodeProjection getSocialCode();
+    CodeView getSocialCode();
 
     String getTitle();
     Integer getCapacity();
@@ -39,7 +39,7 @@ public interface CampaignSearchView {
     String getLongitude();
     String getLatitude();
 
-    List<CampaignImageProjection> getImages();
+    List<CampaignImageView> getImages();
 
     List<CampaignOptionProjection> getOptions();
 

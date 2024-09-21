@@ -5,7 +5,7 @@ import com.blazebit.persistence.view.IdMapping;
 import com.iamjunhyeok.review.domain.CampaignImage;
 
 @EntityView(CampaignImage.class)
-public interface CampaignImageProjection {
+public interface CampaignImageView {
     @IdMapping
     Long getId();
 

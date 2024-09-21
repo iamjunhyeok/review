@@ -12,11 +12,11 @@ public interface CampaignSummaryProjection {
     @IdMapping
     Long getId();
 
-    CodeProjection getTypeCode();
+    CodeView getTypeCode();
 
-    CodeProjection getCategoryCode();
+    CodeView getCategoryCode();
 
-    CodeProjection getSocialCode();
+    CodeView getSocialCode();
 
     String getTitle();
 
@@ -26,5 +26,5 @@ public interface CampaignSummaryProjection {
 
     LocalDate getReviewEndDate();
 
-    List<CampaignImageProjection> getImages();
+    List<CampaignImageView> getImages();
 }

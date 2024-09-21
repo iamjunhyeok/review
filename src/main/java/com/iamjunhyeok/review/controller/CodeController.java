@@ -2,7 +2,7 @@ package com.iamjunhyeok.review.controller;
 
 import com.iamjunhyeok.review.dto.request.CodeCreateRequest;
 import com.iamjunhyeok.review.dto.request.CodeUpdateRequest;
-import com.iamjunhyeok.review.projection.CodeProjection;
+import com.iamjunhyeok.review.projection.CodeView;
 import com.iamjunhyeok.review.service.CodeService;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
@@ -29,8 +29,8 @@ public class CodeController {
     private final CodeService codeService;
 
     @GetMapping
-    public ResponseEntity<List<CodeProjection>> fetchAllByParentId(@RequestParam(value = "parent_id", required = false) Long parentId,
-                                                                   @RequestParam(value = "parent_code", required = false) String parentCode) {
+    public ResponseEntity<List<CodeView>> fetchAllByParentId(@RequestParam(value = "parent_id", required = false) Long parentId,
+                                                             @RequestParam(value = "parent_code", required = false) String parentCode) {
         if (parentId == null && Strings.isBlank(parentCode)) {
             return ResponseEntity.ok(codeService.findByParentIsNull());
         } else if (parentId != null) {

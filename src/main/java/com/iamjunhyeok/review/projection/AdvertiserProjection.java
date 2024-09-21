@@ -10,7 +10,7 @@ public interface AdvertiserProjection {
     @IdMapping
     Long getId();
 
-    CodeProjection getBusinessTypeCode();
+    CodeView getBusinessTypeCode();
 
     String getBusinessNumber();
 

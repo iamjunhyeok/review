@@ -14,6 +14,7 @@ import com.iamjunhyeok.review.dto.CodeDto;
 import com.iamjunhyeok.review.dto.request.CampaignCreateRequest;
 import com.iamjunhyeok.review.dto.request.CampaignUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
+import com.iamjunhyeok.review.projection.CampaignProjection;
 import com.iamjunhyeok.review.projection.CampaignSearchView;
 import com.iamjunhyeok.review.projection.CampaignSummaryProjection;
 import com.iamjunhyeok.review.projection.CampaignViewProjection;

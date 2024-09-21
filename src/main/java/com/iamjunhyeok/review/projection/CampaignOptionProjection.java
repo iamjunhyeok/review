@@ -9,5 +9,5 @@ public interface CampaignOptionProjection {
     @IdMapping
     Long getId();
 
-    CodeProjection getCode();
+    CodeView getCode();
 }

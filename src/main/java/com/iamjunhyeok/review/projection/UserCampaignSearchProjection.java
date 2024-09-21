@@ -13,11 +13,11 @@ public interface UserCampaignSearchProjection {
     @IdMapping
     Long getId();
 
-    CodeProjection getTypeCode();
+    CodeView getTypeCode();
 
-    CodeProjection getCategoryCode();
+    CodeView getCategoryCode();
 
-    CodeProjection getSocialCode();
+    CodeView getSocialCode();
 
     String getTitle();
 
@@ -31,5 +31,5 @@ public interface UserCampaignSearchProjection {
 
     CampaignStatus getStatus();
 
-    List<CampaignImageProjection> getImages();
+    List<CampaignImageView> getImages();
 }

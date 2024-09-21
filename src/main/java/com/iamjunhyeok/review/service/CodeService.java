@@ -4,7 +4,7 @@ import com.iamjunhyeok.review.domain.Code;
 import com.iamjunhyeok.review.dto.request.CodeCreateRequest;
 import com.iamjunhyeok.review.dto.request.CodeUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
-import com.iamjunhyeok.review.projection.CodeProjection;
+import com.iamjunhyeok.review.projection.CodeView;
 import com.iamjunhyeok.review.repository.CodeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,15 +19,15 @@ public class CodeService {
 
     private final CodeRepository codeRepository;
 
-    public List<CodeProjection> findByParentIsNull() {
+    public List<CodeView> findByParentIsNull() {
         return codeRepository.findByParentIsNull();
     }
 
-    public List<CodeProjection> fetchAllByParentId(Long parentId) {
+    public List<CodeView> fetchAllByParentId(Long parentId) {
         return codeRepository.fetchAllByParentId(parentId);
     }
 
-    public List<CodeProjection> fetchAllByParentCode(String parentCode) {
+    public List<CodeView> fetchAllByParentCode(String parentCode) {
         return codeRepository.fetchAllByParentCode(parentCode);
     }
 
