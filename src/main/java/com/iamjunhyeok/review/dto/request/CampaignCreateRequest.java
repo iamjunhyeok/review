@@ -16,9 +16,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CampaignCreateRequest extends CampaignBaseDto {
-    Long typeCodeId;
-    Long categoryCodeId;
-    Long socialCodeId;
-
+    private Long typeCodeId;
+    private Long categoryCodeId;
+    private Long socialCodeId;
     private List<CampaignLinkDto> links;
 }
