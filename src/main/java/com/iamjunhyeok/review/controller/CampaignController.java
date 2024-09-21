@@ -43,7 +43,7 @@ public class CampaignController {
         campaignService.create(request, files, principal);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'ADVERTISER')")
+    @PreAuthorize("hasPermission(#id, 'campaign', 'ADMIN')")
     @PatchMapping("/campaigns/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void update(@PathVariable Long id,
@@ -52,7 +52,7 @@ public class CampaignController {
         campaignService.update(id, request, files);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasPermission(#id, 'campaign', 'ADMIN')")
     @DeleteMapping("/campaigns/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {

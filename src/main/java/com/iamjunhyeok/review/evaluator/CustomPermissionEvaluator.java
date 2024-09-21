@@ -1,6 +1,7 @@
 package com.iamjunhyeok.review.evaluator;
 
 import com.iamjunhyeok.review.repository.ApplicationRepository;
+import com.iamjunhyeok.review.repository.CampaignRepository;
 import com.iamjunhyeok.review.repository.InquiryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.PermissionEvaluator;
@@ -16,6 +17,8 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
     private final InquiryRepository inquiryRepository;
 
     private final ApplicationRepository applicationRepository;
+
+    private final CampaignRepository campaignRepository;
 
     private final String ROLE_PREFIX = "ROLE_";
 
@@ -39,6 +42,8 @@ public class CustomPermissionEvaluator implements PermissionEvaluator {
             evaluator = new InquiryPermissionEvaluator(inquiryRepository);
         } else if (targetType.equals("application")) {
             evaluator = new ApplicationPermissionEvaluator(applicationRepository);
+        } else if (targetType.equals("campaign")) {
+            evaluator = new CampaignPermissionEvaluator(campaignRepository);
         }
         return evaluator.hasPermission(authentication, targetId, targetType, permission);
     }
