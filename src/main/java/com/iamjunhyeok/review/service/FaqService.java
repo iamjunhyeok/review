@@ -1,10 +1,12 @@
 package com.iamjunhyeok.review.service;
 
+import com.iamjunhyeok.review.domain.Code;
 import com.iamjunhyeok.review.domain.Faq;
 import com.iamjunhyeok.review.dto.request.FaqCreateRequest;
 import com.iamjunhyeok.review.dto.request.FaqUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.projection.FaqProjection;
+import com.iamjunhyeok.review.repository.CodeRepository;
 import com.iamjunhyeok.review.repository.FaqRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -20,29 +22,32 @@ public class FaqService {
 
     private final FaqRepository faqRepository;
 
+    private final CodeRepository codeRepository;
+
     @Transactional
     public Faq register(FaqCreateRequest request) {
-        return faqRepository.save(Faq.of(request.getCategory(), request.getQuestion(), request.getAnswer()));
+        Code categoryCode = codeRepository.getReferenceById(request.getCategoryCodeId());
+        return faqRepository.save(Faq.of(categoryCode, request.getQuestion(), request.getAnswer()));
     }
 
-    public List<FaqProjection> fetchAll(String category, Pageable pageable) {
-        return faqRepository.fetchAll(category, pageable);
+    public List<FaqProjection> fetchAll(Long categoryId, Pageable pageable) {
+        return faqRepository.fetchAll(categoryId, pageable);
     }
 
-    public Long fetchAll(String category) {
-        return faqRepository.fetchAll(category);
+    public Long fetchAll(Long categoryId) {
+        return faqRepository.fetchAll(categoryId);
     }
 
     public FaqProjection fetchOne(Long id) {
-        return faqRepository.fetchOne(id)
-                .orElseThrow(() -> ErrorCode.FAQ_NOT_FOUND.build());
+        return faqRepository.fetchOne(id);
     }
 
     @Transactional
     public Faq update(Long id, FaqUpdateRequest request) {
+        Code categoryCode = codeRepository.getReferenceById(request.getCategoryCodeId());
         return faqRepository.findById(id)
                 .orElseThrow(() -> ErrorCode.FAQ_NOT_FOUND.build())
-                .update(request.getCategory(), request.getQuestion(), request.getAnswer());
+                .update(categoryCode, request.getQuestion(), request.getAnswer());
     }
 
     @Transactional

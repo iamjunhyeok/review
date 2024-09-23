@@ -2,8 +2,6 @@ package com.iamjunhyeok.review.controller;
 
 import com.iamjunhyeok.review.dto.request.FaqCreateRequest;
 import com.iamjunhyeok.review.dto.request.FaqUpdateRequest;
-import com.iamjunhyeok.review.dto.response.FaqCreateResponse;
-import com.iamjunhyeok.review.dto.response.FaqUpdateResponse;
 import com.iamjunhyeok.review.projection.FaqProjection;
 import com.iamjunhyeok.review.service.FaqService;
 import jakarta.validation.Valid;
@@ -26,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
 @RestController
-@RequestMapping("/support/faq")
+@RequestMapping("/support/faqs")
 @RequiredArgsConstructor
 public class FaqController {
 
@@ -34,13 +32,15 @@ public class FaqController {
 
     /**
      * FAQ 등록
+     *
      * @param request
      * @return
      */
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<FaqCreateResponse> register(@RequestBody @Valid FaqCreateRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(FaqCreateResponse.from(faqService.register(request)));
+    @ResponseStatus(HttpStatus.CREATED)
+    public void register(@RequestBody @Valid FaqCreateRequest request) {
+        faqService.register(request);
     }
 
     /**
@@ -49,13 +49,13 @@ public class FaqController {
      * @return
      */
     @GetMapping
-    public ResponseEntity<List<FaqProjection>> fetchAll(@RequestParam(required = false) String category, Pageable pageable) {
-        return ResponseEntity.ok(faqService.fetchAll(category, pageable));
+    public ResponseEntity<List<FaqProjection>> fetchAll(@RequestParam(value = "category", required = false) Long categoryId, Pageable pageable) {
+        return ResponseEntity.ok(faqService.fetchAll(categoryId, pageable));
     }
 
     @GetMapping("/count")
-    public Long fetchAll(@RequestParam(required = false) String category) {
-        return faqService.fetchAll(category);
+    public Long fetchAll(@RequestParam(value = "category", required = false) Long categoryId) {
+        return faqService.fetchAll(categoryId);
     }
 
     /**
@@ -70,14 +70,16 @@ public class FaqController {
 
     /**
      * FAQ 수정
+     *
      * @param id
      * @param request
      * @return
      */
     @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/{id}")
-    public ResponseEntity<FaqUpdateResponse> modify(@PathVariable Long id, @RequestBody @Valid FaqUpdateRequest request) {
-        return ResponseEntity.ok(FaqUpdateResponse.from(faqService.update(id, request)));
+    @ResponseStatus(HttpStatus.OK)
+    public void modify(@PathVariable Long id, @RequestBody @Valid FaqUpdateRequest request) {
+        faqService.update(id, request);
     }
 
     /**

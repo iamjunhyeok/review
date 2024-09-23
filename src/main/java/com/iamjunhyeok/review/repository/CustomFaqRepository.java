@@ -7,7 +7,9 @@ import java.util.List;
 
 public interface CustomFaqRepository {
 
-    List<FaqProjection> fetchAll(String category, Pageable pageable);
+    List<FaqProjection> fetchAll(Long categoryId, Pageable pageable);
 
-    Long fetchAll(String category);
+    Long fetchAll(Long categoryId);
+
+    FaqProjection fetchOne(Long id);
 }

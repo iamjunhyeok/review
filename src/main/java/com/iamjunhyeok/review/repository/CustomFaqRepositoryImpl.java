@@ -1,52 +1,79 @@
 package com.iamjunhyeok.review.repository;
 
-import com.blazebit.persistence.CriteriaBuilder;
-import com.blazebit.persistence.CriteriaBuilderFactory;
-import com.blazebit.persistence.view.EntityViewManager;
-import com.blazebit.persistence.view.EntityViewSetting;
-import com.iamjunhyeok.review.constant.FaqCategory;
-import com.iamjunhyeok.review.domain.Faq;
+import com.iamjunhyeok.review.projection.CodeProjection;
 import com.iamjunhyeok.review.projection.FaqProjection;
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.TypedQuery;
+import com.querydsl.core.types.Predicate;
+import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.SimpleExpression;
+import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
+import static com.iamjunhyeok.review.domain.QFaq.faq;
+
 @RequiredArgsConstructor
 public class CustomFaqRepositoryImpl implements CustomFaqRepository {
 
-    private final CriteriaBuilderFactory criteriaBuilderFactory;
-
-    private final EntityManager entityManager;
-
-    private final EntityViewManager entityViewManager;
+    private final JPAQueryFactory qf;
 
     @Override
-    public List<FaqProjection> fetchAll(String category, Pageable pageable) {
-        CriteriaBuilder<Faq> cb = getFaqCriteriaBuilder(category);
-        cb.orderByDesc("createdAt");
-        cb.setFirstResult((int) pageable.getOffset());
-        cb.setMaxResults(pageable.getPageSize());
-
-        EntityViewSetting<FaqProjection, CriteriaBuilder<FaqProjection>> setting = EntityViewSetting.create(FaqProjection.class);
-        return entityViewManager.applySetting(setting, cb).getResultList();
+    public List<FaqProjection> fetchAll(Long categoryId, Pageable pageable) {
+        return qf.select(
+                        Projections.fields(
+                                FaqProjection.class,
+                                faq.id,
+                                faq.question,
+                                faq.answer,
+                                Projections.fields(
+                                        CodeProjection.class,
+                                        faq.categoryCode.id,
+                                        faq.categoryCode.code,
+                                        faq.categoryCode.value
+                                ).as("categoryCode")
+                        )
+                )
+                .from(faq)
+                .where(eq(faq.categoryCode.id, categoryId))
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
     }
 
     @Override
-    public Long fetchAll(String category) {
-        CriteriaBuilder<Faq> faqCriteriaBuilder = getFaqCriteriaBuilder(category);
-        TypedQuery<Long> countQuery = faqCriteriaBuilder.getCountQuery();
-        return countQuery.getSingleResult();
+    public Long fetchAll(Long categoryId) {
+        return qf.select(faq.count())
+                .from(faq)
+                .where(eq(faq.categoryCode.id, categoryId))
+                .fetchOne();
     }
 
-    private CriteriaBuilder<Faq> getFaqCriteriaBuilder(String category) {
-        CriteriaBuilder<Faq> cb = criteriaBuilderFactory.create(entityManager, Faq.class, "f");
-        if (Strings.isNotBlank(category)) {
-            cb.where("f.category").eq(FaqCategory.valueOf(category.toUpperCase()));
+    @Override
+    public FaqProjection fetchOne(Long id) {
+        return qf.select(
+                        Projections.fields(
+                                FaqProjection.class,
+                                faq.id,
+                                faq.question,
+                                faq.answer,
+                                Projections.fields(
+                                        CodeProjection.class,
+                                        faq.categoryCode.id,
+                                        faq.categoryCode.code,
+                                        faq.categoryCode.value
+                                ).as("categoryCode")
+                        )
+                )
+                .from(faq)
+                .where(faq.id.eq(id))
+                .fetchOne();
+    }
+
+    private <T> Predicate eq(SimpleExpression<T> path, T value) {
+        if (value == null) {
+            return null;
         }
-        return cb;
+        return path.eq(value);
     }
 }

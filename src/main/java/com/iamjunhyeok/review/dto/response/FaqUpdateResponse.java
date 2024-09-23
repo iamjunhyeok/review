@@ -16,7 +16,6 @@ public class FaqUpdateResponse {
     public static FaqUpdateResponse from(Faq faq) {
         FaqUpdateResponse response = new FaqUpdateResponse();
         response.setId(faq.getId());
-        response.setCategory(faq.getCategory());
         response.setQuestion(faq.getQuestion());
         response.setAnswer(faq.getAnswer());
         return response;

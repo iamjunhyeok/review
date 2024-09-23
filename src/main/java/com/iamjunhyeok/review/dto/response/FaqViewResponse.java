@@ -16,7 +16,6 @@ public class FaqViewResponse {
     public static FaqViewResponse from(Faq faq) {
         FaqViewResponse response = new FaqViewResponse();
         response.setId(faq.getId());
-        response.setCategory(faq.getCategory());
         response.setQuestion(faq.getQuestion());
         response.setAnswer(faq.getAnswer());
         return response;

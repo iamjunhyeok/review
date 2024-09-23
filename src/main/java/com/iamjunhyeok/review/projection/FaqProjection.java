@@ -1,18 +1,11 @@
 package com.iamjunhyeok.review.projection;
 
-import com.blazebit.persistence.view.EntityView;
-import com.blazebit.persistence.view.IdMapping;
-import com.iamjunhyeok.review.constant.FaqCategory;
-import com.iamjunhyeok.review.domain.Faq;
+import lombok.Getter;
 
-@EntityView(Faq.class)
-public interface FaqProjection {
-    @IdMapping
-    Long getId();
-
-    FaqCategory getCategory();
-
-    String getQuestion();
-
-    String getAnswer();
+@Getter
+public class FaqProjection {
+    private Long id;
+    private CodeProjection categoryCode;
+    private String question;
+    private String answer;
 }

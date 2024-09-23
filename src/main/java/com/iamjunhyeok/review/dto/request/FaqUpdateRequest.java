@@ -1,6 +1,5 @@
 package com.iamjunhyeok.review.dto.request;
 
-import com.iamjunhyeok.review.constant.FaqCategory;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -11,7 +10,7 @@ import lombok.Setter;
 public class FaqUpdateRequest {
 
     @NotNull
-    private FaqCategory category;
+    private Long categoryCodeId;
 
     @NotBlank
     private String question;

@@ -16,7 +16,6 @@ public class FaqSearchResponse {
     public static FaqSearchResponse from(Faq faq) {
         FaqSearchResponse response = new FaqSearchResponse();
         response.setId(faq.getId());
-        response.setCategory(faq.getCategory());
         response.setQuestion(faq.getQuestion());
         response.setAnswer(faq.getAnswer());
         return response;

@@ -16,7 +16,6 @@ public class FaqCreateResponse {
     public static FaqCreateResponse from(Faq faq) {
         FaqCreateResponse response = new FaqCreateResponse();
         response.setId(faq.getId());
-        response.setCategory(faq.getCategory());
         response.setQuestion(faq.getQuestion());
         response.setAnswer(faq.getAnswer());
         return response;
