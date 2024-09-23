@@ -390,3 +390,27 @@ INSERT IGNORE INTO code (ID, CODE, VALUE, ORDERS,PARENT_ID) VALUES (378, '296', 
 INSERT IGNORE INTO code (ID, CODE, VALUE, ORDERS,PARENT_ID) VALUES (379, '297', '외환선물', 88, 291);
 INSERT IGNORE INTO code (ID, CODE, VALUE, ORDERS,PARENT_ID) VALUES (380, '298', '현대선물', 89, 291);
 INSERT IGNORE INTO code (ID, CODE, VALUE, ORDERS,PARENT_ID) VALUES (381, '092', '토스뱅크', 90, 291);
+
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(6, NULL, 383, NULL, NULL, 'SCREEN_CODE', '화면 코드', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(1, '2024-08-23 15:13:52.112713', 405, 383, '2024-08-23 15:13:52.112713', 'HOME', '홈', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(1, NULL, 410, NULL, NULL, 'VISIT_SOURCE', '가입경로', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(1, '2024-08-26 17:41:57.313791', 411, 410, '2024-08-26 17:41:57.313791', 'CAFE', '카페', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(1, NULL, 412, NULL, NULL, 'CAMPAIGN_TYPE', '캠페인 타입', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(1, NULL, 413, NULL, NULL, 'CAMPAIGN_SOCIAL', '캠페인 소셜', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(1, NULL, 414, NULL, NULL, 'CAMPAIGN_CATEGORY', '캠페인 카테고리', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(1, '2024-08-29 11:35:58.283939', 415, 412, '2024-08-29 11:35:58.283939', 'VISITING', '방문', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(1, '2024-08-29 11:38:14.643375', 416, 413, '2024-08-29 11:38:42.578239', 'NAVER', '네이버', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(2, '2024-08-29 11:38:53.060980', 417, 413, '2024-08-29 11:38:53.060980', 'INSTAGRAM', '인스타그램', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(3, '2024-08-29 11:39:10.732753', 418, 413, '2024-08-29 11:39:10.732753', 'YOUTUBE', '유튜브', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(1, '2024-08-29 11:41:59.873176', 419, 414, '2024-08-29 11:41:59.873176', 'FASHION', '패션', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(2, '2024-08-29 11:42:08.177758', 420, 414, '2024-08-29 11:42:08.177758', 'BEAUTY', '뷰티', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(1, '2024-08-29 11:42:24.547481', 421, 414, '2024-08-29 11:42:24.547481', 'FOOD', '식품', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(1, '2024-08-29 11:42:34.969385', 422, 414, '2024-08-29 11:42:34.969385', 'LIVING', '생활', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(1, '2024-08-29 11:42:44.074848', 423, 414, '2024-08-29 11:42:44.074848', 'DIGITAL', '가전', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(1, '2024-08-29 11:42:53.705907', 424, 414, '2024-08-29 11:42:53.705907', 'CHILD', '유아동', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(1, '2024-08-29 11:43:11.874159', 425, 414, '2024-08-29 11:43:11.874159', 'PET', '반려동물', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(1, '2024-08-29 11:43:22.475940', 426, 414, '2024-08-29 11:43:22.475940', 'TASTY', '맛집', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(1, '2024-08-29 11:43:44.535927', 427, 414, '2024-08-29 11:43:44.535927', 'STAY', '숙박', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(1, '2024-08-29 11:43:53.313485', 428, 414, '2024-08-29 11:43:53.313485', 'ETC', '기타', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(1, '2024-08-29 11:35:58.283939', 429, 412, '2024-08-29 11:35:58.283939', 'DELIVERY', '배송', 0);
+INSERT IGNORE INTO code (orders, created_at, id, parent_id, updated_at, code, value, deleted) VALUES(1, '2024-08-29 11:35:58.283939', 430, 412, '2024-08-29 11:35:58.283939', 'REPORTERS', '기자단', 0);
