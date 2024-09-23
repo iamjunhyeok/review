@@ -46,7 +46,6 @@ import static com.iamjunhyeok.review.domain.QCampaignLink.campaignLink;
 import static com.iamjunhyeok.review.domain.QCampaignMission.campaignMission;
 import static com.iamjunhyeok.review.domain.QCampaignOption.campaignOption;
 import static com.querydsl.core.group.GroupBy.groupBy;
-import static com.querydsl.core.group.GroupBy.list;
 import static com.querydsl.core.group.GroupBy.set;
 
 @RequiredArgsConstructor
@@ -133,7 +132,7 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
                                         ).as("dDay"),
                                         campaign.longitude,
                                         campaign.latitude,
-                                        list(
+                                        set(
                                                 Projections.fields(
                                                         CampaignImageProjection.class,
                                                         campaignImage.id,
@@ -179,7 +178,7 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
                                         campaign.announcementDate,
                                         campaign.reviewStartDate,
                                         campaign.reviewEndDate,
-                                        list(
+                                        set(
                                                 Projections.fields(
                                                         CampaignImageProjection.class,
                                                         campaignImage.id,
