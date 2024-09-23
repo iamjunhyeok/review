@@ -8,10 +8,10 @@ import lombok.Setter;
 @Setter
 public class CampaignApplyRequest {
 
-    @NotBlank
+    @NotBlank(message = "{validation.name.notEmpty}")
     private String name;
 
-    @NotBlank
+    @NotBlank(message = "{validation.phoneNumber.notEmpty}")
     private String phoneNumber;
 
     private String address;
