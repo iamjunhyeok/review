@@ -9,7 +9,11 @@ import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.constant.CampaignSort;
 import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.domain.CustomOAuth2User;
+import com.iamjunhyeok.review.domain.QFavourite;
 import com.iamjunhyeok.review.projection.CampaignImageProjection;
+import com.iamjunhyeok.review.projection.CampaignLinkProjection;
+import com.iamjunhyeok.review.projection.CampaignMissionProjection;
+import com.iamjunhyeok.review.projection.CampaignOptionProjection;
 import com.iamjunhyeok.review.projection.CampaignProjection;
 import com.iamjunhyeok.review.projection.CodeProjection;
 import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
@@ -38,9 +42,12 @@ import static com.blazebit.persistence.querydsl.JPQLNextExpressions.count;
 import static com.iamjunhyeok.review.domain.QApplication.application;
 import static com.iamjunhyeok.review.domain.QCampaign.campaign;
 import static com.iamjunhyeok.review.domain.QCampaignImage.campaignImage;
+import static com.iamjunhyeok.review.domain.QCampaignLink.campaignLink;
+import static com.iamjunhyeok.review.domain.QCampaignMission.campaignMission;
 import static com.iamjunhyeok.review.domain.QCampaignOption.campaignOption;
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.list;
+import static com.querydsl.core.group.GroupBy.set;
 
 @RequiredArgsConstructor
 public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
@@ -60,8 +67,18 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
         String[] array = regionMappingRepository.findTrimmedCodesByRegionGroupId(regionCodeId)
                 .stream().map(aLong -> String.valueOf(aLong)).toList().toArray(new String[0]);
 
+        Long userId = 0L;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof CustomOAuth2User) {
+            CustomOAuth2User principal = (CustomOAuth2User) authentication.getPrincipal();
+            userId = principal.getUserId();
+        }
+
+        QFavourite favourite = QFavourite.favourite;
         List<CampaignProjection> fetch = qf.from(campaign)
                 .innerJoin(campaign.images, campaignImage)
+                .leftJoin(campaign.favourites, favourite)
+                .on(favourite.user.id.eq(userId))
                 .where(
                         eq(campaign.typeCode.id, typeCodeId),
                         in(campaign.categoryCode.id, categoryCodeIds),
@@ -122,7 +139,8 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
                                                         campaignImage.id,
                                                         campaignImage.name
                                                 )
-                                        ).as("images")
+                                        ).as("images"),
+                                        favourite.isNotNull().as("isFavourite")
                                 )
                         )
                 );
@@ -171,6 +189,91 @@ public class CustomCampaignRepositoryImpl implements CustomCampaignRepository {
                                 )
                         )
                 ).get(0);
+    }
+
+    @Override
+    public CampaignProjection fetchOneDetail(Long id) {
+        List<CampaignProjection> transform = qf.from(campaign)
+                .innerJoin(campaign.images, campaignImage)
+                .leftJoin(campaign.links, campaignLink)
+                .leftJoin(campaign.missions, campaignMission)
+                .leftJoin(campaign.options, campaignOption)
+                .where(campaign.id.eq(id))
+                .transform(
+                        groupBy(campaign.id).list(
+                                Projections.fields(
+                                        CampaignProjection.class,
+                                        campaign.id,
+                                        Projections.fields(
+                                                CodeProjection.class,
+                                                campaign.typeCode.id,
+                                                campaign.typeCode.code,
+                                                campaign.typeCode.value
+                                        ).as("typeCode"),
+                                        Projections.fields(
+                                                CodeProjection.class,
+                                                campaign.categoryCode.id,
+                                                campaign.categoryCode.code,
+                                                campaign.categoryCode.value
+                                        ).as("categoryCode"),
+                                        Projections.fields(
+                                                CodeProjection.class,
+                                                campaign.socialCode.id,
+                                                campaign.socialCode.code,
+                                                campaign.socialCode.value
+                                        ).as("socialCode"),
+                                        campaign.title,
+                                        campaign.capacity,
+                                        campaign.applicationStartDate,
+                                        campaign.applicationEndDate,
+                                        campaign.announcementDate,
+                                        campaign.reviewStartDate,
+                                        campaign.reviewEndDate,
+                                        campaign.offering,
+                                        campaign.offeringSummary,
+                                        campaign.keyword,
+                                        campaign.hashtag,
+                                        campaign.guide,
+                                        campaign.information,
+                                        campaign.status,
+                                        campaign.point,
+                                        campaign.address,
+                                        campaign.rest,
+                                        campaign.postalCode,
+                                        campaign.longitude,
+                                        campaign.latitude,
+                                        set(
+                                                Projections.fields(
+                                                        CampaignLinkProjection.class,
+                                                        campaignLink.id,
+                                                        campaignLink.url
+                                                )
+                                        ).as("links"),
+                                        set(
+                                                Projections.fields(
+                                                        CampaignImageProjection.class,
+                                                        campaignImage.id,
+                                                        campaignImage.name
+                                                )
+                                        ).as("images"),
+                                        set(
+                                                Projections.fields(
+                                                        CampaignMissionProjection.class,
+                                                        campaignMission.id,
+                                                        campaignMission.value
+                                                )
+                                        ).as("missions"),
+                                        set(
+                                                Projections.fields(
+                                                        CampaignOptionProjection.class,
+                                                        campaignOption.id
+                                                )
+                                        ).as("options")
+                                )
+                        )
+                );
+        CampaignProjection campaignProjection = transform.get(0);
+        return campaignProjection;
     }
 
     private OrderSpecifier<?> order(CampaignSort campaignSort) {

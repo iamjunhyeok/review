@@ -67,13 +67,13 @@ public interface CampaignViewProjection {
 
     String getLatitude();
 
-    List<CampaignLinkProjection> getLinks();
+    List<CampaignLinkView> getLinks();
 
     List<CampaignImageView> getImages();
 
-    List<CampaignMissionProjection> getMissions();
+    List<CampaignMissionView> getMissions();
 
-    List<CampaignOptionProjection> getOptions();
+    List<CampaignOptionView> getOptions();
 
     @Mapping("CASE WHEN favourites IS NOT NULL THEN TRUE ELSE FALSE END")
     boolean getIsFavourite();

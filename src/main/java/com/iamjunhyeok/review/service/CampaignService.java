@@ -277,4 +277,8 @@ public class CampaignService {
         Campaign campaign = campaignRepository.getReferenceById(id);
         user.removeFromFavourites(campaign);
     }
+
+    public CampaignProjection fetchOneDetail(Long id) {
+        return campaignRepository.fetchOneDetail(id);
+    }
 }

@@ -41,7 +41,7 @@ public interface CampaignSearchView {
 
     List<CampaignImageView> getImages();
 
-    List<CampaignOptionProjection> getOptions();
+    List<CampaignOptionView> getOptions();
 
     @Mapping("DATEDIFF(applicationEndDate, CURDATE())")
     Integer getDday();

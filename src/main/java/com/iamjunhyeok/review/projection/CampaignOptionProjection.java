@@ -1,13 +1,10 @@
 package com.iamjunhyeok.review.projection;
 
-import com.blazebit.persistence.view.EntityView;
-import com.blazebit.persistence.view.IdMapping;
-import com.iamjunhyeok.review.domain.CampaignOption;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 
-@EntityView(CampaignOption.class)
-public interface CampaignOptionProjection {
-    @IdMapping
-    Long getId();
-
-    CodeView getCode();
+@Getter
+@EqualsAndHashCode(of = "id")
+public class CampaignOptionProjection {
+    private Long id;
 }
