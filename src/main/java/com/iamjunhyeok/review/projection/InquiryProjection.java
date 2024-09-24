@@ -1,6 +1,5 @@
 package com.iamjunhyeok.review.projection;
 
-import com.iamjunhyeok.review.constant.InquiryCategory;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -8,7 +7,7 @@ import java.time.LocalDateTime;
 @Getter
 public class InquiryProjection {
     private Long id;
-    private InquiryCategory category;
+    private CodeProjection categoryCode;
     private String title;
     private String content;
     private LocalDateTime createdAt;

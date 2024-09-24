@@ -1,12 +1,13 @@
 package com.iamjunhyeok.review.service;
 
+import com.iamjunhyeok.review.domain.Code;
 import com.iamjunhyeok.review.domain.Inquiry;
 import com.iamjunhyeok.review.domain.User;
 import com.iamjunhyeok.review.dto.request.InquiryCreateRequest;
 import com.iamjunhyeok.review.dto.request.InquiryUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.projection.InquiryProjection;
-import com.iamjunhyeok.review.projection.InquiryWithAnswerAndUserProjection;
+import com.iamjunhyeok.review.repository.CodeRepository;
 import com.iamjunhyeok.review.repository.InquiryRepository;
 import com.iamjunhyeok.review.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -25,17 +26,22 @@ public class InquiryService {
 
     private final UserRepository userRepository;
 
+    private final CodeRepository codeRepository;
+
     @Transactional
-    public Inquiry register(InquiryCreateRequest request, Long userId) {
+    public Long register(InquiryCreateRequest request, Long userId) {
         User user = userRepository.getReferenceById(userId);
-        return inquiryRepository.save(Inquiry.of(request.getCategory(), request.getTitle(), request.getContent(), user));
+        Code category = codeRepository.getReferenceById(request.getCategoryCodeId());
+        Inquiry saved = inquiryRepository.save(Inquiry.of(category, request.getTitle(), request.getContent(), user));
+        return saved.getId();
     }
 
     @Transactional
-    public Inquiry modify(Long id, InquiryUpdateRequest request) {
-        return inquiryRepository.findById(id)
+    public void modify(Long id, InquiryUpdateRequest request) {
+        Code category = codeRepository.getReferenceById(request.getCategoryCodeId());
+        inquiryRepository.findById(id)
                 .orElseThrow(() -> ErrorCode.INQUIRY_NOT_FOUND.build())
-                .update(request.getCategory(), request.getTitle(), request.getContent());
+                .update(category, request.getTitle(), request.getContent());
     }
 
     @Transactional
@@ -45,17 +51,12 @@ public class InquiryService {
                 .delete();
     }
 
-    public List<InquiryWithAnswerAndUserProjection> fetchAllInquiriesForAuthenticatedUser(String category) {
-        return inquiryRepository.fetchAllInquiriesForAuthenticatedUser(category);
+    public List<InquiryProjection> fetchAll(Long categoryCodeId, Pageable pageable) {
+        return inquiryRepository.fetchAll(categoryCodeId, pageable);
     }
 
-    public List<InquiryProjection> fetchAllInquiries(Pageable pageable) {
-        return inquiryRepository.fetchAllInquiries(pageable);
-    }
-
-    public InquiryWithAnswerAndUserProjection fetchOne(Long id) {
-        return inquiryRepository.fetchOne(id)
-                .orElseThrow(() -> ErrorCode.INQUIRY_NOT_FOUND.build());
+    public InquiryProjection fetchOne(Long id) {
+        return inquiryRepository.fetchOne(id);
     }
 
     public List<InquiryProjection> fetchAllInquiriesByUserId(Long userId, Pageable pageable) {

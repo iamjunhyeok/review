@@ -1,11 +1,8 @@
 package com.iamjunhyeok.review.domain;
 
-import com.iamjunhyeok.review.constant.InquiryCategory;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,9 +22,9 @@ public class Inquiry extends Base {
     @Column(name = "id", nullable = false, updatable = false)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private InquiryCategory category;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_code_id")
+    private Code categoryCode;
 
     @Column(nullable = false)
     private String title;
@@ -44,20 +41,20 @@ public class Inquiry extends Base {
     @OneToOne
     private InquiryAnswer inquiryAnswer;
 
-    public static Inquiry of(InquiryCategory category, String title, String content, User user) {
+    public static Inquiry of(Code categoryCode, String title, String content, User user) {
         Inquiry inquiry = new Inquiry();
-        inquiry.setCategory(category);
+        inquiry.setCategoryCode(categoryCode);
         inquiry.setTitle(title);
         inquiry.setContent(content);
         inquiry.setUser(user);
         return inquiry;
     }
 
-    public Inquiry update(InquiryCategory category, String title, String content) {
+    public Inquiry update(Code categoryCode, String title, String content) {
         if (this.inquiryAnswer != null) {
             throw ErrorCode.INQUIRY_CANNOT_BE_MODIFIED.build();
         }
-        this.category = category;
+        this.categoryCode = categoryCode;
         this.title = title;
         this.content = content;
         return this;

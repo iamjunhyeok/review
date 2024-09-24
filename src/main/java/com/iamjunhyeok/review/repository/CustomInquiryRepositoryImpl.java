@@ -1,72 +1,40 @@
 package com.iamjunhyeok.review.repository;
 
-import com.blazebit.persistence.CriteriaBuilder;
-import com.blazebit.persistence.CriteriaBuilderFactory;
-import com.blazebit.persistence.view.EntityViewManager;
-import com.blazebit.persistence.view.EntityViewSetting;
-import com.iamjunhyeok.review.domain.CustomOAuth2User;
-import com.iamjunhyeok.review.domain.Inquiry;
-import com.iamjunhyeok.review.domain.QInquiry;
+import com.iamjunhyeok.review.projection.CodeProjection;
 import com.iamjunhyeok.review.projection.InquiryAnswerProjection;
 import com.iamjunhyeok.review.projection.InquiryProjection;
-import com.iamjunhyeok.review.projection.InquiryWithAnswerAndUserProjection;
 import com.iamjunhyeok.review.projection.UserProjection;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.Projections;
+import com.querydsl.core.types.dsl.SimpleExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import jakarta.persistence.EntityManager;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
+
+import static com.iamjunhyeok.review.domain.QInquiry.inquiry;
 
 @RequiredArgsConstructor
 public class CustomInquiryRepositoryImpl implements CustomInquiryRepository {
 
-    private final CriteriaBuilderFactory criteriaBuilderFactory;
-
-    private final EntityManager entityManager;
-
-    private final EntityViewManager entityViewManager;
-
     private final JPAQueryFactory qf;
 
     @Override
-    public List<InquiryWithAnswerAndUserProjection> fetchAllInquiriesForAuthenticatedUser(String category) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        CustomOAuth2User principal = (CustomOAuth2User) authentication.getPrincipal();
-        CriteriaBuilder<Inquiry> cb = criteriaBuilderFactory.create(entityManager, Inquiry.class, "i");
-        cb.where("i.user.id").eq(principal.getUserId());
-        if (Strings.isNotBlank(category)) cb.where("i.category").eq(category);
-        return entityViewManager.applySetting(EntityViewSetting.create(InquiryWithAnswerAndUserProjection.class), cb).getResultList();
-    }
-
-    @Override
-    public List<InquiryWithAnswerAndUserProjection> fetchAllInquiries(String category) {
-        CriteriaBuilder<Inquiry> cb = criteriaBuilderFactory.create(entityManager, Inquiry.class, "i");
-        if (Strings.isNotBlank(category)) cb.where("i.category").eq(category);
-        return entityViewManager.applySetting(EntityViewSetting.create(InquiryWithAnswerAndUserProjection.class), cb).getResultList();
-    }
-
-    @Override
     public List<InquiryProjection> fetchAllInquiriesByUserId(Long userId, Pageable pageable) {
-        QInquiry inquiry = QInquiry.inquiry;
         List<InquiryProjection> fetch = qf.select(
                         Projections.fields(InquiryProjection.class,
                                 inquiry.id,
-                                inquiry.category,
+                                Projections.fields(
+                                        CodeProjection.class,
+                                        inquiry.categoryCode.id,
+                                        inquiry.categoryCode.code,
+                                        inquiry.categoryCode.value
+                                ).as("categoryCode"),
                                 inquiry.title,
                                 inquiry.content,
                                 inquiry.createdAt,
-                                inquiry.updatedAt,
-                                Projections.fields(
-                                        InquiryAnswerProjection.class,
-                                        inquiry.inquiryAnswer.id,
-                                        inquiry.inquiryAnswer.title,
-                                        inquiry.inquiryAnswer.content
-                                ).as("inquiryAnswer")
+                                inquiry.updatedAt
                         )
                 ).from(inquiry)
                 .innerJoin(inquiry.user)
@@ -79,12 +47,16 @@ public class CustomInquiryRepositoryImpl implements CustomInquiryRepository {
     }
 
     @Override
-    public List<InquiryProjection> fetchAllInquiries(Pageable pageable) {
-        QInquiry inquiry = QInquiry.inquiry;
-        List<InquiryProjection> fetch = qf.select(
+    public List<InquiryProjection> fetchAll(Long categoryCodeId, Pageable pageable) {
+        return qf.select(
                         Projections.fields(InquiryProjection.class,
                                 inquiry.id,
-                                inquiry.category,
+                                Projections.fields(
+                                        CodeProjection.class,
+                                        inquiry.categoryCode.id,
+                                        inquiry.categoryCode.code,
+                                        inquiry.categoryCode.value
+                                ).as("categoryCode"),
                                 inquiry.title,
                                 inquiry.content,
                                 inquiry.createdAt,
@@ -106,9 +78,51 @@ public class CustomInquiryRepositoryImpl implements CustomInquiryRepository {
                 ).from(inquiry)
                 .innerJoin(inquiry.user)
                 .leftJoin(inquiry.inquiryAnswer)
+                .where(eq(inquiry.categoryCode.id, categoryCodeId))
                 .offset(pageable.getOffset())
                 .limit(pageable.getPageSize())
                 .fetch();
-        return fetch;
+    }
+
+    @Override
+    public InquiryProjection fetchOne(Long id) {
+        return qf.select(
+                        Projections.fields(InquiryProjection.class,
+                                inquiry.id,
+                                Projections.fields(
+                                        CodeProjection.class,
+                                        inquiry.categoryCode.id,
+                                        inquiry.categoryCode.code,
+                                        inquiry.categoryCode.value
+                                ).as("categoryCode"),
+                                inquiry.title,
+                                inquiry.content,
+                                inquiry.createdAt,
+                                inquiry.updatedAt,
+                                Projections.fields(
+                                        UserProjection.class,
+                                        inquiry.user.id,
+                                        inquiry.user.email,
+                                        inquiry.user.nickname,
+                                        inquiry.user.profileImageName
+                                ).as("user"),
+                                Projections.fields(
+                                        InquiryAnswerProjection.class,
+                                        inquiry.inquiryAnswer.id,
+                                        inquiry.inquiryAnswer.title,
+                                        inquiry.inquiryAnswer.content
+                                ).as("answer")
+                        )
+                ).from(inquiry)
+                .innerJoin(inquiry.user)
+                .leftJoin(inquiry.inquiryAnswer)
+                .fetchOne();
+    }
+
+    private <T> Predicate eq(SimpleExpression<T> path, T value) {
+        if (value == null) {
+            return null;
+        }
+        return path.eq(value);
     }
 }

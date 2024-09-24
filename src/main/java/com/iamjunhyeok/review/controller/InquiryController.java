@@ -3,10 +3,7 @@ package com.iamjunhyeok.review.controller;
 import com.iamjunhyeok.review.domain.CustomOAuth2User;
 import com.iamjunhyeok.review.dto.request.InquiryCreateRequest;
 import com.iamjunhyeok.review.dto.request.InquiryUpdateRequest;
-import com.iamjunhyeok.review.dto.response.InquiryCreateResponse;
-import com.iamjunhyeok.review.dto.response.InquiryUpdateResponse;
 import com.iamjunhyeok.review.projection.InquiryProjection;
-import com.iamjunhyeok.review.projection.InquiryWithAnswerAndUserProjection;
 import com.iamjunhyeok.review.service.InquiryService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,12 +18,15 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
 @RestController
+@RequestMapping("/support/inquiries")
 @RequiredArgsConstructor
 public class InquiryController {
 
@@ -35,15 +35,17 @@ public class InquiryController {
     /**
      * 관리자에게 1:1 문의하기를 등록
      * 인증된 사용자만이 문의하기 등록 가능
+     *
      * @param request
      * @param principal
      * @return
      */
     @PreAuthorize("hasRole('USER')")
-    @PostMapping("/support/inquiries")
-    public ResponseEntity<InquiryCreateResponse> register(@RequestBody @Valid InquiryCreateRequest request,
-                                                          @AuthenticationPrincipal CustomOAuth2User principal) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(InquiryCreateResponse.from(inquiryService.register(request, principal.getUserId())));
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public void register(@RequestBody @Valid InquiryCreateRequest request,
+                         @AuthenticationPrincipal CustomOAuth2User principal) {
+        inquiryService.register(request, principal.getUserId());
     }
 
     /**
@@ -55,9 +57,10 @@ public class InquiryController {
      * @return
      */
     @PreAuthorize("hasPermission(#id, 'inquiry', 'ADMIN')")
-    @PatchMapping("/support/inquiries/{id}")
-    public ResponseEntity<InquiryUpdateResponse> modify(@PathVariable Long id, @RequestBody @Valid InquiryUpdateRequest request) {
-        return ResponseEntity.ok(InquiryUpdateResponse.from(inquiryService.modify(id, request)));
+    @PatchMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void modify(@PathVariable Long id, @RequestBody @Valid InquiryUpdateRequest request) {
+        inquiryService.modify(id, request);
     }
 
     /**
@@ -67,7 +70,7 @@ public class InquiryController {
      * @param id
      */
     @PreAuthorize("hasPermission(#id, 'inquiry', 'ADMIN')")
-    @DeleteMapping("/support/inquiries/{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long id) {
         inquiryService.delete(id);
@@ -80,9 +83,10 @@ public class InquiryController {
      * @return
      */
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/support/inquiries")
-    public ResponseEntity<List<InquiryProjection>> fetchAllInquiries(Pageable pageable) {
-        return ResponseEntity.ok(inquiryService.fetchAllInquiries(pageable));
+    @GetMapping
+    public ResponseEntity<List<InquiryProjection>> fetchAllInquiries(@RequestParam(value = "category", required = false) Long categoryCodeId,
+                                                                     Pageable pageable) {
+        return ResponseEntity.ok(inquiryService.fetchAll(categoryCodeId, pageable));
     }
 
     /**
@@ -91,8 +95,8 @@ public class InquiryController {
      * @return
      */
     @PreAuthorize("hasPermission(#id, 'inquiry', 'ADMIN')")
-    @GetMapping("/support/inquiries/{id}")
-    public ResponseEntity<InquiryWithAnswerAndUserProjection> fetchOne(@PathVariable Long id) {
+    @GetMapping("/{id}")
+    public ResponseEntity<InquiryProjection> fetchOne(@PathVariable Long id) {
         return ResponseEntity.ok(inquiryService.fetchOne(id));
     }
 }

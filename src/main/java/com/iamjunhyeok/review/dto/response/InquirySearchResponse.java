@@ -20,7 +20,6 @@ public class InquirySearchResponse {
     public static InquirySearchResponse from(Inquiry inquiry) {
         InquirySearchResponse response = new InquirySearchResponse();
         response.setId(inquiry.getId());
-        response.setCategory(inquiry.getCategory());
         response.setTitle(inquiry.getTitle());
         response.setContent(inquiry.getContent());
         response.setCreatedAt(inquiry.getCreatedAt());
