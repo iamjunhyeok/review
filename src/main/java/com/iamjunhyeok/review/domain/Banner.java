@@ -43,6 +43,6 @@ public class Banner extends Base {
     private boolean deleted = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "code_id")
-    private Code code;
+    @JoinColumn(name = "screen_code_id")
+    private Code screen;
 }

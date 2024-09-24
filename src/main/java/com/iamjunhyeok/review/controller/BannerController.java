@@ -1,6 +1,6 @@
 package com.iamjunhyeok.review.controller;
 
-import com.iamjunhyeok.review.projection.BannerSimpleProjection;
+import com.iamjunhyeok.review.projection.BannerProjection;
 import com.iamjunhyeok.review.service.BannerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ public class BannerController {
     private final BannerService bannerService;
 
     @GetMapping
-    public List<BannerSimpleProjection> fetchAll() {
+    public List<BannerProjection> fetchAll() {
         return bannerService.fetchAll();
     }
 }
