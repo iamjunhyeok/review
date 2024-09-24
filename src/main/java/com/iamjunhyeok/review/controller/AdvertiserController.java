@@ -3,6 +3,7 @@ package com.iamjunhyeok.review.controller;
 import com.iamjunhyeok.review.domain.CustomOAuth2User;
 import com.iamjunhyeok.review.dto.request.AdvertiserApplyRequest;
 import com.iamjunhyeok.review.service.AdvertiserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,7 +27,7 @@ public class AdvertiserController {
     @PreAuthorize("hasRole('USER')")
     @PostMapping("/applications")
     @ResponseStatus(HttpStatus.CREATED)
-    public void applyAdvertiser(@RequestPart AdvertiserApplyRequest request,
+    public void applyAdvertiser(@RequestPart @Valid AdvertiserApplyRequest request,
                                 @RequestPart MultipartFile file,
                                 @AuthenticationPrincipal CustomOAuth2User principal) throws IOException {
         advertiserService.apply(request, file, principal);
