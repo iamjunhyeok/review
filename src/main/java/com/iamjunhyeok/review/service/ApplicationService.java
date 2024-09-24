@@ -12,10 +12,9 @@ import com.iamjunhyeok.review.dto.request.ApplicationCancelRequest;
 import com.iamjunhyeok.review.dto.request.CampaignApplyRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
 import com.iamjunhyeok.review.projection.ApplicantProjection;
-import com.iamjunhyeok.review.projection.ApplicationView;
+import com.iamjunhyeok.review.projection.ApplicationProjection;
 import com.iamjunhyeok.review.projection.ApplicationSearchProjection;
 import com.iamjunhyeok.review.projection.CampaignViewProjection;
-import com.iamjunhyeok.review.projection.UserCampaignApplicationProjection;
 import com.iamjunhyeok.review.repository.ApplicationRepository;
 import com.iamjunhyeok.review.repository.CampaignRepository;
 import com.iamjunhyeok.review.repository.UserRepository;
@@ -69,7 +68,7 @@ public class ApplicationService {
                 .orElseThrow(() -> ErrorCode.APPLICATION_NOT_FOUND.build());
     }
 
-    public ApplicationView fetchOne(Long campaignId, Long applicationId) {
+    public ApplicationProjection fetchOne(Long campaignId, Long applicationId) {
         return applicationRepository.fetchOne(campaignId, applicationId);
     }
 
@@ -121,10 +120,6 @@ public class ApplicationService {
 
     public List<ApplicantProjection> fetchAllApplicants(Long campaignId) {
         return applicationRepository.fetchAllApplicants(campaignId);
-    }
-
-    public List<UserCampaignApplicationProjection> fetchAuthenticatedUserCampaignApplication(Long campaignId, Long applicationId) {
-        return applicationRepository.fetchAuthenticatedUserCampaignApplication(campaignId, applicationId);
     }
 
     @Transactional
