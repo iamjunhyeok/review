@@ -17,8 +17,8 @@ INSERT IGNORE INTO users (birth_date, postal_code, created_at, id, updated_at, p
 INSERT IGNORE INTO sns (deleted, created_at, id, updated_at, user_id, sns_id, `type`) VALUES(0, '2024-07-25 18:26:19.109742', 1, '2024-07-25 18:26:19.109742', 1, 'S1AUwh2LocbSW2eTGL6rNr22sDFpcGMBJg91rlyNo3I', 'NAVER');
 INSERT IGNORE INTO sns (deleted, created_at, id, updated_at, user_id, sns_id, `type`) VALUES(0, '2024-07-25 18:27:18.499209', 2, '2024-07-25 18:27:18.499209', 2, 'rzSdE5DWbqNKvnsfy8VYx3Oc_S34a_BAXKnojhfd12g', 'NAVER');
 
-INSERT IGNORE INTO refresh_token (created_at, id, updated_at, user_id, token) VALUES('2024-07-25 18:26:19.147601', 1, '2024-07-25 18:26:50.504260', 1, 'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqZW9uamh5ZW9rQGdtYWlsLmNvbSIsImlhdCI6MTcyMTg5OTYxMCwiaWQiOjEsInJvbGUiOiJST0xFX0FETUlOIiwiZXhwIjoxNzIyNzYzNjEwfQ.Pw5uMqXAJnlk6mfY_m6X5XVnBv5UdP-mwJnx7XGE7WQ');
-INSERT IGNORE INTO refresh_token (created_at, id, updated_at, user_id, token) VALUES('2024-07-25 18:27:18.523775', 2, '2024-07-25 18:27:18.523775', 2, 'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqZW9uamh5ZW9rQGdtYWlsLmNvbSIsImlhdCI6MTcyMTg5OTYzOCwiaWQiOjIsInJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjE3MjI3NjM2Mzh9.yGpriu7PPjzACeMFAbl_v8L7jqcFpovxkKHmchWjOyw');
+INSERT IGNORE INTO refresh_token (created_at, id, updated_at, user_id, token) VALUES('2024-07-25 18:26:19.147601', 1, '2024-07-25 18:26:50.504260', 1, 'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqZW9uamh5ZW9rQGdtYWlsLmNvbSIsImlhdCI6MTcyNjI4NzI3OCwiaWQiOjEsInJvbGUiOiJST0xFX0FETUlOIiwiZXhwIjoyMDI3MTUxMjc4fQ.qPaNpGTi9gSKvjLlk7Q1eWC-K-vet5-piSlG5zM2pOk');
+INSERT IGNORE INTO refresh_token (created_at, id, updated_at, user_id, token) VALUES('2024-07-25 18:27:18.523775', 2, '2024-07-25 18:27:18.523775', 2, 'eyJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJqZW9uamh5ZW9rQGdtYWlsLmNvbSIsImlhdCI6MTcyNjI4NzMzMiwiaWQiOjIsInJvbGUiOiJST0xFX1VTRVIiLCJleHAiOjIwMjcxNTEzMzJ9.y568s4IK9WR1TwBKq5UmAL3TMremBMp74XArpoY2XZk');
 
 INSERT IGNORE INTO code (ID, CODE, VALUE, ORDERS,PARENT_ID) VALUES (13, '1100000000', '서울특별시', 1, 12);
 INSERT IGNORE INTO code (ID, CODE, VALUE, ORDERS,PARENT_ID) VALUES (14, '1111000000', '서울특별시 종로구', 1, 13);
