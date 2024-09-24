@@ -48,6 +48,29 @@ public class JwtProvider {
                 .compact();
     }
 
+    public String generate(Duration expiredAt) {
+        Date now = new Date();
+        return Jwts.builder()
+                .issuer(issuer)
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + expiredAt.toMillis()))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String generate(Long userId, String role, String profileImageName, Duration expiredAt) {
+        Date now = new Date();
+        return Jwts.builder()
+                .issuer(issuer)
+                .setIssuedAt(now)
+                .claim("id", userId)
+                .claim("role", role)
+                .claim("profileImageName", profileImageName)
+                .setExpiration(new Date(now.getTime() + expiredAt.toMillis()))
+                .signWith(secretKey, SignatureAlgorithm.HS256)
+                .compact();
+    }
+
     public Long validate(String token) {
         try {
             String subject = Jwts.parser()
@@ -69,6 +92,18 @@ public class JwtProvider {
                 .parseSignedClaims(token)
                 .getPayload();
         return payload.get("id", Long.class);
+    }
+
+    public boolean isValid(String token) {
+        try {
+            Jwts.parser()
+                    .verifyWith(secretKey)
+                    .build()
+                    .parseSignedClaims(token);
+        } catch (JwtException e) {
+            return false;
+        }
+        return true;
     }
 
     public String getRole(String token) {

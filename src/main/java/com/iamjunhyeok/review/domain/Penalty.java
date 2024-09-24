@@ -1,6 +1,7 @@
 package com.iamjunhyeok.review.domain;
 
 import com.iamjunhyeok.review.constant.PenaltyReason;
+import com.iamjunhyeok.review.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -28,6 +29,8 @@ public class Penalty extends Base {
     @Column(nullable = false)
     private PenaltyReason reason;
 
+    private String details;
+
     private int point;
 
     private boolean deleted = false;
@@ -50,6 +53,9 @@ public class Penalty extends Base {
     }
 
     public void delete() {
+        if (this.deleted) {
+            throw ErrorCode.PENALTY_ALREADY_DELETED.build();
+        }
         this.deleted = true;
     }
 }

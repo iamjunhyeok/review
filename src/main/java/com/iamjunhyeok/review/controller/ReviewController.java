@@ -1,16 +1,18 @@
 package com.iamjunhyeok.review.controller;
 
-import com.iamjunhyeok.review.dto.ReviewCreateRequest;
-import com.iamjunhyeok.review.dto.ReviewCreateResponse;
-import com.iamjunhyeok.review.dto.ReviewRejectRequest;
-import com.iamjunhyeok.review.dto.ReviewRejectResponse;
-import com.iamjunhyeok.review.dto.ReviewUpdateRequest;
-import com.iamjunhyeok.review.dto.ReviewUpdateResponse;
+import com.iamjunhyeok.review.dto.request.ReviewModifyRequest;
+import com.iamjunhyeok.review.dto.request.ReviewRegisterRequest;
+import com.iamjunhyeok.review.dto.request.ReviewRejectRequest;
+import com.iamjunhyeok.review.dto.response.ReviewModifyResponse;
+import com.iamjunhyeok.review.dto.response.ReviewRegisterResponse;
+import com.iamjunhyeok.review.projection.ReviewProjection;
 import com.iamjunhyeok.review.service.ReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,44 +20,105 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class ReviewController {
 
     private final ReviewService reviewService;
 
+    /**
+     * 캠페인 리뷰 URL 등록
+     * @param campaignId
+     * @param applicationId
+     * @param request
+     * @return
+     */
+    @PreAuthorize("hasPermission(#applicationId, 'application', 'ADMIN')")
     @PostMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews")
-    public ResponseEntity<ReviewCreateResponse> create(@PathVariable Long campaignId,
-                                                       @PathVariable Long applicationId,
-                                                       @RequestBody @Valid ReviewCreateRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(ReviewCreateResponse.from(reviewService.create(campaignId, applicationId, request)));
+    public ResponseEntity<ReviewRegisterResponse> register(@PathVariable Long campaignId,
+                                                         @PathVariable Long applicationId,
+                                                         @RequestBody @Valid ReviewRegisterRequest request) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                ReviewRegisterResponse.from(reviewService.register(campaignId, applicationId, request))
+        );
     }
 
-    @PatchMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews/{id}")
-    public ResponseEntity<ReviewUpdateResponse> update(@PathVariable Long campaignId,
+    /**
+     * 캠페인 리뷰 URL 수정
+     * @param campaignId
+     * @param applicationId
+     * @param request
+     * @return
+     */
+    @PreAuthorize("hasPermission(#applicationId, 'application', 'ADMIN')")
+    @PatchMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews")
+    public ResponseEntity<ReviewModifyResponse> modify(@PathVariable Long campaignId,
                                                        @PathVariable Long applicationId,
-                                                       @PathVariable Long id,
-                                                       @RequestBody @Valid ReviewUpdateRequest request) {
-        return ResponseEntity.ok(ReviewUpdateResponse.from(reviewService.update(campaignId, applicationId, id, request)));
+                                                       @RequestBody @Valid ReviewModifyRequest request) {
+        return ResponseEntity.ok(
+                ReviewModifyResponse.from(reviewService.modify(campaignId, applicationId, request))
+        );
     }
 
+    /**
+     * 캠페인에 등록된 특정 리뷰 수정요청
+     * @param campaignId
+     * @param applicationId
+     * @param id
+     * @param request
+     */
+    @PreAuthorize("hasRole('ADMIN')")
     @PatchMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews/{id}/modify-request")
-    public ResponseEntity<ReviewRejectResponse> modifyRequest(@PathVariable Long campaignId,
-                                                       @PathVariable Long applicationId,
-                                                       @PathVariable Long id,
-                                                       @RequestBody @Valid ReviewRejectRequest request) {
-        return ResponseEntity.ok(ReviewRejectResponse.from(reviewService.modifyRequest(campaignId, applicationId, id, request)));
+    @ResponseStatus(HttpStatus.OK)
+    public void modifyRequest(@PathVariable Long campaignId,
+                              @PathVariable Long applicationId,
+                              @PathVariable Long id,
+                              @RequestBody @Valid ReviewRejectRequest request) {
+        reviewService.modifyRequest(campaignId, applicationId, id, request);
     }
 
-    @PatchMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews/{id}/reconfirm-request")
+    /**
+     * 캠페인에 등록된 특정 리뷰 재검토요청
+     * @param campaignId
+     * @param applicationId
+     * @param id
+     */
+    @PreAuthorize("hasPermission(#applicationId, 'application', 'ADMIN')")
+    @PostMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews/{id}/reconfirm-request")
     @ResponseStatus(HttpStatus.OK)
-    public void reconfirmRequest(@PathVariable Long campaignId, @PathVariable Long applicationId, @PathVariable Long id) {
+    public void reconfirmRequest(@PathVariable Long campaignId,
+                                 @PathVariable Long applicationId,
+                                 @PathVariable Long id) {
         reviewService.reconfirmRequest(campaignId, applicationId, id);
     }
 
-    @PatchMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews/{id}/confirm")
+    /**
+     * 캠페인에 등록된 특정 리뷰 확인완료
+     * @param campaignId
+     * @param applicationId
+     * @param id
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews/{id}/confirm")
     @ResponseStatus(HttpStatus.OK)
-    public void confirm(@PathVariable Long campaignId, @PathVariable Long applicationId, @PathVariable Long id) {
+    public void confirm(@PathVariable Long campaignId,
+                        @PathVariable Long applicationId,
+                        @PathVariable Long id) {
         reviewService.confirm(campaignId, applicationId, id);
+    }
+
+    /**
+     * 캠페인 신청서에 등록된 모든 리뷰 조회
+     * @param campaignId
+     * @param applicationId
+     * @return
+     */
+    @PreAuthorize("hasPermission(#applicationId, 'application', 'ADMIN')")
+    @GetMapping("/campaigns/{campaignId}/applications/{applicationId}/reviews")
+    public ResponseEntity<List<ReviewProjection>> fetchAll(@PathVariable Long campaignId,
+                                                           @PathVariable Long applicationId) {
+        return ResponseEntity.ok(reviewService.fetchAll(campaignId, applicationId));
     }
 }

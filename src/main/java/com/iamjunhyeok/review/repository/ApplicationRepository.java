@@ -1,7 +1,8 @@
 package com.iamjunhyeok.review.repository;
 
+import com.iamjunhyeok.review.constant.ApplicationStatus;
 import com.iamjunhyeok.review.domain.Application;
-import com.iamjunhyeok.review.dto.ApplicationViewProjection;
+import com.iamjunhyeok.review.projection.ApplicationViewProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -10,9 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ApplicationRepository extends JpaRepository<Application, Long> {
-
-    boolean existsByUserIdAndCampaignId(Long userId, Long campaignId);
+public interface ApplicationRepository extends JpaRepository<Application, Long>, CustomApplicationRepository {
 
     Optional<Application> findByIdAndCampaignId(Long id, Long campaignId);
 
@@ -22,4 +21,13 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
 
     @Query("select a from Application a join fetch a.user where a.campaign.id = :campaignId")
     List<Application> findByCampaignIdWithUsers(Long campaignId);
+
+    Optional<Application> findByIdAndUserId(Long id, Long userId);
+
+    List<Application> findAllByCampaignIdAndStatus(Long campaignId, ApplicationStatus status);
+
+    @Query("select a.user.id from Application a where a.id = :id")
+    Long findUserIdByApplicationId(Long id);
+
+    boolean existsByCampaignIdAndUserIdAndStatus(Long campaignId, Long userId, ApplicationStatus status);
 }

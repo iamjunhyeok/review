@@ -4,28 +4,41 @@ import com.iamjunhyeok.review.constant.CampaignStatus;
 import com.iamjunhyeok.review.domain.Campaign;
 import com.iamjunhyeok.review.domain.CampaignImage;
 import com.iamjunhyeok.review.domain.CampaignLink;
-import com.iamjunhyeok.review.dto.CampaignCreateRequest;
-import com.iamjunhyeok.review.dto.CampaignImageNameProjection;
+import com.iamjunhyeok.review.domain.Code;
+import com.iamjunhyeok.review.domain.CustomOAuth2User;
+import com.iamjunhyeok.review.domain.User;
 import com.iamjunhyeok.review.dto.CampaignLinkDto;
-import com.iamjunhyeok.review.dto.CampaignSearchProjection;
-import com.iamjunhyeok.review.dto.CampaignSummaryProjection;
-import com.iamjunhyeok.review.dto.CampaignUpdateRequest;
+import com.iamjunhyeok.review.dto.CampaignMissionDto;
+import com.iamjunhyeok.review.dto.CampaignOptionDto;
+import com.iamjunhyeok.review.dto.CodeDto;
+import com.iamjunhyeok.review.dto.request.CampaignCreateRequest;
+import com.iamjunhyeok.review.dto.request.CampaignUpdateRequest;
 import com.iamjunhyeok.review.exception.ErrorCode;
+import com.iamjunhyeok.review.projection.CampaignProjection;
+import com.iamjunhyeok.review.projection.CampaignViewProjection;
+import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
 import com.iamjunhyeok.review.repository.CampaignImageRepository;
 import com.iamjunhyeok.review.repository.CampaignLinkRepository;
+import com.iamjunhyeok.review.repository.CampaignMissionRepository;
+import com.iamjunhyeok.review.repository.CampaignOptionRepository;
 import com.iamjunhyeok.review.repository.CampaignRepository;
-import com.iamjunhyeok.review.dto.CampaignViewProjection;
+import com.iamjunhyeok.review.repository.CodeRepository;
+import com.iamjunhyeok.review.repository.FavouriteRepository;
+import com.iamjunhyeok.review.repository.UserRepository;
 import com.iamjunhyeok.review.util.S3Util;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDate;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -36,15 +49,26 @@ public class CampaignService {
     private final CampaignRepository campaignRepository;
     private final CampaignLinkRepository campaignLinkRepository;
     private final CampaignImageRepository campaignImageRepository;
+    private final CodeRepository codeRepository;
     private final S3Util s3Util;
+    private final CampaignMissionRepository campaignMissionRepository;
+    private final CampaignOptionRepository campaignOptionRepository;
+    private final UserRepository userRepository;
+    private final FavouriteRepository favouriteRepository;
 
     @Transactional
-    public Campaign create(CampaignCreateRequest request, List<MultipartFile> files) throws IOException {
+    public Campaign create(CampaignCreateRequest request, List<MultipartFile> files, CustomOAuth2User principal) throws IOException {
+        User user = userRepository.getReferenceById(principal.getUserId());
+
+        Code typeCode = codeRepository.getReferenceById(request.getTypeCodeId());
+        Code categoryCode = codeRepository.getReferenceById(request.getCategoryCodeId());
+        Code socialCode = codeRepository.getReferenceById(request.getSocialCodeId());
+
         Campaign campaign = campaignRepository.save(
                 Campaign.builder()
-                        .type(request.getType())
-                        .category(request.getCategory())
-                        .social(request.getSocial())
+                        .typeCode(typeCode)
+                        .categoryCode(categoryCode)
+                        .socialCode(socialCode)
                         .title(request.getTitle())
                         .capacity(request.getCapacity())
                         .applicationStartDate(request.getApplicationStartDate())
@@ -56,7 +80,6 @@ public class CampaignService {
                         .offeringSummary(request.getOfferingSummary())
                         .keyword(request.getKeyword())
                         .hashtag(request.getHashtag())
-                        .mission(request.getMission())
                         .guide(request.getGuide())
                         .information(request.getInformation())
                         .address(request.getAddress())
@@ -64,32 +87,47 @@ public class CampaignService {
                         .postalCode(request.getPostalCode())
                         .longitude(request.getLongitude())
                         .latitude(request.getLatitude())
-                        .status(request.getApplicationStartDate().isAfter(LocalDate.now()) ? CampaignStatus.PLANNED : CampaignStatus.ONGOING)
+                        .administrativeDistrictCode(request.getAdministrativeDistrictCode())
+                        .status(CampaignStatus.INSPECTING)
                         .storeInformation(request.getStoreInformation())
+                        .point(request.getPoint())
+                        .user(user)
                         .build()
         );
+
+        List<Code> missions = codeRepository.findAllById(request.getMissions().stream()
+                .map(CampaignMissionDto::getCode)
+                .map(CodeDto::getId)
+                .toList());
+        Map<Long, String> argumentsMap = request.getMissions().stream()
+                .filter(dto -> Strings.isNotBlank(dto.getValue()))
+                .collect(Collectors.toMap(dto -> dto.getCode().getId(), CampaignMissionDto::getValue));
+        campaign.addMission(missions, argumentsMap);
+
+        List<Code> options = codeRepository.findAllById(request.getOptions().stream()
+                .map(CampaignOptionDto::getCode)
+                .map(CodeDto::getId)
+                .toList());
+        campaign.addOption(options);
 
         List<CampaignLink> links = convertDtoToEntity(request.getLinks());
         campaign.addLink(links);
 
-        Map<String, String> newFilenameMap = generateNewFilenameMap(files);
-        List<CampaignImage> images = convertFileToEntityUsingMap(files, newFilenameMap);
+        List<CampaignImage> images = files.stream()
+                .map(MultipartFile::getOriginalFilename)
+                .map(CampaignImage::of)
+                .toList();
         campaign.addImage(images);
 
-        putObjectAllFiles(files, newFilenameMap);
+        putObjectAllFiles(files);
 
         return campaign;
     }
 
-    /**
-     * 새로운 파일명으로 파일을 S3 에 putObject
-     * @param files
-     * @param newFilenameMap
-     * @throws IOException
-     */
-    private void putObjectAllFiles(List<MultipartFile> files, Map<String, String> newFilenameMap) throws IOException {
+    private void putObjectAllFiles(List<MultipartFile> files) throws IOException {
+        if (CollectionUtils.isEmpty(files)) return;
         for (MultipartFile file : files) {
-            s3Util.putObject(newFilenameMap.get(file.getOriginalFilename()), file);
+            s3Util.putObject(file);
         }
     }
 
@@ -100,6 +138,7 @@ public class CampaignService {
      * @return
      */
     private static List<CampaignImage> convertFileToEntityUsingMap(List<MultipartFile> files, Map<String, String> newFilenameMap) {
+        if (CollectionUtils.isEmpty(files)) return null;
         return files.stream()
                 .map(multipartFile -> newFilenameMap.get(multipartFile.getOriginalFilename()))
                 .map(CampaignImage::of)
@@ -123,6 +162,7 @@ public class CampaignService {
      * @return
      */
     private static Map<String, String> generateNewFilenameMap(List<MultipartFile> files) {
+        if (CollectionUtils.isEmpty(files)) return null;
         return files.stream()
                 .collect(Collectors.toMap(multipartFile -> multipartFile.getOriginalFilename(), multipartFile -> generateNewFilename(multipartFile)));
 
@@ -141,82 +181,104 @@ public class CampaignService {
     public Campaign update(Long id, CampaignUpdateRequest request, List<MultipartFile> files) throws IOException {
         Campaign campaign = campaignRepository.findByIdWithLink(id)
                 .orElseThrow(() -> ErrorCode.CAMPAIGN_NOT_FOUND.build());
-        // 캠페인 기본정보 업데이트
-        campaign.update(request);
 
-        // 삭제 ID 리스트로 들어온 항목들 일괄 삭제
-        campaignLinkRepository.deleteAllByIdInBatch(request.getDeleteLinkIds());
+        Code typeCode = codeRepository.getReferenceById(request.getTypeCodeId());
+        Code categoryCode = codeRepository.getReferenceById(request.getCategoryCodeId());
+        Code socialCode = codeRepository.getReferenceById(request.getSocialCodeId());
 
-        // 신규 항목, 업데이트 항목 파티셔닝
-        Map<Boolean, List<CampaignLinkDto>> collect = request.getLinks().stream()
-                .collect(Collectors.partitioningBy(dto -> dto.getId() != null));
+        // Code 엔티티를 제외한 캠페인 기본정보 업데이트
+        campaign.update(typeCode, categoryCode, socialCode, request);
 
-        List<CampaignLinkDto> existingLinks = collect.get(true);
-        List<CampaignLinkDto> newLinks = collect.get(false);
+        // 캠페인에 대한 미션정보 모두 삭제
+        campaignMissionRepository.deleteAllByCampaignId(id);
 
-        // 신규 항목 저장
-        List<CampaignLink> links = newLinks.stream()
-                .map(CampaignLinkDto::getUrl)
-                .map(CampaignLink::of)
-                .toList();
+        List<Code> missions = codeRepository.findAllById(request.getMissions().stream()
+                .map(CampaignMissionDto::getCode)
+                .map(CodeDto::getId)
+                .toList());
+        Map<Long, String> argumentsMap = request.getMissions().stream()
+                .filter(dto -> Strings.isNotBlank(dto.getValue()))
+                .collect(Collectors.toMap(dto -> dto.getCode().getId(), CampaignMissionDto::getValue));
+        campaign.addMission(missions, argumentsMap);
+
+
+        campaignOptionRepository.deleteAllByCampaignId(id);
+
+        List<Code> options = codeRepository.findAllById(request.getOptions().stream()
+                .map(CampaignOptionDto::getCode)
+                .map(CodeDto::getId)
+                .toList());
+        campaign.addOption(options);
+
+        campaignLinkRepository.deleteAllByCampaignId(id);
+
+        List<CampaignLink> links = convertDtoToEntity(request.getLinks());
         campaign.addLink(links);
 
-        // 업데이트 대상 엔티티 조회
-        List<CampaignLink> existingLinkEntities = campaignLinkRepository.findAllById(existingLinks.stream()
-                .map(CampaignLinkDto::getId)
-                .toList());
 
-        // 업데이트 대상 엔티티의 link 필드 변경을 위해 Map 으로 변경
-        Map<Long, String> dtoMap = existingLinks.stream()
-                .collect(Collectors.toMap(CampaignLinkDto::getId, CampaignLinkDto::getUrl));
-
-        // link 필드 변경
-        existingLinkEntities.forEach(link -> link.updateUrl(dtoMap.get(link.getId())));
-        campaignLinkRepository.saveAll(existingLinkEntities);
-
-
-        // S3 에서 삭제하기 위해 파일 이름 조회 (삭제하기 전 수행해야 함)
-        List<String> names = campaignImageRepository.findByIdIn(request.getDeleteImageIds())
-                .stream().map(CampaignImageNameProjection::getName)
-                .toList();
-
-        // 이미지 삭제
-        campaignImageRepository.deleteAllByIdInBatch(request.getDeleteImageIds());
+        campaignImageRepository.deleteAllByNameIn(request.getDeleteImageNames());
 
         // 새로운 이미지 추가
-        Map<String, String> newFilenameMap = generateNewFilenameMap(files);
-        List<CampaignImage> images = convertFileToEntityUsingMap(files, newFilenameMap);
+        List<CampaignImage> images = Optional.ofNullable(files)
+                .orElse(Collections.emptyList())
+                .stream()
+                .map(MultipartFile::getOriginalFilename)
+                .map(CampaignImage::of)
+                .toList();
         campaign.addImage(images);
 
         // S3 에서 삭제
-        for (String deleteImageName : names) {
+        for (String deleteImageName : request.getDeleteImageNames()) {
             s3Util.deleteObject(deleteImageName);
         }
+
         // S3 에 추가
-        putObjectAllFiles(files, newFilenameMap);
+        putObjectAllFiles(files);
 
         return campaign;
     }
 
     @Transactional
     public void delete(Long id) {
-        Campaign campaign = campaignRepository.findById(id)
-                .orElseThrow(() -> ErrorCode.CAMPAIGN_NOT_FOUND.build());
-        campaign.delete();
+        campaignRepository.findById(id)
+                .orElseThrow(() -> ErrorCode.CAMPAIGN_NOT_FOUND.build())
+                .delete();
     }
 
-    public List<CampaignSearchProjection> search(String type, String category, String social, String filter, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
-        return campaignRepository.search(type, category, social, filter, pageable, swlat, swlng, nelat, nelng);
+    public List<CampaignProjection> fetchAll(Long typeCodeId, Long[] categoryCodeIds, Long[] socialCodeIds, Long[] optionCodeIds, Long regionCodeId, Pageable pageable, String swlat, String swlng, String nelat, String nelng) {
+        return campaignRepository.fetchAll(typeCodeId, categoryCodeIds, socialCodeIds, optionCodeIds, regionCodeId, pageable, swlat, swlng, nelat, nelng);
     }
-
 
     public CampaignViewProjection fetchById(Long id) {
         return campaignRepository.fetchById(id, CampaignViewProjection.class)
                 .orElseThrow(() -> ErrorCode.CAMPAIGN_NOT_FOUND.build());
     }
 
-    public CampaignSummaryProjection summary(Long id) {
-        return campaignRepository.fetchById(id, CampaignSummaryProjection.class)
-                .orElseThrow(() -> ErrorCode.CAMPAIGN_NOT_FOUND.build());
+    public CampaignProjection summary(Long id) {
+        return campaignRepository.fetchOne(id);
+    }
+
+    public List<UserCampaignSearchProjection> fetchAuthenticatedUserCampaigns(String status) {
+        return campaignRepository.fetchAuthenticatedUserCampaigns(status);
+    }
+
+    @Transactional
+    public void addToFavourites(Long id, CustomOAuth2User principal) {
+        User user = userRepository.findById(principal.getUserId())
+                .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build());
+        Campaign campaign = campaignRepository.getReferenceById(id);
+        user.favourite(campaign);
+    }
+
+    @Transactional
+    public void removeFromFavourites(Long id, CustomOAuth2User principal) {
+        User user = userRepository.findById(principal.getUserId())
+                .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build());
+        Campaign campaign = campaignRepository.getReferenceById(id);
+        user.removeFromFavourites(campaign);
+    }
+
+    public CampaignProjection fetchOneDetail(Long id) {
+        return campaignRepository.fetchOneDetail(id);
     }
 }

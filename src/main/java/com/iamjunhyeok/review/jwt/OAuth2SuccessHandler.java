@@ -31,7 +31,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         Role role = customOAuth2User.getRole();
 
         // 리프레시 토큰 생성
-        String refreshToken = JWTProvider.generate(userId, role.name(), Duration.ofDays(10));
+        String refreshToken = JWTProvider.generate(Duration.ofDays(10));
         // 리프레시 토큰 DB 저장
         refreshTokenRepository.findByUserId(userId)
                         .ifPresentOrElse(token -> refreshTokenRepository.save(token.update(refreshToken)),
@@ -47,6 +47,6 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
         CookieUtil.createCookie(response, "access_token", accessToken, (int) Duration.ofMinutes(30).toSeconds());
 
         // 리다이렉션
-        response.sendRedirect("http://localhost:5173");
+        response.sendRedirect("http://localhost:3000");
     }
 }

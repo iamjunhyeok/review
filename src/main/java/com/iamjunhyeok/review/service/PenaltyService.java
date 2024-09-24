@@ -5,10 +5,12 @@ import com.iamjunhyeok.review.domain.Application;
 import com.iamjunhyeok.review.domain.Penalty;
 import com.iamjunhyeok.review.domain.User;
 import com.iamjunhyeok.review.exception.ErrorCode;
+import com.iamjunhyeok.review.projection.PenaltyProjection;
 import com.iamjunhyeok.review.repository.ApplicationRepository;
 import com.iamjunhyeok.review.repository.PenaltyRepository;
 import com.iamjunhyeok.review.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +28,7 @@ public class PenaltyService {
     private final ApplicationRepository applicationRepository;
 
     @Transactional
-    public void create(Long userId, Long applicationId, PenaltyReason reason) {
+    public void givePenaltyPoints(Long userId, Long applicationId, PenaltyReason reason) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> ErrorCode.USER_NOT_FOUND.build());
 
@@ -36,14 +38,23 @@ public class PenaltyService {
         penaltyRepository.save(Penalty.of(user, application, reason));
     }
 
-    public List<Penalty> search(Long userId) {
-        return penaltyRepository.findByUserIdWithCampaign(userId);
+    @Transactional
+    public void givePenaltyPoints(User user, Application application, PenaltyReason reason) {
+        penaltyRepository.save(Penalty.of(user, application, reason));
     }
 
     @Transactional
     public void delete(Long userId, Long id) {
-        penaltyRepository.findByIdAndUserId(id, userId)
+        penaltyRepository.findById(id)
                 .orElseThrow(() -> ErrorCode.PENALTY_NOT_FOUND.build())
                 .delete();
+    }
+
+    public List<PenaltyProjection> fetchAllPenaltyHistoryByUserId(Long userId, Pageable pageable) {
+        return penaltyRepository.fetchAllPenaltyHistoryByUserId(userId, pageable);
+    }
+
+    public int getTotalScore(Long userId) {
+        return penaltyRepository.getTotalScore(userId);
     }
 }

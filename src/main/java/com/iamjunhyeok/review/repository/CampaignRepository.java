@@ -14,4 +14,7 @@ public interface CampaignRepository extends JpaRepository<Campaign, Long>, Custo
 
     @Query("select c from Campaign c join fetch c.links where c.id = :id")
     Optional<Campaign> findByIdWithLink(Long id);
+
+    @Query("select c.user.id from Campaign c where c.id = :id")
+    Long findUserIdById(Long id);
 }

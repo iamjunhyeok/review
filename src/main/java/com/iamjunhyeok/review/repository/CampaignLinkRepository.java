@@ -11,5 +11,5 @@ public interface CampaignLinkRepository extends JpaRepository<CampaignLink, Long
 
     @Modifying
     @Query("delete from CampaignLink l where l.campaign.id = :campaignId")
-    void deleteByCampaignId(Long campaignId);
+    void deleteAllByCampaignId(Long campaignId);
 }

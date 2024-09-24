@@ -1,5 +1,6 @@
 package com.iamjunhyeok.review.config;
 
+import com.iamjunhyeok.review.evaluator.CustomPermissionEvaluator;
 import com.iamjunhyeok.review.jwt.JwtAuthenticationFilter;
 import com.iamjunhyeok.review.jwt.OAuth2SuccessHandler;
 import com.iamjunhyeok.review.service.CustomOAuth2UserService;
@@ -7,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionHandler;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
@@ -26,6 +30,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Configuration
+@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -35,6 +40,15 @@ public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
+    private final CustomPermissionEvaluator customPermissionEvaluator;
+
+    @Bean
+    protected MethodSecurityExpressionHandler createExpressionHandler() {
+        DefaultMethodSecurityExpressionHandler expressionHandler = new DefaultMethodSecurityExpressionHandler();
+        expressionHandler.setPermissionEvaluator(customPermissionEvaluator);
+        return expressionHandler;
+    }
+
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         return request -> {
@@ -42,7 +56,7 @@ public class SecurityConfig {
             config.setAllowedHeaders(Collections.singletonList("*"));
             config.setAllowedMethods(Collections.singletonList("*"));
             config.setAllowedOriginPatterns(List.of(
-                    "http://localhost:5173",
+                    "http://localhost:3000",
                     "http://192.168.219.103:5173",
                     "http://192.168.219.102:5173",
                     "http://192.168.219.101:5173",
@@ -65,9 +79,6 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/oauth2/**", "/token/refresh").permitAll()
-                        .requestMatchers("/campaigns/**").hasAnyRole("USER", "ADMIN")
-//                        .anyRequest().authenticated()
                         .anyRequest().permitAll()
                 )
 

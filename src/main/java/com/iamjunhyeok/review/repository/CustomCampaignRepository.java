@@ -1,6 +1,7 @@
 package com.iamjunhyeok.review.repository;
 
-import com.iamjunhyeok.review.dto.CampaignSearchProjection;
+import com.iamjunhyeok.review.projection.CampaignProjection;
+import com.iamjunhyeok.review.projection.UserCampaignSearchProjection;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
@@ -8,7 +9,13 @@ import java.util.Optional;
 
 public interface CustomCampaignRepository {
 
-    List<CampaignSearchProjection> search(String type, String category, String social, String filter, Pageable pageable, String swlat, String swlng, String nelat, String nelng);
-
     <T> Optional<T> fetchById(Long id, Class<T> type);
+
+    List<UserCampaignSearchProjection> fetchAuthenticatedUserCampaigns(String status);
+
+    List<CampaignProjection> fetchAll(Long typeCodeId, Long[] categoryCodeIds, Long[] socialCodeIds, Long[] optionCodeIds, Long regionCodeId, Pageable pageable, String swlat, String swlng, String nelat, String nelng);
+
+    CampaignProjection fetchOne(Long id);
+
+    CampaignProjection fetchOneDetail(Long id);
 }
