@@ -21,7 +21,7 @@ public class InquiryAnswerService {
     private final InquiryAnswerRepository inquiryAnswerRepository;
 
     @Transactional
-    public InquiryAnswer register(Long inquiryId, InquiryAnswerRegisterRequest request) {
+    public void register(Long inquiryId, InquiryAnswerRegisterRequest request) {
         Inquiry inquiry = inquiryRepository.findById(inquiryId)
                 .orElseThrow(() -> ErrorCode.INQUIRY_NOT_FOUND.build());
 
@@ -29,13 +29,11 @@ public class InquiryAnswerService {
         inquiryAnswerRepository.save(inquiryAnswer);
 
         inquiry.registerAnswer(inquiryAnswer);
-
-        return inquiryAnswer;
     }
 
     @Transactional
-    public InquiryAnswer modify(Long inquiryId, Long id, InquiryAnswerModifyRequest request) {
-        return inquiryAnswerRepository.findByIdAndInquiryId(id, inquiryId)
+    public void modify(Long inquiryId, Long id, InquiryAnswerModifyRequest request) {
+        inquiryAnswerRepository.findByIdAndInquiryId(id, inquiryId)
                 .orElseThrow(() -> ErrorCode.ANSWER_NOT_FOUND.build())
                 .update(request.getTitle(), request.getContent());
     }
