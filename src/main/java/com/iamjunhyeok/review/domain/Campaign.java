@@ -61,8 +61,9 @@ public class Campaign extends CampaignBase {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
-    private boolean deleted = false;
+    private boolean deleted;
 
+    @Builder.Default
     @OneToMany(mappedBy = "campaign")
     private Set<Application> applications = new HashSet<>();
 
@@ -86,6 +87,7 @@ public class Campaign extends CampaignBase {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
+    @Builder.Default
     @OneToMany(mappedBy = "campaign")
     private List<Favourite> favourites = new ArrayList<>();
 

@@ -40,7 +40,7 @@ public class Banner extends Base {
     @Column(name = "orders")
     private int order;
 
-    private boolean deleted = false;
+    private boolean deleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "screen_code_id")
