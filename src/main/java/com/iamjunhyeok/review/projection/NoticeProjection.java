@@ -1,17 +1,11 @@
 package com.iamjunhyeok.review.projection;
 
-import com.blazebit.persistence.view.EntityView;
-import com.blazebit.persistence.view.IdMapping;
-import com.iamjunhyeok.review.domain.Notice;
+import lombok.Getter;
 
-@EntityView(Notice.class)
-public interface NoticeProjection {
-    @IdMapping
-    Long getId();
-
-    String getCategoryCode();
-
-    String getTitle();
-
-    String getContent();
+@Getter
+public class NoticeProjection {
+    private Long id;
+    private CodeProjection categoryCode;
+    private String title;
+    private String content;
 }

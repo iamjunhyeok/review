@@ -17,6 +17,7 @@ import com.iamjunhyeok.review.repository.PlanRepository;
 import com.iamjunhyeok.review.repository.UserRepository;
 import com.iamjunhyeok.review.util.S3Util;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -39,24 +40,23 @@ public class AdminService {
     private final S3Util s3Util;
 
     @Transactional
-    public void registerBanner(Long codeId, BannerRegisterRequest request, MultipartFile file) throws IOException {
-        Code code = codeRepository.getReferenceById(codeId);
-
+    public void registerBanner(BannerRegisterRequest request, MultipartFile file) throws IOException {
+        Code screen = codeRepository.getReferenceById(request.getScreenCodeId());
         Banner banner = Banner.builder()
                 .imageName(file.getOriginalFilename())
                 .linkUrl(request.getLinkUrl())
                 .startDate(request.getStartDate())
                 .endDate(request.getEndDate())
                 .order(request.getOrder())
-                .code(code)
+                .screen(screen)
                 .build();
         bannerRepository.save(banner);
 
         s3Util.putObject("olim-banner", file);
     }
 
-    public List<BannerProjection> fetchAll() {
-        return bannerRepository.fetchAll();
+    public List<BannerProjection> fetchAll(Pageable pageable) {
+        return bannerRepository.fetchAll(pageable);
     }
 
     @Transactional

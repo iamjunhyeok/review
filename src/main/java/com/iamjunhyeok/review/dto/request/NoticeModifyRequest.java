@@ -6,7 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class NoticeModifyRequest {
-    private String categoryCode;
+    private Long categoryCodeId;
     private String title;
     private String content;
 }

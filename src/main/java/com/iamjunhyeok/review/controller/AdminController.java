@@ -7,6 +7,7 @@ import com.iamjunhyeok.review.projection.BannerProjection;
 import com.iamjunhyeok.review.projection.PlanProjection;
 import com.iamjunhyeok.review.service.AdminService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -32,17 +33,16 @@ public class AdminController {
 
     private final AdminService adminService;
 
-    @PostMapping("/banners/{codeId}")
+    @PostMapping("/banners")
     @ResponseStatus(HttpStatus.CREATED)
-    public void registerBanner(@PathVariable Long codeId,
-                       @RequestPart BannerRegisterRequest request,
-                       @RequestPart MultipartFile file) throws IOException {
-        adminService.registerBanner(codeId, request, file);
+    public void registerBanner(@RequestPart BannerRegisterRequest request,
+                               @RequestPart MultipartFile file) throws IOException {
+        adminService.registerBanner(request, file);
     }
 
     @GetMapping("/banners")
-    public ResponseEntity<List<BannerProjection>> fetchAll() {
-        return ResponseEntity.ok(adminService.fetchAll());
+    public ResponseEntity<List<BannerProjection>> fetchAll(Pageable pageable) {
+        return ResponseEntity.ok(adminService.fetchAll(pageable));
     }
 
     @PostMapping("/plans")

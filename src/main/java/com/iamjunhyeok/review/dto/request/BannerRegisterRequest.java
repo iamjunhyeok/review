@@ -12,4 +12,5 @@ public class BannerRegisterRequest {
     private LocalDate startDate;
     private LocalDate endDate;
     private int order;
+    private Long screenCodeId;
 }

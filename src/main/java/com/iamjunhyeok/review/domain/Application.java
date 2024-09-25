@@ -55,7 +55,7 @@ public class Application extends Address {
 
     private String details;
 
-    private boolean deleted = false;
+    private boolean deleted;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -65,6 +65,7 @@ public class Application extends Address {
     @JoinColumn(name = "campaign_id")
     private Campaign campaign;
 
+    @Builder.Default
     @OneToMany(mappedBy = "application", cascade = CascadeType.PERSIST)
     private List<Review> reviews = new ArrayList<>();
 

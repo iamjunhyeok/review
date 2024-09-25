@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@PreAuthorize("hasRole('ADMIN')")
 @RestController
 @RequiredArgsConstructor
 public class PenaltyController {
@@ -26,7 +27,6 @@ public class PenaltyController {
      * @param userId
      * @return
      */
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/users/{userId}/penalties")
     public ResponseEntity<List<PenaltyProjection>> fetchAll(@PathVariable Long userId, Pageable pageable) {
         return ResponseEntity.ok(penaltyService.fetchAllPenaltyHistoryByUserId(userId, pageable));
@@ -37,7 +37,6 @@ public class PenaltyController {
      * @param userId
      * @param id
      */
-    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/users/{userId}/penalties/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable Long userId, @PathVariable Long id) {
